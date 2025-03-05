@@ -42,7 +42,7 @@ const AuthLogin = ({ title, subtitle, subtext }: LoginProps) => {
     } else {
       setError("not successful"); // Clear the error message on successful login
       console.log("Login successful", res);
-      router.push("/dashboard"); // Redirect to the dashboard after login
+      router.push("/"); // Redirect to the dashboard after login
     }
   };
   
