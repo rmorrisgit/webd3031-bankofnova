@@ -1,9 +1,10 @@
 // src/auth.ts
+
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { JWT } from "next-auth/jwt";
-import { CustomSession } from "./lib/types";  // Import CustomSession
-import { getUserByEmail } from "./lib/db";
+import { CustomSession } from "./lib/types"; // Custom session type
+import { getUserByEmail, getUserByAccountNumber } from "./lib/db"; // Functions for fetching user data
 import bcrypt from "bcryptjs";
 
 // Authentication options
@@ -12,27 +13,32 @@ export const authOptions = {
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        email: { label: "Email", type: "text" },
-        password: { label: "Password", type: "password" },
+        identifier: { label: "Email or Account Number", type: "text" },
+        password: { label: "Password or PIN", type: "password" },
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) {
-          throw new Error("Email and password are required");
+        if (!credentials?.identifier || !credentials?.password) {
+          throw new Error("Identifier and password are required");
         }
 
-        // Fetch user from the database
-        const user = await getUserByEmail(credentials.email);
+        let user;
+        const isEmail = credentials.identifier.includes("@");
 
-        // If user exists and password matches (hash comparison)
-        if (user && await bcrypt.compare(credentials.password, user.password)) {
+        if (isEmail) {
+          user = await getUserByEmail(credentials.identifier);
+        } else {
+          user = await getUserByAccountNumber(credentials.identifier);
+        }
+
+        if (user && (await bcrypt.compare(credentials.password, user.password))) {
           return {
             id: user.id,
-            email: user.email,
-            role: user.role, // Include role or any other properties you need
+            email: user.email || null,
+            account_number: user.account_number || null,
+            role: user.role,
           };
         }
 
-        // If authentication fails
         return null;
       },
     }),
@@ -42,6 +48,7 @@ export const authOptions = {
       if (user) {
         token.id = user.id;
         token.email = user.email || undefined;
+        token.account_number = user.account_number || undefined;
         token.role = user.role || undefined;
       }
       return token;
@@ -51,6 +58,7 @@ export const authOptions = {
       if (session.user) {
         session.user.id = token.id as string;
         session.user.email = token.email as string;
+        session.user.account_number = token.account_number as string;
         session.user.role = token.role as string;
       }
       session.expires = token.exp?.toString() || new Date().toISOString();
@@ -60,8 +68,8 @@ export const authOptions = {
 
   secret: process.env.NEXTAUTH_SECRET,
   pages: {
-    signIn: "/authentication/login", // Correct path for Next.js 13+ app directory
+    signIn: "/authentication/login", // Custom sign-in page
   },
 };
 
-export default NextAuth(authOptions); // Exporting NextAuth with provided options
+export default NextAuth(authOptions);

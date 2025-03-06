@@ -22,7 +22,7 @@ interface LoginProps {
 }
 
 const AuthLogin = ({ title, subtitle, subtext }: LoginProps) => {
-  const [email, setEmail] = useState("");
+  const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
@@ -32,7 +32,7 @@ const AuthLogin = ({ title, subtitle, subtext }: LoginProps) => {
   
     const res = await signIn("credentials", {
       redirect: false,
-      email,
+      identifier,
       password,
     });
   
@@ -70,11 +70,11 @@ const AuthLogin = ({ title, subtitle, subtext }: LoginProps) => {
               Email
             </Typography>
             <CustomTextField
-  variant="outlined"
-  fullWidth
-  value={email}
-  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
-/>
+              variant="outlined"
+              fullWidth
+              value={identifier}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setIdentifier(e.target.value)}
+            />
           </Box>
           <Box mt="25px">
             <Typography
@@ -86,16 +86,13 @@ const AuthLogin = ({ title, subtitle, subtext }: LoginProps) => {
             >
               Password
             </Typography>
-
-
-<CustomTextField
-  type="password"
-  variant="outlined"
-  fullWidth
-  value={password}
-  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
-/>
-
+            <CustomTextField
+              type="password"
+              variant="outlined"
+              fullWidth
+              value={password}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
+            />
           </Box>
 
           {error && (

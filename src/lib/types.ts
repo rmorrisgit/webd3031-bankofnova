@@ -1,11 +1,12 @@
-// src/lib/types.ts
 import { Session } from "next-auth";
 
-// Extend the Session type to include custom fields like `id` and `role`
-export interface CustomSession extends Session {
+// Custom session type with optional email and account_number
+export interface CustomSession extends Omit<Session, "user"> {
   user: {
     id: string;
-    email: string;
+    email: string | null;
+    account_number: string | null;
     role: string;
   };
+  expires: string;
 }

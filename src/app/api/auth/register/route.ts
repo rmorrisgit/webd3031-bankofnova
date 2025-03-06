@@ -1,6 +1,6 @@
 // src/app/api/auth/register/route.ts
 import { NextResponse } from "next/server";
-import pool from "../../../../lib/db"; // Your MariaDB pool connection
+import pool from "../../../../lib/db"; // MariaDB pool connection
 import bcrypt from "bcryptjs";
 
 export async function POST(req: Request) {
