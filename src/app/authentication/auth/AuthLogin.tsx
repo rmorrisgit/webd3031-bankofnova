@@ -1,18 +1,8 @@
-"use client";
-
-import React, { useState } from "react";
-import {
-  Box,
-  Typography,
-  FormGroup,
-  FormControlLabel,
-  Button,
-  Stack,
-  Checkbox,
-} from "@mui/material";
-import Link from "next/link";
-import { signIn } from "next-auth/react"; // Import signIn
-import { useRouter } from "next/navigation"; // For navigation
+import React, { useState, useEffect } from "react";
+import { Button, Box, Typography, Stack } from "@mui/material";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import CustomTextField from "../../(DashboardLayout)/components/forms/theme-elements/CustomTextField";
 
 interface LoginProps {
@@ -22,29 +12,39 @@ interface LoginProps {
 }
 
 const AuthLogin = ({ title, subtitle, subtext }: LoginProps) => {
-  const [email, setEmail] = useState("");
+  const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
+  const { data: session, status } = useSession();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-  
+
     const res = await signIn("credentials", {
       redirect: false,
-      email,
+      identifier,
       password,
     });
-  
+
     if (res?.error) {
       setError(res.error); // Display the error message if login fails
       console.log("Login failed", res.error);
     } else {
-      setError("not successful"); // Clear the error message on successful login
+      setError(""); // Clear the error message on successful login
       console.log("Login successful", res);
-      router.push("/"); // Redirect to the dashboard after login
+
+      // Now check the role from session
+      if (session?.user?.role === "admin") {
+        router.push("/dashboard"); // Redirect admin to the admin dashboard
+      } else {
+        router.push("/userprofile"); // Redirect regular user to the user dashboard
+      }
     }
   };
+
+
+  
   
 
   return (
@@ -67,14 +67,16 @@ const AuthLogin = ({ title, subtitle, subtext }: LoginProps) => {
               htmlFor="email"
               mb="5px"
             >
-              Email
+              Email or Account Number
             </Typography>
             <CustomTextField
-  variant="outlined"
-  fullWidth
-  value={email}
-  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
-/>
+              variant="outlined"
+              fullWidth
+              value={identifier}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setIdentifier(e.target.value)
+              }
+            />
           </Box>
           <Box mt="25px">
             <Typography
@@ -84,18 +86,17 @@ const AuthLogin = ({ title, subtitle, subtext }: LoginProps) => {
               htmlFor="password"
               mb="5px"
             >
-              Password
+              Password or PIN
             </Typography>
-
-
-<CustomTextField
-  type="password"
-  variant="outlined"
-  fullWidth
-  value={password}
-  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
-/>
-
+            <CustomTextField
+              type="password"
+              variant="outlined"
+              fullWidth
+              value={password}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setPassword(e.target.value)
+              }
+            />
           </Box>
 
           {error && (
@@ -104,15 +105,14 @@ const AuthLogin = ({ title, subtitle, subtext }: LoginProps) => {
             </Typography>
           )}
 
-          <Stack justifyContent="space-between" direction="row" alignItems="center" my={2}>
-            <FormGroup>
-              <FormControlLabel
-                control={<Checkbox defaultChecked />}
-                label="Remember this device"
-              />
-            </FormGroup>
+          <Stack
+            justifyContent="space-between"
+            direction="row"
+            alignItems="center"
+            my={2}
+          >
             <Typography
-              component={Link}
+              component="a"
               href="/authentication/forgot-password"
               fontWeight="500"
               sx={{ textDecoration: "none", color: "primary.main" }}
