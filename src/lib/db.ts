@@ -1,3 +1,4 @@
+// src/lib/db.ts
 import mysql from 'mysql2/promise';
 
 const pool = mysql.createPool({
@@ -10,15 +11,30 @@ const pool = mysql.createPool({
   queueLimit: 0,
 });
 
-// Function to get a user by email
-export const getUserByEmail = async (email: string): Promise<any | null> => {
-  try {
-    const [rows] = await pool.execute('SELECT * FROM users WHERE email = ?', [email]);
+// Define the User interface with optional bank account fields
+export interface User {
+  id: number;
+  email: string;
+  name: string;
+  role: string;
+  password: string;
+  account_number?: string;
+  bank_accounts_id?: number;
+}
 
-    // Type assertion to cast `rows` to an array of users
-    if ((rows as Array<any>).length > 0) {
-      return (rows as Array<any>)[0]; // Return the first matching user
+// Updated function to get a user by email including bank account data
+export const getUserByEmail = async (email: string): Promise<User | null> => {
+  try {
+    const [rows] = await pool.execute<mysql.RowDataPacket[]>(`
+      SELECT users.*, bank_accounts.account_number, bank_accounts.id AS bank_accounts_id
+      FROM users
+      LEFT JOIN bank_accounts ON users.id = bank_accounts.user_id
+      WHERE users.email = ?`, [email]);
+
+    if (rows.length > 0) {
+      return rows[0] as User;
     }
+    
     return null; // If no user found
   } catch (error) {
     console.error('Error fetching user by email:', error);
@@ -26,24 +42,24 @@ export const getUserByEmail = async (email: string): Promise<any | null> => {
   }
 };
 
-// Function to get a user by account number
-export const getUserByAccountNumber = async (account_number: string): Promise<any | null> => {
+// Function to get a user by account number (already updated)
+export const getUserByAccountNumber = async (account_number: string): Promise<User | null> => {
   try {
-    // Join bank_accounts with users table to get the user details
-    const [rows] = await pool.execute(
-      `SELECT users.* FROM users 
-       JOIN bank_accounts ON users.id = bank_accounts.user_id 
-       WHERE bank_accounts.account_number = ?`,
-      [account_number]
-    );
-
-    // Return the first matching user or null if no user found
-    return (rows as Array<any>).length > 0 ? (rows as Array<any>)[0] : null;
+    const [rows] = await pool.execute<mysql.RowDataPacket[]>(`
+      SELECT users.*, bank_accounts.account_number, bank_accounts.id AS bank_accounts_id
+      FROM users
+      LEFT JOIN bank_accounts ON users.id = bank_accounts.user_id
+      WHERE bank_accounts.account_number = ?`, [account_number]);
+  
+    if (rows.length > 0) {
+      return rows[0] as User;
+    }
+    
+    return null;
   } catch (error) {
     console.error('Error fetching user by account number:', error);
     throw new Error('Error fetching user by account number');
   }
 };
-
 
 export default pool;
