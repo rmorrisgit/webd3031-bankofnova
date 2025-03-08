@@ -38,7 +38,6 @@ const UserProfile = () => {
   return (
     <div>
       <h1>User Profile</h1>
-      <p>Account Number: {session?.user?.account_number || "Not available"}</p>
       <p>Email: {session?.user?.email || "No email"}</p>
       <p>Balance: {balance !== null ? `$${balance}` : "Loading balance..."}</p>
       {error && <p style={{ color: "red" }}>{error}</p>}

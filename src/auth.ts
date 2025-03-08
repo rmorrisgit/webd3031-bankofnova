@@ -1,4 +1,3 @@
-// src/auth.ts
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { JWT } from "next-auth/jwt";
@@ -34,8 +33,6 @@ export const authOptions = {
           return {
             id: user.id.toString(),
             email: user.email || null,
-            account_number: user.account_number || null,
-            bank_accounts_id: user.bank_accounts_id ? user.bank_accounts_id.toString() : null,
             role: user.role,
           };
         }
@@ -49,8 +46,6 @@ export const authOptions = {
       if (user) {
         token.id = user.id;
         token.email = user.email || undefined;
-        token.account_number = user.account_number || undefined;
-        token.bank_accounts_id = user.bank_accounts_id ? user.bank_accounts_id.toString() : null;
         token.role = user.role || undefined;
       }
       return token;
@@ -59,10 +54,6 @@ export const authOptions = {
       if (session.user) {
         session.user.id = token.id as string;
         session.user.email = token.email as string;
-        session.user.account_number = token.account_number as string;
-        session.user.bank_accounts_id = token.bank_accounts_id
-          ? token.bank_accounts_id.toString()
-          : null;
         session.user.role = token.role as string;
       }
       session.expires = token.exp?.toString() || new Date().toISOString();

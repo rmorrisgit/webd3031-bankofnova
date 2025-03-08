@@ -18,8 +18,6 @@ export interface User {
   name: string;
   role: string;
   password: string;
-  account_number?: string;
-  bank_accounts_id?: number;
 }
 
 // Updated function to get a user by email including bank account data

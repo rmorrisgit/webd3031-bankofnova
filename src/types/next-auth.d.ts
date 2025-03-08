@@ -9,8 +9,6 @@ declare module "next-auth" {
     user: {
       id: string;
       email: string | null;
-      account_number: string | null;
-      bank_accounts_id: string | null;  // Property name with an "s"
       role: string;
     };
   }
@@ -18,8 +16,6 @@ declare module "next-auth" {
   interface JWT {
     id: string;
     email: string | null;
-    account_number: string | null;
-    bank_accounts_id: string | null;  // Property name with an "s"
     role: string;
   }
 }
