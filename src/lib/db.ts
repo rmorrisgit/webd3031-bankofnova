@@ -30,15 +30,28 @@ export const getUserByEmail = async (email: string): Promise<User | null> => {
       WHERE users.email = ?`, [email]);
 
     if (rows.length > 0) {
-      return rows[0] as User;
+      const user = {
+        id: rows[0].id,
+        email: rows[0].email,
+        name: rows[0].name,
+        role: rows[0].role,
+        password: rows[0].password,
+        bankAccounts: rows.map(row => ({
+          account_number: row.account_number,
+          bank_accounts_id: row.bank_accounts_id
+        }))
+      };
+      
+      return user;
     }
-    
+
     return null; // If no user found
   } catch (error) {
     console.error('Error fetching user by email:', error);
     throw new Error('Error fetching user by email');
   }
 };
+
 
 // Function to get a user by account number (already updated)
 export const getUserByAccountNumber = async (account_number: string): Promise<User | null> => {

@@ -1,33 +1,40 @@
 import { getServerSession } from "next-auth";
-import { NextRequest } from 'next/server';
-import pool from "../../../../lib/db"; // Adjust the path if necessary
-import mysql from 'mysql2/promise'; // Correct import for mysql2/promise
-import { authOptions } from "../../../../auth"; // Correct import for authOptions from auth.ts
+import { NextRequest } from "next/server";
+import pool from "../../../../lib/db";
+import mysql from "mysql2/promise";
+import { authOptions } from "../../../../auth";
+
+// Helper function for sending JSON responses
+const jsonResponse = (data: object, status: number) =>
+  new Response(JSON.stringify(data), { status, headers: { "Content-Type": "application/json" } });
+
 export async function GET(req: NextRequest) {
-  // Get session to check authentication using getServerSession
-  const session = await getServerSession(authOptions);
-
-  if (!session) {
-    return new Response(JSON.stringify({ error: "Not authenticated" }), { status: 401 });
-  }
-
-  const userId = session.user.id; // Get user ID from session
-
   try {
-    // Query the balance from the bank_accounts table
+    const session = await getServerSession(authOptions);
+
+    if (!session) {
+      return jsonResponse({ error: "Not authenticated" }, 401);
+    }
+
+    if (session.user.role === "admin") {
+      return jsonResponse({ error: "Admins do not have a balance" }, 403);
+    }
+
+    const userId = session.user.id;
+
+    // Query the balance
     const [account] = await pool.query<mysql.RowDataPacket[]>(
       "SELECT balance FROM bank_accounts WHERE user_id = ?",
       [userId]
     );
 
-    // Check if account exists and if balance is found
-    if (!account || account.length === 0) {
-      return new Response(JSON.stringify({ error: "Bank account not found" }), { status: 404 });
+    if (!account?.length) {
+      return jsonResponse({ error: "Bank account not found" }, 404);
     }
 
-    // Return the balance as JSON
-    return new Response(JSON.stringify({ balance: account[0].balance }), { status: 200 });
+    return jsonResponse({ balance: account[0].balance }, 200);
   } catch (error) {
-    return new Response(JSON.stringify({ error: "Internal server error" }), { status: 500 });
+    console.error("Error fetching balance:", error);
+    return jsonResponse({ error: "Internal server error" }, 500);
   }
 }
