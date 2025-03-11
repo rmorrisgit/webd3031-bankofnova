@@ -1,20 +1,26 @@
-// src/app/api/auth/register/route.ts
 import { NextResponse } from "next/server";
 import pool from "../../../../lib/db"; // MariaDB pool connection
 import bcrypt from "bcryptjs";
+import { registerSchema } from "@/lib/schemas/registerSchema";
 
 export async function POST(req: Request) {
-    const { name, email, password } = await req.json();
-
-    if (!name || !email || !password) {
-        return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
-    }
-
     try {
+        const body = await req.json();
+        
+        // Validate request body using Zod
+        const validationResult = registerSchema.safeParse(body);
+        if (!validationResult.success) {
+            return NextResponse.json({ 
+                error: validationResult.error.errors.map((e) => e.message) 
+            }, { status: 400 });
+        }
+        
+
+        const { name, email, password } = validationResult.data;
+
         // Check if user already exists
         const [existingUser]: any[] = await pool.query("SELECT * FROM users WHERE email = ?", [email]);
 
-        // Check if any user is returned from the query
         if (existingUser && existingUser.length > 0) {
             return NextResponse.json({ error: "Email already registered" }, { status: 400 });
         }
@@ -23,7 +29,7 @@ export async function POST(req: Request) {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         // Insert new user into the database
-        const [result]: any[] = await pool.query(
+        await pool.query(
             "INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)",
             [name, email, hashedPassword, "user"]
         );
