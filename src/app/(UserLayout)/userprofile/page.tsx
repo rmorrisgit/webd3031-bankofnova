@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation"; // Use next/navigation for client-side routing
 import { fetchUserBalance } from '../../api/user';
 import DashboardCard from '../components/shared/DashboardCard';
+import MonthlyEarnings from '../components/dashboard/MonthlyEarnings';
 
 
 const UserProfile = () => {
@@ -42,15 +43,19 @@ const UserProfile = () => {
     {/* <PageContainer title="USERPROFILE" description="this is USERPROFILE"> */}
      <Box>
         <Grid item xs={12} lg={8}>
-          <h1>User Profile</h1>
-          <p>Email: {session?.user?.email || "No email"}</p>
           <p>Balance: {balance !== null ? `$${balance}` : "Loading balance..."}</p>
           {error && <p style={{ color: "red" }}>{error}</p>}
         </Grid>
 
         <Grid item xs={12} lg={8}>
         </Grid>
+        <Grid item xs={12} lg={8}>
+     <MonthlyEarnings title="Chequings" balance={5142}/>
+     <MonthlyEarnings title="Savings" balance={40321}/>
+
+     </Grid>
     </Box>
+    
     {/* </PageContainer> */}
   </DashboardCard>
   );
