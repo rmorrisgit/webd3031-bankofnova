@@ -1,8 +1,13 @@
 "use client"; // Mark the component as client-side component
-
+import { Grid, Box } from '@mui/material';
+import PageContainer from '../components/container/PageContainer';
+// components
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation"; // Use next/navigation for client-side routing
+import { fetchUserBalance } from '../../api/user';
+import DashboardCard from '../components/shared/DashboardCard';
+
 
 const UserProfile = () => {
   const { data: session, status } = useSession();
@@ -11,37 +16,43 @@ const UserProfile = () => {
 
   useEffect(() => {
     if (session) {
-      // Fetch balance when the session is available
-      const fetchBalance = async () => {
+      const getBalance = async () => {
         try {
-          const response = await fetch("/api/user/balance");
-          const data = await response.json();
-          
-          if (response.ok) {
-            setBalance(data.balance); // Set balance if the response is successful
-          } else {
-            setError(data.error || "Failed to fetch balance"); // Set error if there is an issue
-          }
+          const balance = await fetchUserBalance();
+          setBalance(balance);
         } catch (error) {
-          setError("Failed to fetch balance"); // Handle any unexpected errors
+          if (error instanceof Error) {
+            setError(error.message);
+          } else {
+            setError("An unknown error occurred");
+          }
         }
       };
-
-      fetchBalance(); // Call the function to fetch balance
+  
+      getBalance();
     }
-  }, [session]); // Run this effect when the session changes
+  }, [session]);
 
   if (status === "loading" || !session) {
     return <div>Loading...</div>;
   }
 
   return (
-    <div>
-      <h1>User Profile</h1>
-      <p>Email: {session?.user?.email || "No email"}</p>
-      <p>Balance: {balance !== null ? `$${balance}` : "Loading balance..."}</p>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-    </div>
+  <DashboardCard>
+    {/* <PageContainer title="USERPROFILE" description="this is USERPROFILE"> */}
+     <Box>
+        <Grid item xs={12} lg={8}>
+          <h1>User Profile</h1>
+          <p>Email: {session?.user?.email || "No email"}</p>
+          <p>Balance: {balance !== null ? `$${balance}` : "Loading balance..."}</p>
+          {error && <p style={{ color: "red" }}>{error}</p>}
+        </Grid>
+
+        <Grid item xs={12} lg={8}>
+        </Grid>
+    </Box>
+    {/* </PageContainer> */}
+  </DashboardCard>
   );
 };
 
