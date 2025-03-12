@@ -1,268 +1,139 @@
 'use client';
-import { Typography, Grid, CardContent } from '@mui/material';
+import { useState } from 'react';
+import { Grid, TextField, Button, Typography, CardContent } from '@mui/material';
 import PageContainer from '../components/container/PageContainer';
 import DashboardCard from '../components/shared/DashboardCard';
 import BlankCard from '../components/shared/BlankCard';
+import { processTransaction } from '../../api/transactions'; // Assume this API call processes the transaction
+import RecentTransactions from "../components/overiew/RecentTransactions";
 
+const TransactionsPage = () => {
+  const [amount, setAmount] = useState('');
+  const [transactionType, setTransactionType] = useState('deposit'); // Default to 'deposit'
+  const [recipientAccount, setRecipientAccount] = useState('');
+  const [transactionStatus, setTransactionStatus] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-const TypographyPage = () => {
+  const handleTransactionSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+  if (!amount || parseFloat(amount) <= 0) {
+    setError('Please enter a valid amount');
+    return;
+  }
+
+  setError(null);
+  setTransactionStatus('Processing...');
+
+  try {
+    // Process the transaction via API
+    const response = await processTransaction({
+      amount: parseFloat(amount),
+      transactionType,
+      recipientAccount: transactionType === 'transfer' ? recipientAccount : undefined,
+    });
+
+    if (response.success) {
+      setTransactionStatus('Transaction successful!');
+    } else {
+      setTransactionStatus('Transaction failed. Please try again.');
+    }
+  } catch (err: unknown) {
+    // Type assertion to access error message
+    if (err instanceof Error) {
+      setTransactionStatus('Transaction failed. Please try again.');
+      setError(err.message);
+    } else {
+      // If the error is not an instance of Error, provide a generic message
+      setTransactionStatus('Transaction failed. Please try again.');
+      setError('An unknown error occurred.');
+    }
+  }
+};
+
   return (
-    <PageContainer title="Transactions" description="this is Transactions">
-
+    <PageContainer title="Transactions" description="Make transactions between your accounts">
       <Grid container spacing={3}>
         <Grid item sm={12}>
-          <DashboardCard title="Default Text">
+       
             <Grid container spacing={3}>
+              {/* Transaction Form */}
               <Grid item sm={12}>
                 <BlankCard>
                   <CardContent>
-                    <Typography variant="h1">h1. Heading</Typography>
-                    <Typography variant="body1" color="textSecondary">
-                      font size: 30 | line-height: 45 | font weight: 500
-                    </Typography>
-                  </CardContent>
-                </BlankCard>
-              </Grid>
-              <Grid item sm={12}>
-                <BlankCard>
-                  <CardContent>
-                    <Typography variant="h2">h2. Heading</Typography>
-                    <Typography variant="body1" color="textSecondary">
-                      font size: 24 | line-height: 36 | font weight: 500
-                    </Typography>
-                  </CardContent>
-                </BlankCard>
-              </Grid>
-              <Grid item sm={12}>
-                <BlankCard>
-                  <CardContent>
-                    <Typography variant="h3">h3. Heading</Typography>
+                    <form onSubmit={handleTransactionSubmit}>
+                      <Typography variant="h5" gutterBottom>Transaction Form</Typography>
 
-                    <Typography variant="body1" color="textSecondary">
-                      font size: 21 | line-height: 31.5 | font weight: 500
-                    </Typography>
+                      {/* Amount Field */}
+                      <TextField
+                        label="Amount"
+                        variant="outlined"
+                        fullWidth
+                        value={amount}
+                        onChange={(e) => setAmount(e.target.value)}
+                        type="number"
+                        required
+                      />
+
+                      {/* Transaction Type (Deposit or Transfer) */}
+                      <TextField
+                        label="Transaction Type"
+                        variant="outlined"
+                        fullWidth
+                        select
+                        value={transactionType}
+                        onChange={(e) => setTransactionType(e.target.value)}
+                        required
+                        SelectProps={{
+                          native: true,
+                        }}
+                      >
+                        <option value="deposit">Deposit</option>
+                        <option value="transfer">Transfer</option>
+                      </TextField>
+
+                      {/* Recipient Account (only for transfer) */}
+                      {transactionType === 'transfer' && (
+                        <TextField
+                          label="Recipient Account"
+                          variant="outlined"
+                          fullWidth
+                          value={recipientAccount}
+                          onChange={(e) => setRecipientAccount(e.target.value)}
+                          required
+                        />
+                      )}
+
+                      {/* Submit Button */}
+                      <Button variant="contained" color="primary" type="submit" fullWidth>
+                        Submit Transaction
+                      </Button>
+                    </form>
+
+                    {/* Transaction Status and Error */}
+                    {transactionStatus && (
+                      <Typography variant="h6" color={transactionStatus === 'Transaction successful!' ? 'success' : 'error'} gutterBottom>
+                        {transactionStatus}
+                      </Typography>
+                    )}
+                    {error && (
+                      <Typography variant="body2" color="error">
+                        {error}
+                      </Typography>
+                    )}
                   </CardContent>
                 </BlankCard>
               </Grid>
-              <Grid item sm={12}>
-                <BlankCard>
-                  <CardContent>
-                    <Typography variant="h4">h4. Heading</Typography>
 
-                    <Typography variant="body1" color="textSecondary">
-                      font size: 18 | line-height: 27 | font weight: 500
-                    </Typography>
-                  </CardContent>
-                </BlankCard>
-              </Grid>
+              {/* Transaction History (Optional) */}
               <Grid item sm={12}>
-                <BlankCard>
-                  <CardContent>
-                    <Typography variant="h5">h5. Heading</Typography>
-
-                    <Typography variant="body1" color="textSecondary">
-                      font size: 16 | line-height: 24 | font weight: 500
-                    </Typography>
-                  </CardContent>
-                </BlankCard>
-              </Grid>
-              <Grid item sm={12}>
-                <BlankCard>
-                  <CardContent>
-                    <Typography variant="h6">h6. Heading</Typography>
-
-                    <Typography variant="body1" color="textSecondary">
-                      font size: 14 | line-height: 21 | font weight: 500
-                    </Typography>
-                  </CardContent>
-                </BlankCard>
-              </Grid>
-              <Grid item sm={12}>
-                <BlankCard>
-                  <CardContent>
-                    <Typography variant="subtitle1">
-                      subtitle1. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis
-                      tenetur
-                    </Typography>
-
-                    <Typography variant="body1" color="textSecondary">
-                      font size: 16 | line-height: 28 | font weight: 400
-                    </Typography>
-                  </CardContent>
-                </BlankCard>
-              </Grid>
-              <Grid item sm={12}>
-                <BlankCard>
-                  <CardContent>
-                    <Typography variant="subtitle2">
-                      subtitle2. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis
-                      tenetur
-                    </Typography>
-
-                    <Typography variant="body1" color="textSecondary">
-                      font size: 14 | line-height: 21 | font weight: 400
-                    </Typography>
-                  </CardContent>
-                </BlankCard>
-              </Grid>
-              <Grid item sm={12}>
-                <BlankCard>
-                  <CardContent>
-                    <Typography variant="body1">
-                      body1. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur
-                    </Typography>
-
-                    <Typography variant="body1" color="textSecondary">
-                      font size: 16 | line-height: 24 | font weight: 400
-                    </Typography>
-                  </CardContent>
-                </BlankCard>
-              </Grid>
-              <Grid item sm={12}>
-                <BlankCard>
-                  <CardContent>
-                    <Typography variant="body2">
-                      body2. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur
-                    </Typography>
-
-                    <Typography variant="body1" color="textSecondary">
-                      font size: 14 | line-height: 20 | font weight: 400
-                    </Typography>
-                  </CardContent>
-                </BlankCard>
-              </Grid>
-              <Grid item sm={12}>
-                <BlankCard>
-                  <CardContent>
-                    <Typography variant="caption">
-                      caption. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis
-                      tenetur
-                    </Typography>
-
-                    <Typography variant="body1" color="textSecondary">
-                      font size: 12 | line-height: 19 | font weight: 400
-                    </Typography>
-                  </CardContent>
-                </BlankCard>
-              </Grid>
-              <Grid item sm={12}>
-                <BlankCard>
-                  <CardContent>
-                    <Typography variant="overline">
-                      overline. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis
-                      tenetur
-                    </Typography>
-
-                    <Typography variant="body1" color="textSecondary">
-                      font size: 12 | line-height: 31 | font weight: 400
-                    </Typography>
-                  </CardContent>
-                </BlankCard>
+             <RecentTransactions />
               </Grid>
             </Grid>
-
-          </DashboardCard>
         </Grid>
-        <Grid item sm={12}>
-          <DashboardCard title="Default Text">
-            <Grid container spacing={3}>
-              <Grid item sm={12}>
-                <BlankCard>
-                  <CardContent>
-                    <Typography variant="h5" color="textprimary">
-                      Text Primary
-                    </Typography>
-
-                    <Typography variant="body1" color="textprimary">
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur
-                    </Typography>
-                  </CardContent>
-                </BlankCard>
-              </Grid>
-              <Grid item sm={12}>
-                <BlankCard>
-                  <CardContent>
-                    <Typography variant="h5" color="textSecondary">
-                      Text Secondary
-                    </Typography>
-
-                    <Typography variant="body1" color="textSecondary">
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur
-                    </Typography>
-                  </CardContent>
-                </BlankCard>
-              </Grid>
-              <Grid item sm={12}>
-                <BlankCard>
-                  <CardContent>
-                    <Typography variant="h5" sx={{ color: (theme) => theme.palette.info.main }}>
-                      Text Info
-                    </Typography>
-
-                    <Typography variant="body1" sx={{ color: (theme) => theme.palette.info.main }}>
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur
-                    </Typography>
-                  </CardContent>
-                </BlankCard>
-              </Grid>
-              <Grid item sm={12}>
-                <BlankCard>
-                  <CardContent>
-                    <Typography variant="h5" sx={{ color: (theme) => theme.palette.primary.main }}>
-                      Text Primary
-                    </Typography>
-
-                    <Typography variant="body1" sx={{ color: (theme) => theme.palette.primary.main }}>
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur
-                    </Typography>
-                  </CardContent>
-                </BlankCard>
-              </Grid>
-              <Grid item sm={12}>
-                <BlankCard>
-                  <CardContent>
-                    <Typography variant="h5" sx={{ color: (theme) => theme.palette.warning.main }}>
-                      Text Warning
-                    </Typography>
-
-                    <Typography variant="body1" sx={{ color: (theme) => theme.palette.warning.main }}>
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur
-                    </Typography>
-                  </CardContent>
-                </BlankCard>
-              </Grid>
-              <Grid item sm={12}>
-                <BlankCard>
-                  <CardContent>
-                    <Typography variant="h5" sx={{ color: (theme) => theme.palette.error.main }}>
-                      Text Error
-                    </Typography>
-
-                    <Typography variant="body1" sx={{ color: (theme) => theme.palette.error.main }}>
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur
-                    </Typography>
-                  </CardContent>
-                </BlankCard>
-              </Grid>
-              <Grid item sm={12}>
-                <BlankCard>
-                  <CardContent>
-                    <Typography variant="h5" sx={{ color: (theme) => theme.palette.success.main }}>
-                      Text Success
-                    </Typography>
-
-                    <Typography variant="body1" sx={{ color: (theme) => theme.palette.success.main }}>
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur
-                    </Typography>
-                  </CardContent>
-                </BlankCard>
-              </Grid>
-            </Grid>
-          </DashboardCard>
-        </Grid>
-      </Grid >
+      </Grid>
     </PageContainer>
   );
 };
 
-export default TypographyPage;
+export default TransactionsPage;

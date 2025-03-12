@@ -1,7 +1,7 @@
-import { Box, Typography, Button } from "@mui/material";
+import { Box, Button, Link, Typography, IconButton, Tooltip } from "@mui/material";
 import Image from "next/image";
-import Link from "next/link";
-import { useSession } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
+import LogoutIcon from '@mui/icons-material/Logout'; // Material UI Logout Icon
 
 export const Profile = () => {
   const { data: session } = useSession(); // Get the session data
@@ -18,7 +18,7 @@ export const Profile = () => {
         <Typography variant="h5" fontSize="16px" mb={1}>
           {session ? `Welcome, ${userName}!` : "Haven't an account?"}
         </Typography>
-        {!session && (
+        {!session ? (
           <Button
             color="primary"
             target="_blank"
@@ -31,6 +31,20 @@ export const Profile = () => {
           >
             Sign Up
           </Button>
+        ) : (
+          <Tooltip title="Sign out" arrow>
+            {/* Explicitly wrap the IconButton with a div or Box */}
+            <Box>
+              <IconButton
+                color="primary"
+                aria-label="logout"
+                onClick={() => signOut()}
+                size="small"
+              >
+                <LogoutIcon /> {/* Material UI Logout Icon */}
+              </IconButton>
+            </Box>
+          </Tooltip>
         )}
       </Box>
       <Box mt="-35px">

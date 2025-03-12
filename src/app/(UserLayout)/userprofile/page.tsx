@@ -1,25 +1,31 @@
-"use client"; // Mark the component as client-side component
-import { Grid, Box } from '@mui/material';
-import PageContainer from '../components/container/PageContainer';
-// components
+"use client"; 
+import { Grid, Box, Typography } from "@mui/material";
+import PageContainer from "../components/container/PageContainer";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation"; // Use next/navigation for client-side routing
-import { fetchUserBalance } from '../../api/user';
-import MonthlyEarnings from '../components/overiew/MonthlyEarnings';
-
+import { useRouter } from "next/navigation";
+import { fetchUserBalance } from "../../api/user";
+import MonthlyEarnings from "../components/overiew/MonthlyEarnings";
 
 const UserProfile = () => {
   const { data: session, status } = useSession();
-  const [balance, setBalance] = useState<string | null>(null); // State for storing the balance
-  const [error, setError] = useState<string | null>(null); // State for any error during the balance fetch
+  const router = useRouter(); // For redirection to login page if not authenticated
+  const [chequing, setChequing] = useState<number | null>(null);
+  const [savings, setSavings] = useState<number | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    // Redirect to login if not authenticated
+    if (status === "unauthenticated") {
+      router.push("/login"); // Redirect to login page
+    }
+    
     if (session) {
-      const getBalance = async () => {
+      const getBalances = async () => {
         try {
-          const balance = await fetchUserBalance();
-          setBalance(balance);
+          const balances = await fetchUserBalance(); // Expecting { chequing: 5142, savings: 40321 }
+          setChequing(balances.chequing || 0);
+          setSavings(balances.savings || 0);
         } catch (error) {
           if (error instanceof Error) {
             setError(error.message);
@@ -28,28 +34,31 @@ const UserProfile = () => {
           }
         }
       };
-  
-      getBalance();
+      getBalances();
     }
-  }, [session]);
+  }, [session, status, router]); // Including router and status in dependency array
 
   return (
     <PageContainer title="Overview" description="this is HOME">
-      {status === "loading" || !session ? (
+      {status === "loading" ? (
         <div>Loading...</div>
-      ) : (
+      ) : session ? (
         <Box>
           <Grid item xs={12} lg={8}>
-            <p>Balance: {balance !== null ? `$${balance}` : "Loading balance..."}</p>
-            {error && <p style={{ color: "red" }}>{error}</p>}
+            <Typography variant="h6">Chequing Balance: {chequing !== null ? `$${chequing}` : "Loading..."}</Typography>
+            <Typography variant="h6">Savings Balance: {savings !== null ? `$${savings}` : "Loading..."}</Typography>
+            {error && <Typography style={{ color: "red" }}>{error}</Typography>}
           </Grid>
           <Grid item xs={12} lg={8}>
-            <MonthlyEarnings title="Chequings" balance={5142} />
-            <MonthlyEarnings title="Savings" balance={40321} />
+          <MonthlyEarnings title="Chequings" balance={chequing ?? 0} link="/accounts/chequing" />
+          <MonthlyEarnings title="Savings" balance={savings ?? 0} link="/accounts/savings" />
           </Grid>
         </Box>
+      ) : (
+        <div>You need to be logged in to view this page.</div>
       )}
     </PageContainer>
   );
-}  
+};
+
 export default UserProfile;

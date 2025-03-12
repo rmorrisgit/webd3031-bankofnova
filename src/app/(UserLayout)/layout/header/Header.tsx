@@ -5,7 +5,7 @@ import { Box, AppBar, Toolbar, styled, Stack, IconButton, Badge, Button } from '
 import PropTypes from 'prop-types';
 import Link from 'next/link';
 import { useSession, signOut } from "next-auth/react"; // Import auth functions
-import { IconBellRinging, IconMenu } from '@tabler/icons-react';
+import { IconMenu } from '@tabler/icons-react';
 import Profile from './Profile';
 
 interface ItemType {
@@ -69,7 +69,7 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
           <IconMenu width="20" height="20" />
         </IconButton>
 
-        <IconButton
+        {/* <IconButton
           size="large"
           aria-label="show 11 new notifications"
           color="inherit"
@@ -79,7 +79,7 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
           <Badge variant="dot" color="primary">
             <IconBellRinging size="21" stroke="1.5" />
           </Badge>
-        </IconButton>
+        </IconButton> */}
 
         <Box flexGrow={1} />
         <Stack spacing={1} direction="row" alignItems="center">

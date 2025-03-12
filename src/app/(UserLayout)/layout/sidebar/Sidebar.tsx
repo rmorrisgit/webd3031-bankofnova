@@ -2,7 +2,7 @@
 
 import { useMediaQuery, Box, Drawer } from '@mui/material';
 import { useSession } from 'next-auth/react';
-import { usePathname } from 'next/navigation'; // ✅ Correct way to get the current path
+import { usePathname } from 'next/navigation'; 
 import SidebarItems from './SidebarItems';
 import { Profile } from './SidebarProfile';
 import { Sidebar, Logo } from 'react-mui-sidebar';
@@ -19,7 +19,7 @@ const MSidebar = ({
   isSidebarOpen,
 }: ItemType) => {
   const { data: session, status } = useSession();
-  const pathname = usePathname(); // ✅ Replace useRouter() with usePathname()
+  const pathname = usePathname(); 
   const lgUp = useMediaQuery((theme: any) => theme.breakpoints.up('lg'));
 
   const sidebarWidth = '270px';
@@ -30,7 +30,7 @@ const MSidebar = ({
     '&::-webkit-scrollbar-thumb': { backgroundColor: '#eff2f7', borderRadius: '15px' },
   };
 
-  // ❌ Prevent Sidebar from rendering on Login, Register, or Home pages
+  // Prevent Sidebar from rendering on Login, Register, or Home pages
   const excludedPages = ['/login', '/register', '/'];
   const shouldRenderSidebar = status === 'authenticated' && !excludedPages.includes(pathname);
 
