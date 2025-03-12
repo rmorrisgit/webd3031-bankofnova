@@ -22,6 +22,7 @@ const MSidebar = ({
   const scrollbarStyles = {
     '&::-webkit-scrollbar': {
       width: '7px',
+
     },
     '&::-webkit-scrollbar-thumb': {
       backgroundColor: '#eff2f7',
@@ -29,9 +30,61 @@ const MSidebar = ({
     },
   };
 
-  // Hide sidebar completely on large screens and up
+
   if (lgUp) {
-    return null;  // Do not render anything on large screens
+    return (
+      <Box
+        sx={{
+          width: sidebarWidth,
+          flexShrink: 0,
+        }}
+      >
+        {/* ------------------------------------------- */}
+        {/* Sidebar for desktop */}
+        {/* ------------------------------------------- */}
+        <Drawer
+          anchor="left"
+          open={isSidebarOpen}
+          variant="permanent"
+          PaperProps={{
+            sx: {
+              boxSizing: "border-box",
+              ...scrollbarStyles,
+            },
+          }}
+        >
+          {/* ------------------------------------------- */}
+          {/* Sidebar Box */}
+          {/* ------------------------------------------- */}
+          <Box
+            sx={{
+              height: "100%",
+            }}
+          >
+            <Sidebar
+              width={'270px'}
+              collapsewidth="80px"
+              open={isSidebarOpen}
+              themeColor="#5d87ff"
+              themeSecondaryColor="#49beff"
+              showProfile={false}
+            >
+              {/* ------------------------------------------- */}
+              {/* Logo */}
+              {/* ------------------------------------------- */}
+              <Logo img="/images/logos/dark-logo.svg" />
+              <Box>
+                {/* ------------------------------------------- */}
+                {/* Sidebar Items */}
+                {/* ------------------------------------------- */}
+                <SidebarItems />
+                <Upgrade />
+              </Box>
+            </Sidebar >
+          </Box>
+        </Drawer>
+      </Box>
+    );
   }
 
   return (
@@ -47,7 +100,9 @@ const MSidebar = ({
         },
       }}
     >
+      {/* ------------------------------------------- */}
       {/* Sidebar Box */}
+      {/* ------------------------------------------- */}
       <Box px={2}>
         <Sidebar
           width={'270px'}
@@ -59,15 +114,28 @@ const MSidebar = ({
           themeSecondaryColor="#49beff"
           showProfile={false}
         >
+          {/* ------------------------------------------- */}
           {/* Logo */}
+          {/* ------------------------------------------- */}
           <Logo img="/images/logos/dark-logo.svg" />
+          {/* ------------------------------------------- */}
           {/* Sidebar Items */}
+          {/* ------------------------------------------- */}
           <SidebarItems />
           <Upgrade />
         </Sidebar>
       </Box>
+      {/* ------------------------------------------- */}
+      {/* Sidebar For Mobile */}
+      {/* ------------------------------------------- */}
+
     </Drawer>
   );
 };
 
 export default MSidebar;
+
+
+
+
+

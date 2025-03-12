@@ -6,7 +6,13 @@ import { Stack, Typography, Avatar, Fab } from '@mui/material';
 import { IconArrowDownRight, IconCurrencyDollar } from '@tabler/icons-react';
 import DashboardCard from '../shared/DashboardCard';
 
-const MonthlyEarnings = () => {
+// MonthlyEarnings.tsx (or wherever the component is defined)
+interface MonthlyEarningsProps {
+  title: string;
+  balance: number;
+}
+// make montly earnings take in a string title
+const MonthlyEarnings = ({ title, balance }: MonthlyEarningsProps) => {
   // chart color
   const theme = useTheme();
   const secondary = theme.palette.secondary.main;
@@ -54,7 +60,7 @@ const MonthlyEarnings = () => {
 
   return (
     <DashboardCard
-      title="Monthly Earnings"
+      title= {title}
       action={
         <Fab color="secondary" size="medium" sx={{color: '#ffffff'}}>
           <IconCurrencyDollar width={24} />
@@ -66,7 +72,7 @@ const MonthlyEarnings = () => {
     >
       <>
         <Typography variant="h3" fontWeight="700" mt="-20px">
-          $6,820
+          ${balance}
         </Typography>
         <Stack direction="row" spacing={1} my={1} alignItems="center">
           <Avatar sx={{ bgcolor: errorlight, width: 27, height: 27 }}>
