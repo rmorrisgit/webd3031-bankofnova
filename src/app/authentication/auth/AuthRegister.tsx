@@ -1,130 +1,119 @@
-import React, { useState } from 'react';
-import { Box, Typography, Button } from '@mui/material';
-import { useRouter } from 'next/navigation';
-import CustomTextField from '../../(DashboardLayout)/components/forms/theme-elements/CustomTextField';
-import { Stack } from '@mui/system';
-import axios from 'axios';
+"use client";
 
-interface registerType {
-    title?: string;
-    subtitle?: JSX.Element | JSX.Element[];
-    subtext?: JSX.Element | JSX.Element[];
-}
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { registerSchema } from "@/lib/schemas/registerSchema";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
-const AuthRegister = ({ title, subtitle, subtext }: registerType) => {
-    // State to store form data
-    const [formData, setFormData] = useState({
-        name: '',
-        email: '',
-        password: ''
-    });
+type RegisterFormData = {
+  name: string;
+  email: string;
+  password: string;
+};
 
-    // State to manage loading and error
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
-
-    // Hook for navigation
+export default function RegisterForm() {
+    const [serverError, setServerError] = useState<string | null>(null);
     const router = useRouter();
 
-    // Handle input field changes
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFormData({
-            ...formData,
-            [e.target.id]: e.target.value
-        });
-    };
+    const {
+        register,
+        handleSubmit,
+        formState: { errors, isSubmitting },
+    } = useForm<RegisterFormData>({
+        resolver: zodResolver(registerSchema),
+    });
 
-    // Handle form submission
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setLoading(true);
-        setError(null);
-
+    const onSubmit = async (data: RegisterFormData) => {
         try {
-            // Send a POST request to register the user
-            const response = await axios.post('/api/auth/register', formData);
-            
-            // If registration is successful, redirect to the login page
-            if (response.status === 201) {
-                router.push('/login');
+            const res = await fetch("/api/auth/register", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data),
+            });
+
+            const responseData = await res.json();
+
+            if (!res.ok) {
+                throw new Error(responseData.error || "Registration failed");
             }
-        } catch (err) {
-            // Handle error (e.g., show error message)
-            setError('Error occurred during registration. Please try again.');
-            console.error(err);
-        } finally {
-            setLoading(false);
+
+            alert("Registration successful! Redirecting to login...");
+            router.push("/login"); 
+        } catch (error: any) {
+            setServerError(error.message);
         }
     };
 
+    // Determine which field to highlight first
+    const firstError = errors.name?.message || errors.email?.message || errors.password?.message;
+
     return (
-        <>
-            {title && (
-                <Typography fontWeight="700" variant="h2" mb={1}>
-                    {title}
-                </Typography>
-            )}
+        <div className="flex min-h-screen items-center justify-center bg-gray-100">
+            <form 
+                onSubmit={handleSubmit(onSubmit)} 
+                className="bg-white shadow-lg rounded-lg p-6 w-full max-w-md space-y-6"
+            >
+                <h2 className="text-2xl font-bold text-center text-gray-800">Register</h2>
 
-            {subtext}
+                {serverError && <p className="text-red-500 text-center">{serverError}</p>}
 
-            <Box component="form" onSubmit={handleSubmit}>
-                <Stack mb={3}>
-                    <Typography variant="subtitle1" fontWeight={600} component="label" htmlFor="name" mb="5px">
-                        Name
-                    </Typography>
-                    <CustomTextField
-                        id="name"
-                        variant="outlined"
-                        fullWidth
-                        value={formData.name}
-                        onChange={handleChange}
+                {/* Name Input */}
+                <div>
+                    <label className="block text-gray-700 font-medium mb-1">Name</label>
+                    <input 
+                        {...register("name")} 
+                        className={`border p-3 w-full rounded-lg focus:outline-none focus:ring-2 ${
+                            errors.name ? "border-red-500 focus:ring-red-400" : "border-gray-300 focus:ring-blue-400"
+                        }`} 
+                        placeholder="Enter your name"
                     />
+                    {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>}
+                </div>
 
-                    <Typography variant="subtitle1" fontWeight={600} component="label" htmlFor="email" mb="5px" mt="25px">
-                        Email Address
-                    </Typography>
-                    <CustomTextField
-                        id="email"
-                        variant="outlined"
-                        fullWidth
-                        value={formData.email}
-                        onChange={handleChange}
-                    />
-
-                    <Typography variant="subtitle1" fontWeight={600} component="label" htmlFor="password" mb="5px" mt="25px">
-                        Password
-                    </Typography>
-                    <CustomTextField
-                        id="password"
-                        variant="outlined"
-                        fullWidth
-                        type="password"
-                        value={formData.password}
-                        onChange={handleChange}
-                    />
-                </Stack>
-
-                {error && (
-                    <Typography color="error" variant="body2" mb={2}>
-                        {error}
-                    </Typography>
+                {/* Email Input - Show only if no name error */}
+                {!errors.name && (
+                    <div>
+                        <label className="block text-gray-700 font-medium mb-1">Email</label>
+                        <input 
+                            {...register("email")} 
+                            type="email" 
+                            className={`border p-3 w-full rounded-lg focus:outline-none focus:ring-2 ${
+                                errors.email ? "border-red-500 focus:ring-red-400" : "border-gray-300 focus:ring-blue-400"
+                            }`} 
+                            placeholder="Enter your email"
+                        />
+                        {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
+                    </div>
                 )}
 
-                <Button
-                    color="primary"
-                    variant="contained"
-                    size="large"
-                    fullWidth
-                    type="submit"
-                    disabled={loading}
+                {/* Password Input - Show only if no name and email error */}
+                {!errors.name && !errors.email && (
+                    <div>
+                        <label className="block text-gray-700 font-medium mb-1">Password</label>
+                        <input 
+                            {...register("password")} 
+                            type="password" 
+                            className={`border p-3 w-full rounded-lg focus:outline-none focus:ring-2 ${
+                                errors.password ? "border-red-500 focus:ring-red-400" : "border-gray-300 focus:ring-blue-400"
+                            }`} 
+                            placeholder="Enter your password"
+                        />
+                        {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>}
+                    </div>
+                )}
+
+                {/* Submit Button */}
+                <button 
+                    type="submit" 
+                    disabled={isSubmitting} 
+                    className={`w-full p-3 text-white rounded-lg font-semibold transition ${
+                        isSubmitting ? "bg-gray-400 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-600"
+                    }`}
                 >
-                    {loading ? 'Signing Up...' : 'Sign Up'}
-                </Button>
-            </Box>
-
-            {subtitle}
-        </>
+                    {isSubmitting ? "Registering..." : "Register"}
+                </button>
+            </form>
+        </div>
     );
-};
-
-export default AuthRegister;
+}
