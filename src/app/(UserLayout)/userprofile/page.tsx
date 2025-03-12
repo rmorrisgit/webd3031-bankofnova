@@ -6,8 +6,7 @@ import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation"; // Use next/navigation for client-side routing
 import { fetchUserBalance } from '../../api/user';
-import DashboardCard from '../components/shared/DashboardCard';
-import MonthlyEarnings from '../components/dashboard/MonthlyEarnings';
+import MonthlyEarnings from '../components/overiew/MonthlyEarnings';
 
 
 const UserProfile = () => {
@@ -34,31 +33,23 @@ const UserProfile = () => {
     }
   }, [session]);
 
-  if (status === "loading" || !session) {
-    return <div>Loading...</div>;
-  }
-
   return (
-  <DashboardCard>
-    {/* <PageContainer title="USERPROFILE" description="this is USERPROFILE"> */}
-     <Box>
-        <Grid item xs={12} lg={8}>
-          <p>Balance: {balance !== null ? `$${balance}` : "Loading balance..."}</p>
-          {error && <p style={{ color: "red" }}>{error}</p>}
-        </Grid>
-
-        <Grid item xs={12} lg={8}>
-        </Grid>
-        <Grid item xs={12} lg={8}>
-     <MonthlyEarnings title="Chequings" balance={5142}/>
-     <MonthlyEarnings title="Savings" balance={40321}/>
-
-     </Grid>
-    </Box>
-    
-    {/* </PageContainer> */}
-  </DashboardCard>
+    <PageContainer title="Overview" description="this is HOME">
+      {status === "loading" || !session ? (
+        <div>Loading...</div>
+      ) : (
+        <Box>
+          <Grid item xs={12} lg={8}>
+            <p>Balance: {balance !== null ? `$${balance}` : "Loading balance..."}</p>
+            {error && <p style={{ color: "red" }}>{error}</p>}
+          </Grid>
+          <Grid item xs={12} lg={8}>
+            <MonthlyEarnings title="Chequings" balance={5142} />
+            <MonthlyEarnings title="Savings" balance={40321} />
+          </Grid>
+        </Box>
+      )}
+    </PageContainer>
   );
-};
-
+}  
 export default UserProfile;

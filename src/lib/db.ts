@@ -11,23 +11,23 @@ const pool = mysql.createPool({
   queueLimit: 0,
 });
 
-// Define the User interface with optional bank account fields
+// Define the User interface with only essential fields
 export interface User {
   id: number;
   email: string;
   name: string;
   role: string;
-  password: string;
+  password: string; // Add the password field here for authentication
 }
 
-// Updated function to get a user by email including bank account data
+// Updated function to get a user by email (simplified to return basic info)
+// Updated function to get a user by email including password
 export const getUserByEmail = async (email: string): Promise<User | null> => {
   try {
     const [rows] = await pool.execute<mysql.RowDataPacket[]>(`
-      SELECT users.*, bank_accounts.account_number, bank_accounts.id AS bank_accounts_id
+      SELECT id, email, name, role, password
       FROM users
-      LEFT JOIN bank_accounts ON users.id = bank_accounts.user_id
-      WHERE users.email = ?`, [email]);
+      WHERE email = ?`, [email]);
 
     if (rows.length > 0) {
       const user = {
@@ -35,23 +35,17 @@ export const getUserByEmail = async (email: string): Promise<User | null> => {
         email: rows[0].email,
         name: rows[0].name,
         role: rows[0].role,
-        password: rows[0].password,
-        bankAccounts: rows.map(row => ({
-          account_number: row.account_number,
-          bank_accounts_id: row.bank_accounts_id
-        }))
+        password: rows[0].password, // Include password for authentication
       };
-      
       return user;
     }
 
-    return null; // If no user found
+    return null;
   } catch (error) {
     console.error('Error fetching user by email:', error);
     throw new Error('Error fetching user by email');
   }
 };
-
 
 // Function to get a user by account number (already updated)
 export const getUserByAccountNumber = async (account_number: string): Promise<User | null> => {
@@ -72,5 +66,6 @@ export const getUserByAccountNumber = async (account_number: string): Promise<Us
     throw new Error('Error fetching user by account number');
   }
 };
+
 
 export default pool;

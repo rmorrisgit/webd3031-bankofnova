@@ -6,6 +6,7 @@ export interface CustomSession extends Omit<Session, "user"> {
     id: string;
     email: string | null;
     role: string;
+    name: string | null;
   };
   expires: string;
 }

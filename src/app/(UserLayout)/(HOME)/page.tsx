@@ -2,7 +2,7 @@
 import { Grid, Box } from '@mui/material';
 import PageContainer from '../components/container/PageContainer';
 // components
-import MonthlyEarnings from '../components/dashboard/MonthlyEarnings';
+import MonthlyEarnings from '../components/overiew/MonthlyEarnings';
 
 
 const defaultHome = () => {

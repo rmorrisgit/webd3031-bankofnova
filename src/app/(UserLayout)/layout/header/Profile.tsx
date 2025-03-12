@@ -10,8 +10,8 @@ import {
   ListItemIcon,
   ListItemText,
 } from "@mui/material";
-
 import { IconListCheck, IconMail, IconUser } from "@tabler/icons-react";
+import { signOut } from "next-auth/react"; // Import signOut from next-auth
 
 const Profile = () => {
   const [anchorEl2, setAnchorEl2] = useState(null);
@@ -20,6 +20,13 @@ const Profile = () => {
   };
   const handleClose2 = () => {
     setAnchorEl2(null);
+  };
+
+  // Handle logout functionality
+  const handleLogout = async () => {
+    await signOut({ redirect: false }); // Log out without redirecting
+    // Optionally, you can redirect to a specific page after logout, e.g., the login page
+    window.location.href = '/login'; // Redirect to the login page manually
   };
 
   return (
@@ -83,10 +90,9 @@ const Profile = () => {
         </MenuItem>
         <Box mt={1} py={1} px={2}>
           <Button
-            href=""
             variant="outlined"
             color="primary"
-            component={Link}
+            onClick={handleLogout} // Trigger logout when clicked
             fullWidth
           >
             Logout

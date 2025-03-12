@@ -4,7 +4,7 @@ import { useMediaQuery, Box, Drawer } from '@mui/material';
 import { useSession } from 'next-auth/react';
 import { usePathname } from 'next/navigation'; // ✅ Correct way to get the current path
 import SidebarItems from './SidebarItems';
-import { Upgrade } from './Updrade';
+import { Profile } from './SidebarProfile';
 import { Sidebar, Logo } from 'react-mui-sidebar';
 
 interface ItemType {
@@ -56,7 +56,7 @@ const MSidebar = ({
               <Logo img="/images/logos/dark-logo.svg" />
               <Box>
                 <SidebarItems />
-                <Upgrade />
+                <Profile />
               </Box>
             </Sidebar>
           </Box>
@@ -77,7 +77,8 @@ const MSidebar = ({
         <Sidebar width="270px" collapsewidth="80px" isCollapse={false} mode="light" direction="ltr" themeColor="#5d87ff" themeSecondaryColor="#49beff" showProfile={false}>
           <Logo img="/images/logos/dark-logo.svg" />
           <SidebarItems />
-          <Upgrade />
+          <Profile />
+          {/* <Upgrade /> */}
         </Sidebar>
       </Box>
     </Drawer>
