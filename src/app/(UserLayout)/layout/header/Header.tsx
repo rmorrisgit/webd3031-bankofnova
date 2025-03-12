@@ -83,17 +83,19 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
 
         <Box flexGrow={1} />
         <Stack spacing={1} direction="row" alignItems="center">
-          {!session ? (
-            <Button variant="contained" component={Link} href="/login" color="primary">
-              Login
-            </Button>
-          ) : (
+        {!session ? (
+          <Button variant="contained" component={Link} href="/login" color="primary">
+            Login
+          </Button>
+        ) : (
+          <>
             <Button variant="contained" onClick={handleLogout} color="secondary">
               Logout
             </Button>
-          )}
-          <Profile />
-        </Stack>
+            <Profile /> {/* Only visible when the user is logged in */}
+          </>
+        )}
+      </Stack>
       </ToolbarStyled>
     </AppBarStyled>
   );
