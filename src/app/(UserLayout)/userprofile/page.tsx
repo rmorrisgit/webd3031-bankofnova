@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { fetchUserBalance } from "../../api/user";
-import MonthlyEarnings from "../components/overiew/MonthlyEarnings";
+import MonthlyEarnings from "../components/overview/MonthlyEarnings";
 
 const UserProfile = () => {
   const { data: session, status } = useSession();

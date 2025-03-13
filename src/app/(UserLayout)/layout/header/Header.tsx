@@ -1,12 +1,14 @@
-"use client"; // Ensure this runs on the client side
+"use client"; // Ensure this runs only on the client side
 
 import React, { useState, useEffect } from 'react';
-import { Box, AppBar, Toolbar, styled, Stack, IconButton, Badge, Button } from '@mui/material';
+import { Box, AppBar, Toolbar, styled, Stack, IconButton, Button } from '@mui/material';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
 import { useSession, signOut } from "next-auth/react"; // Import auth functions
 import { IconMenu } from '@tabler/icons-react';
 import Profile from './Profile';
+import { usePathname } from 'next/navigation';
+import { useMediaQuery } from '@mui/material'; // Import useMediaQuery
 
 interface ItemType {
   toggleMobileSidebar: (event: React.MouseEvent<HTMLElement>) => void;
@@ -21,6 +23,24 @@ const Header = ({ toggleMobileSidebar }: ItemType) => {
 const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
   const { data: session, status } = useSession();
   const [loading, setLoading] = useState(false);
+  const [isMounted, setIsMounted] = useState(false); // Track if component is mounted
+  const [isOnAuthPages, setIsOnAuthPages] = useState(false); // Track if on auth-related pages
+  const pathname = usePathname();
+  const lgUp = useMediaQuery((theme: any) => theme.breakpoints.up('lg')); // Check for large screens (lg and up)
+
+  useEffect(() => {
+    // Set the mounted state to true after the component is mounted
+    setIsMounted(true);
+  }, []); // This will run only once after the component mounts
+
+  useEffect(() => {
+    // Set the `isOnAuthPages` state based on the pathname
+    if (pathname === '/' || pathname === '/login' || pathname === '/register') {
+      setIsOnAuthPages(true);
+    } else {
+      setIsOnAuthPages(false);
+    }
+  }, [pathname]); // Runs whenever the pathname changes
 
   useEffect(() => {
     // Reset loading state when session status changes
@@ -40,10 +60,14 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
       minHeight: '70px',
     },
   }));
-  
+
   const ToolbarStyled = styled(Toolbar)(({ theme }) => ({
     width: '100%',
     color: theme.palette.text.secondary,
+    display: 'flex',
+    justifyContent: 'center', // Center content horizontally
+    alignItems: 'center', // Center the toolbar items vertically
+    position: 'relative', // Make sure the toolbar elements don't overlap
   }));
 
   const handleLogout = async () => {
@@ -52,50 +76,61 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
     window.location.href = '/login'; // Manually trigger a page reload
   };
 
+  const handleMyAccountsClick = () => {
+    window.location.href = '/userprofile'; // Navigate to "My Accounts" page using location.href
+  };
+
+  // Only render after the component is mounted on the client
+  if (!isMounted) {
+    return null; // Return null while the component is loading on the client side
+  }
+
   return (
     <AppBarStyled position="sticky" color="default">
       <ToolbarStyled>
+        {/* Hamburger Menu for Mobile */}
         <IconButton
           color="inherit"
           aria-label="menu"
           onClick={toggleMobileSidebar}
           sx={{
             display: {
-              lg: "none",
-              xs: "inline",
+              lg: "none", // Hide on large screens
+              xs: "inline", // Show on small screens
             },
+            position: 'absolute', // Position menu icon on the left side
+            left: 10, // Distance from the left side
           }}
         >
           <IconMenu width="20" height="20" />
         </IconButton>
 
-        {/* <IconButton
-          size="large"
-          aria-label="show 11 new notifications"
-          color="inherit"
-          aria-controls="msgs-menu"
-          aria-haspopup="true"
-        >
-          <Badge variant="dot" color="primary">
-            <IconBellRinging size="21" stroke="1.5" />
-          </Badge>
-        </IconButton> */}
 
-        <Box flexGrow={1} />
-        <Stack spacing={1} direction="row" alignItems="center">
-        {!session ? (
-          <Button variant="contained" component={Link} href="/login" color="primary">
-            Login
-          </Button>
-        ) : (
-          <>
-            <Button variant="contained" onClick={handleLogout} color="secondary">
-              Logout
+
+        {/* Right side: Login/Logout, Profile, or My Accounts */}
+        <Stack spacing={1} direction="row" alignItems="center" sx={{ position: 'absolute', right: 10 }}>
+          {!session ? (
+            // Show login button if not logged in
+            <Button variant="contained" component={Link} href="/login" color="primary">
+              Login
             </Button>
-            <Profile /> {/* Only visible when the user is logged in */}
-          </>
-        )}
-      </Stack>
+          ) : (
+            <>
+              {isOnAuthPages ? (
+                // If on homepage, login, or register, show "My Accounts" instead of logout
+                <Button variant="contained" onClick={handleMyAccountsClick} color="primary">
+                  My Accounts
+                </Button>
+              ) : (
+                // Otherwise, show logout button
+                <Button variant="contained" onClick={handleLogout} color="secondary">
+                  Logout
+                </Button>
+              )}
+              <Profile /> {/* Only visible when the user is logged in */}
+            </>
+          )}
+        </Stack>
       </ToolbarStyled>
     </AppBarStyled>
   );

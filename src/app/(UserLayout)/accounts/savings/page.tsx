@@ -3,7 +3,7 @@ import { Typography, Grid, CardContent } from '@mui/material';
 import PageContainer from '../../components/container/PageContainer';
 import DashboardCard from '../../components/shared/DashboardCard';
 import BlankCard from '../../components/shared/BlankCard';
-import MonthlyEarnings from "../../components/overiew/MonthlyEarnings";
+import MonthlyEarnings from "../../components/overview/MonthlyEarnings";
 import { useEffect, useState } from "react";
 import { fetchUserBalance } from "../../../api/user"; // Assuming this function fetches the user's savings balance from the backend
 

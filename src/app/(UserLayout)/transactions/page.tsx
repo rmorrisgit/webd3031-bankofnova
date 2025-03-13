@@ -5,7 +5,7 @@ import PageContainer from '../components/container/PageContainer';
 import DashboardCard from '../components/shared/DashboardCard';
 import BlankCard from '../components/shared/BlankCard';
 import { processTransaction } from '../../api/transactions'; // Assume this API call processes the transaction
-import RecentTransactions from "../components/overiew/RecentTransactions";
+import RecentTransactions from "../components/overview/RecentTransactions";
 
 const TransactionsPage = () => {
   const [amount, setAmount] = useState('');
