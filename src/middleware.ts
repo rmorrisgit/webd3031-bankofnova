@@ -15,10 +15,11 @@ export default withAuth(
 
     // 🔹 Check role for `/dashboard` and other pages
     if (pathname.startsWith("/dashboard") || 
-        pathname.startsWith("/icons") || 
+        pathname.startsWith("/user-management") || 
         pathname.startsWith("/utilities/typography") || 
         pathname.startsWith("/sample-page") || 
-        pathname.startsWith("/utilities/shadow")) {
+        pathname.startsWith("/utilities/shadow") 
+         ){
       if (token.role !== "admin") {
         return NextResponse.redirect(new URL("/", req.url)); // Redirect non-admins to user profile
       }

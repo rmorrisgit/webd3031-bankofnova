@@ -24,19 +24,19 @@ const Menuitems = [
   },
   {
     navlabel: true,
-    subheader: "Utilities",
+    subheader: "analytics",
   },
   {
     id: uniqueId(),
-    title: "Typography",
+    title: "all-users",
     icon: IconTypography,
-    href: "/utilities/typography",
+    href: "/analytics/all-users",
   },
   {
     id: uniqueId(),
-    title: "Shadow",
+    title: "user-metrics",
     icon: IconCopy,
-    href: "/utilities/shadow",
+    href: "/analytics/user-metrics",
   },
   {
     navlabel: true,
@@ -60,15 +60,15 @@ const Menuitems = [
   },
   {
     id: uniqueId(),
-    title: "Icons",
+    title: "premium-tracking",
     icon: IconMoodHappy,
-    href: "/icons",
+    href: "/premium-tracking",
   },
   {
     id: uniqueId(),
-    title: "Sample Page",
+    title: "user-management",
     icon: IconAperture,
-    href: "/sample-page",
+    href: "/user-management",
   },
 ];
 
