@@ -40,7 +40,7 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
     } else {
       setIsOnAuthPages(false);
     }
-  }, [pathname]); // Runs whenever the pathname changes
+  }, [pathname]); // Runs whenever the pathnameachanges
 
   useEffect(() => {
     // Reset loading state when session status changes
@@ -85,19 +85,28 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
     return null; // Return null while the component is loading on the client side
   }
 
+  // Define restricted paths for the hamburger menu
+  const restrictedPaths = ['/userprofile', '/accounts/chequing', '/accounts/savings', '/transactions'];
+
+  // Check if the current pathname is a restricted path
+  const isRestrictedPath = restrictedPaths.includes(pathname);
+
+  // Check if the current page is /userprofile
+  const isUserProfilePage = ['/userprofile', '/accounts/chequing', '/accounts/savings', '/transactions'].includes(pathname);
+
   return (
     <AppBarStyled position="sticky" color="default">
       <ToolbarStyled>
         {/* Hamburger Menu for Mobile */}
+        {/* Hide on /userprofile page when lgUp, show on restricted paths or small screens */}
         <IconButton
           color="inherit"
           aria-label="menu"
           onClick={toggleMobileSidebar}
           sx={{
-            display: {
-              lg: "none", // Hide on large screens
-              xs: "inline", // Show on small screens
-            },
+            display: 
+              (isUserProfilePage && lgUp) ? "none" : 
+              (isRestrictedPath || !lgUp) ? "inline" : "inline", // Combining both conditions
             position: 'absolute', // Position menu icon on the left side
             left: 10, // Distance from the left side
           }}
@@ -105,15 +114,17 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
           <IconMenu width="20" height="20" />
         </IconButton>
 
-
-
         {/* Right side: Login/Logout, Profile, or My Accounts */}
         <Stack spacing={1} direction="row" alignItems="center" sx={{ position: 'absolute', right: 10 }}>
           {!session ? (
-            // Show login button if not logged in
-            <Button variant="contained" component={Link} href="/login" color="primary">
-              Login
+            <Box sx={{ paddingTop: 2 }}>
+              <Button variant="contained" component={Link} href="/login" color="primary" sx={{ marginBottom: 2, marginRight: 2 }}>
+                Login
+              </Button>
+              <Button variant="contained" component={Link} href="/register" color="primary" sx={{ marginBottom: 2 }}>
+              Register
             </Button>
+          </Box>
           ) : (
             <>
               {isOnAuthPages ? (

@@ -9,21 +9,23 @@ import Link from 'next/link'; // Import Link from Next.js
 interface MonthlyEarningsProps {
   title: string;
   balance: number;
-  link: string; // Add a `link` prop to pass the target route
+  link: string;
+  color?: string; // Optional prop for color
 }
 
-const MonthlyEarnings = ({ title, balance, link }: MonthlyEarningsProps) => {
+const MonthlyEarnings = ({ title, balance, link, color }: MonthlyEarningsProps) => {
   // chart color
   const theme = useTheme();
-  const secondary = theme.palette.secondary.main;
+  // const secondary = theme.palette.secondary.main;
+  const secondary = color || theme.palette.secondary.main; // Use prop if provided
   const secondarylight = '#f5fcff';
-
+  
   // chart
   const optionscolumnchart: any = {
     chart: {
       type: 'area',
       fontFamily: "'Plus Jakarta Sans', sans-serif;",
-      foreColor: '#adb0bb',
+      foreColor: '#adb0bb',   
       toolbar: {
         show: false,
       },

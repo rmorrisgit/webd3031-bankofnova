@@ -16,7 +16,7 @@ export const Profile = () => {
     >
       <Box>
         <Typography variant="h5" fontSize="16px" mb={1}>
-          {session ? `Welcome, ${userName}!` : "Haven't an account?"}
+          {session ? `${userName}.` : "Haven't an account?"}
         </Typography>
         {!session ? (
           <Button
