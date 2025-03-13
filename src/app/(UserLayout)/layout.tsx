@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import Header from "./layout/header/Header";
 import Sidebar from "./layout/sidebar/Sidebar";
 
-
 const MainWrapper = styled("div")(() => ({
   display: "flex",
   minHeight: "100vh",
@@ -14,7 +13,6 @@ const MainWrapper = styled("div")(() => ({
 const PageWrapper = styled("div")(() => ({
   display: "flex",
   flexGrow: 1,
-  paddingBottom: "60px",
   flexDirection: "column",
   zIndex: 1,
   backgroundColor: "transparent",
@@ -24,15 +22,15 @@ interface Props {
   children: React.ReactNode;
 }
 
-
-
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   const [isSidebarOpen, setSidebarOpen] = useState(true);
   const [isMobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+
+  // Function to toggle the mobile sidebar
+  const onMobileSidebarToggle = () => {
+    setMobileSidebarOpen(!isMobileSidebarOpen);
+  };
+
   return (
     <MainWrapper className="mainwrapper">
       {/* ------------------------------------------- */}
@@ -42,6 +40,7 @@ export default function RootLayout({
         isSidebarOpen={isSidebarOpen}
         isMobileSidebarOpen={isMobileSidebarOpen}
         onSidebarClose={() => setMobileSidebarOpen(false)}
+        onMobileSidebarToggle={onMobileSidebarToggle} // Passing the toggle function here
       />
       {/* ------------------------------------------- */}
       {/* Main Wrapper */}
@@ -50,7 +49,7 @@ export default function RootLayout({
         {/* ------------------------------------------- */}
         {/* Header */}
         {/* ------------------------------------------- */}
-        <Header toggleMobileSidebar={() => setMobileSidebarOpen(true)} />
+        <Header toggleMobileSidebar={onMobileSidebarToggle} />
         {/* ------------------------------------------- */}
         {/* PageContent */}
         {/* ------------------------------------------- */}

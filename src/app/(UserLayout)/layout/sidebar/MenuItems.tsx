@@ -1,11 +1,9 @@
 import {
-  IconAperture,
-  IconCopy,
-  IconLayoutDashboard,
-  IconLogin,
-  IconMoodHappy,
-  IconTypography,
-  IconUserPlus,
+  IconHome,
+  IconCurrencyDollar,
+  IconBuildingBank, // Alternative to IconBank
+  IconTransfer,
+  IconWallet, // Alternative to IconPiggyBank
 } from "@tabler/icons-react";
 
 import { uniqueId } from "lodash";
@@ -13,62 +11,39 @@ import { uniqueId } from "lodash";
 const Menuitems = [
   {
     navlabel: true,
-    subheader: "Home",
+    subheader: "Overview",
   },
-
   {
     id: uniqueId(),
-    title: "Dashboard",
-    icon: IconLayoutDashboard,
-    href: "/",
+    title: "Overview",
+    icon: IconHome,
+    href: "/userprofile",
   },
   {
     navlabel: true,
-    subheader: "Utilities",
+    subheader: "Accounts",
   },
   {
     id: uniqueId(),
-    title: "Typography",
-    icon: IconTypography,
-    href: "/utilities/typography",
+    title: "Chequing",
+    icon: IconCurrencyDollar,
+    href: "/accounts/chequing",
   },
   {
     id: uniqueId(),
-    title: "Shadow",
-    icon: IconCopy,
-    href: "/utilities/shadow",
+    title: "Savings",
+    icon: IconWallet,
+    href: "/accounts/savings",
   },
   {
     navlabel: true,
-    subheader: "Auth",
+    subheader: "Transactions",
   },
   {
     id: uniqueId(),
-    title: "Login",
-    icon: IconLogin,
-    href: "/login",
-  },
-  {
-    id: uniqueId(),
-    title: "Register",
-    icon: IconUserPlus,
-    href: "/register",
-  },
-  {
-    navlabel: true,
-    subheader: "Extra",
-  },
-  {
-    id: uniqueId(),
-    title: "Icons",
-    icon: IconMoodHappy,
-    href: "/icons",
-  },
-  {
-    id: uniqueId(),
-    title: "Sample Page",
-    icon: IconAperture,
-    href: "/sample-page",
+    title: "Transactions",
+    icon: IconTransfer,
+    href: "/transactions",
   },
 ];
 

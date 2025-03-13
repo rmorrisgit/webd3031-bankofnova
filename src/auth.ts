@@ -34,6 +34,7 @@ export const authOptions = {
             id: user.id.toString(),
             email: user.email || null,
             role: user.role,
+            name: user.name || null,  // Ensure name is either string or null
           };
         }
 
@@ -47,6 +48,7 @@ export const authOptions = {
         token.id = user.id;
         token.email = user.email || undefined;
         token.role = user.role || undefined;
+        token.name = user.name || null;
       }
       return token;
     },
@@ -55,6 +57,7 @@ export const authOptions = {
         session.user.id = token.id as string;
         session.user.email = token.email as string;
         session.user.role = token.role as string;
+        session.user.name = token.name as string | null; // Ensure name is either string or null
       }
       session.expires = token.exp?.toString() || new Date().toISOString();
       return session;

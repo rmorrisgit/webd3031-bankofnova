@@ -2,7 +2,6 @@
 import { Grid, Box } from '@mui/material';
 import PageContainer from '../components/container/PageContainer';
 // components
-import ProductPerformance from '../components/dashboard/ProductPerformance';
 
 
 const defaultHome = () => {
@@ -10,8 +9,9 @@ const defaultHome = () => {
     <PageContainer title="HOME" description="this is HOME">
      <Box>
      <Grid item xs={12} lg={8}>
-            <ProductPerformance />
-          </Grid>
+
+
+     </Grid>
      </Box>
     </PageContainer>
   )

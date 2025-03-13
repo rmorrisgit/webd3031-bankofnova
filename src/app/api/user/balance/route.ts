@@ -22,19 +22,27 @@ export async function GET(req: NextRequest) {
 
     const userId = session.user.id;
 
-    // Query the balance
-    const [account] = await pool.query<mysql.RowDataPacket[]>(
-      "SELECT balance FROM bank_accounts WHERE user_id = ?",
+    // Query balances for both chequing and savings
+    const [accounts] = await pool.query<mysql.RowDataPacket[]>(
+      `SELECT account_type, balance 
+       FROM bank_accounts 
+       WHERE user_id = ?`,
       [userId]
     );
 
-    if (!account?.length) {
-      return jsonResponse({ error: "Bank account not found" }, 404);
+    if (!accounts.length) {
+      return jsonResponse({ error: "Bank accounts not found" }, 404);
     }
 
-    return jsonResponse({ balance: account[0].balance }, 200);
+    // Format response to include both chequing and savings
+    const balances = accounts.reduce((acc, account) => {
+      acc[account.account_type] = account.balance;
+      return acc;
+    }, {} as Record<string, number>);
+
+    return jsonResponse({ balances }, 200);
   } catch (error) {
-    console.error("Error fetching balance:", error);
+    console.error("Error fetching balances:", error);
     return jsonResponse({ error: "Internal server error" }, 500);
   }
 }
