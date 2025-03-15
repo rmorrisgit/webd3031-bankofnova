@@ -17,7 +17,7 @@ const Menuitems = [
     id: uniqueId(),
     title: "Overview",
     icon: IconHome,
-    href: "/userprofile",
+    href: "/overview",
   },
   {
     navlabel: true,
@@ -44,6 +44,12 @@ const Menuitems = [
     title: "Transactions",
     icon: IconTransfer,
     href: "/transactions",
+  },
+  {
+    id: uniqueId(),
+    title: "E-Transfer",
+    icon: IconTransfer,
+    href: "/transactions/transfer",
   },
 ];
 

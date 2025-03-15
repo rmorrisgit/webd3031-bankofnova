@@ -41,7 +41,7 @@ const AuthLogin = ({ title, subtitle, subtext }: LoginProps) => {
       if (session?.user?.role === "admin") {
         router.push("/dashboard");
       } else {
-        router.push("/userprofile");
+        router.push("/overview");
       }
     }
   };

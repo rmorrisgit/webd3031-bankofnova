@@ -47,9 +47,6 @@ export const Profile = () => {
           </Tooltip>
         )}
       </Box>
-      <Box mt="-35px">
-        <Image alt="Rocket Image" src="/images/backgrounds/rocket.png" width={100} height={100} />
-      </Box>
     </Box>
   );
 };
