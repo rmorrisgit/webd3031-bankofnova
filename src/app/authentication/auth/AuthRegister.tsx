@@ -47,7 +47,7 @@ export default function RegisterForm() {
   };
 
   return (
-    <Box display="flex" justifyContent="center" alignItems="center" minHeight="50vh" bgcolor="grey.100">
+    <Box display="flex" justifyContent="center" alignItems="center" minHeight="20vh" bgcolor="grey.100">
       <Box
         component="form"
         onSubmit={handleSubmit(onSubmit)}
