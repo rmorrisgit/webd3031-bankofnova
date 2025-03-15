@@ -6,24 +6,38 @@ import BlankCard from '../../components/shared/BlankCard';
 import MonthlyEarnings from "../../components/overview/MonthlyEarnings";
 import { useEffect, useState } from "react";
 import { fetchUserBalance } from "../../../api/user"; // Assuming this function fetches the user's balance from the backend
+import RecentTransactions from "../../components/overview/RecentTransactions";
+import { useSession } from 'next-auth/react'; // Import useSession for session check
+import { useRouter } from 'next/navigation'; // Import useRouter for navigation
 
 const ChequingPage = () => {
+  const { data: session, status } = useSession();
   const [chequingBalance, setChequingBalance] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter(); // Hook for navigation
 
   useEffect(() => {
-    // Fetch the Chequing balance from API or state
-    const getBalance = async () => {
-      try {
-        const response = await fetchUserBalance(); // Assume this returns an object with chequing balance
-        setChequingBalance(response.chequing); // Set the balance to state
-      } catch (error) {
-        setError("Failed to fetch balance.");
-      }
-    };
-    
-    getBalance();
-  }, []); // Runs once when the component mounts
+    // Redirect to login page if not authenticated
+    if (status === 'unauthenticated') {
+      router.push('/login');
+    }
+  }, [status, router]);
+
+  useEffect(() => {
+    if (session) {
+      // Fetch the Chequing balance from API or state only if the user is authenticated
+      const getBalance = async () => {
+        try {
+          const response = await fetchUserBalance(); // Assume this returns an object with chequing balance
+          setChequingBalance(response.chequing); // Set the balance to state
+        } catch (error) {
+          setError("Failed to fetch balance.");
+        }
+      };
+      
+      getBalance();
+    }
+  }, [session]); // Runs when the session changes
 
   const formatBalance = (balance: number | null) => {
     if (balance === null || isNaN(Number(balance))) {
@@ -34,69 +48,36 @@ const ChequingPage = () => {
 
   return (
     <PageContainer title="Chequing" description="This is your Chequing account overview">
-      
       <Grid container spacing={3}>
         <Grid item sm={12}>
-          <DashboardCard title="Chequing Account Overview">
-            <Grid container spacing={3}>
-              {/* Typography Examples for Chequing */}
-              <Grid item sm={12}>
-                <BlankCard>
-                  <CardContent>
-                    <Typography variant="h1">Chequing Account Overview</Typography>
-                    <Typography variant="body1" color="textSecondary">
-                      Get detailed insights into your chequing account balance and transactions.
-                    </Typography>
-                  </CardContent>
-                </BlankCard>
-              </Grid>
-
-              {/* Balance Display */}
-              <Grid item sm={12}>
-                <BlankCard>
-                  <CardContent>
-                    <Typography variant="h3" fontWeight="700">Account Balance</Typography>
-                    <Typography variant="h5" color="textPrimary">
-                      {formatBalance(chequingBalance)}
-                    </Typography>
-                    {error && <Typography variant="body2" color="error">{error}</Typography>}
-                    <Typography variant="body2" color="textSecondary">
-                      Your current balance is the total available amount in your chequing account.
-                    </Typography>
-                  </CardContent>
-                </BlankCard>
-              </Grid>
-
-              {/* Recent Transactions */}
-              <Grid item sm={12}>
-                <BlankCard>
-                  <CardContent>
-                    <Typography variant="h4">Recent Transactions</Typography>
-                    <Typography variant="body2" color="textSecondary">
-                      Below are your most recent transactions in the chequing account.
-                    </Typography>
-                    <ul>
-                      <li>Deposit: +$500 (March 10, 2025)</li>
-                      <li>Transfer to Savings: -$200 (March 5, 2025)</li>
-                      <li>ATM Withdrawal: -$50 (March 3, 2025)</li>
-                    </ul>
-                  </CardContent>
-                </BlankCard>
-              </Grid>
-
-              {/* Other Information */}
-              <Grid item sm={12}>
-                <BlankCard>
-                  <CardContent>
-                    <Typography variant="h5">Account Type</Typography>
-                    <Typography variant="body1" color="textSecondary">
-                      Standard Chequing Account with no minimum balance requirement.
-                    </Typography>
-                  </CardContent>
-                </BlankCard>
-              </Grid>
+          <Grid container spacing={3}>
+            {/* Typography Examples for Chequing */}
+            <Grid item sm={12}>
+              <BlankCard>
+                <CardContent>
+                  <Typography variant="h2">Chequing</Typography>
+                  <Typography variant="body1" color="textSecondary">
+                    Chequing Account
+                  </Typography>
+                </CardContent>
+              </BlankCard>
             </Grid>
-          </DashboardCard>
+
+            {/* Balance Display */}
+            <Grid item sm={12}>
+              <BlankCard>
+                <CardContent>
+                  <Typography variant="h1" fontWeight="700">{formatBalance(chequingBalance)}</Typography>
+                  {error && <Typography variant="body2" color="error">{error}</Typography>}
+                  <Typography variant="body1" color="textSecondary">Current Balance</Typography>
+                </CardContent>
+              </BlankCard>
+            </Grid>
+
+            <Grid item sm={12}>
+              <RecentTransactions />
+            </Grid>
+          </Grid>
         </Grid>
       </Grid>
     </PageContainer>

@@ -1,11 +1,14 @@
 "use client"; 
-import { Grid, Box, Typography } from "@mui/material";
-import PageContainer from "../components/container/PageContainer";
+import { Grid, Box, Typography, CardContent } from "@mui/material";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { fetchUserBalance } from "../../api/user";
 import MonthlyEarnings from "../components/overview/MonthlyEarnings";
+import DashboardCard from '../components/shared/DashboardCard';
+import BlankCard from '../components/shared/BlankCard';
+import RecentTransactions from "../components/overview/RecentTransactions";
+import PageContainer from '../components/container/PageContainer';
 
 const UserProfile = () => {
   const { data: session, status } = useSession();
@@ -44,15 +47,34 @@ const UserProfile = () => {
         <div>Loading...</div>
       ) : session ? (
         <Box>
-          <Grid item xs={12} lg={8}>
+            <Grid container spacing={3}>
+              {/* Typography Examples for Chequing */}
+              <Grid item sm={12}>
+                <BlankCard>
+                  <CardContent>
+                    <Typography variant="h1">Accounts</Typography>
+                    {/* <Typography variant="body1" color="textSecondary">
+                      Get detailed insights into your chequing account balance and transactions.
+                    </Typography> */}
+                  </CardContent>
+                </BlankCard>
+              </Grid>
+              </Grid>
+          {/* <Grid item xs={12} lg={8}>
             <Typography variant="h6">Chequing Balance: {chequing !== null ? `$${chequing}` : "Loading..."}</Typography>
             <Typography variant="h6">Savings Balance: {savings !== null ? `$${savings}` : "Loading..."}</Typography>
             {error && <Typography style={{ color: "red" }}>{error}</Typography>}
+          </Grid> */}
+          <Grid item xs={12} lg={8}  sx={{marginBottom: 2}}>
+          
+          <MonthlyEarnings title="Chequing" balance={chequing ?? 0} link="/accounts/chequing"/>
           </Grid>
           <Grid item xs={12} lg={8}>
-          <MonthlyEarnings title="Chequings" balance={chequing ?? 0} link="/accounts/chequing" />
-          <MonthlyEarnings title="Savings" balance={savings ?? 0} link="/accounts/savings" />
+
+          <MonthlyEarnings title="Savings" balance={savings ?? 0} link="/accounts/savings" color="#ff5733" />
           </Grid>
+        
+          
         </Box>
       ) : (
         <div>You need to be logged in to view this page.</div>

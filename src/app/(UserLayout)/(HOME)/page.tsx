@@ -1,20 +1,18 @@
-'use client'
-import { Grid, Box } from '@mui/material';
+'use client';
+import { Typography } from '@mui/material';
 import PageContainer from '../components/container/PageContainer';
-// components
+import DashboardCard from '../components/shared/DashboardCard';
 
 
 const defaultHome = () => {
   return (
-    <PageContainer title="HOME" description="this is HOME">
-     <Box>
-     <Grid item xs={12} lg={8}>
-
-
-     </Grid>
-     </Box>
+    <PageContainer title="Home" description="this is Home">
+      <DashboardCard title="Home">
+        <Typography>This is a Home</Typography>
+      </DashboardCard>
     </PageContainer>
-  )
-}
+  );
+};
 
 export default defaultHome;
+

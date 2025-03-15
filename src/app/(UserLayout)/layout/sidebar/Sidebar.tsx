@@ -1,13 +1,12 @@
 "use client";
-import { useMediaQuery, Box, Drawer, IconButton } from '@mui/material';
+import { useMediaQuery, Box, Drawer } from '@mui/material';
 import { useSession } from 'next-auth/react';
 import { usePathname } from 'next/navigation';
 import SidebarItems from './SidebarItems';
 import { Profile } from './SidebarProfile';
 import { Sidebar, Logo } from 'react-mui-sidebar';
 import Link from 'next/link';
-import { IconMenu } from '@tabler/icons-react';  // Import the icon directly
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState } from 'react';
 import UnauthSidebarItems from './UnautenticatedSidebarItems'; // Corrected import
 
 interface ItemType {
@@ -47,10 +46,6 @@ const MSidebar = ({
   // Add state for client-side checks
   const [lgUp, setLgUp] = useState(false);
 
-  // Memoize menu items for optimization
-  const memoizedUnauthenticatedMenuItems = useMemo(() => UnauthSidebarItems, []);
-  const memoizedSidebarItems = useMemo(() => SidebarItems, []);
-
   // Custom scrollbar styles
   const scrollbarStyles = {
     '&::-webkit-scrollbar': { width: '7px' },
@@ -81,32 +76,38 @@ const MSidebar = ({
   // Sidebar logic for non-authenticated users
   const shouldRenderUnauthenticatedSidebar = status === 'unauthenticated';
 
-  // If not authenticated, always show hamburger menu (does not rely on excluded pages now)
-  if (lgUp && !shouldRenderAuthenticatedSidebar) {
-    return (
-      <Box sx={{ width: '270px', flexShrink: 0 }}>
-        <Drawer
-          anchor="left"
-          open={isSidebarOpen}
-          variant="permanent"
-          PaperProps={{
-            sx: { boxSizing: 'border-box', ...scrollbarStyles },
-          }}
-        >
-          <Box sx={{ height: '100%' }}>
-            <Sidebar width="270px" collapsewidth="80px" open={isSidebarOpen} themeColor="#ff5733" themeSecondaryColor="#ff8c42" showProfile={false}>
-              <LogoWithHover /> {/* Logo with hover effect */}
-              <UnauthSidebarItems />
+  // Special pages where burger should always be visible
+  const isSpecialPage = ['/', '/login', '/register'].includes(pathname);
 
-            </Sidebar>
-          </Box>
-        </Drawer>
-      </Box>
+  // Force mobile sidebar on special pages, ignoring lgUp
+  if (isSpecialPage) {
+    return (
+      <Drawer
+        anchor="left"
+        open={isMobileSidebarOpen}
+        onClose={onSidebarClose}
+        variant="temporary"
+        PaperProps={{ sx: { boxShadow: (theme) => theme.shadows[8], ...scrollbarStyles } }}
+      >
+        <Box px={2}>
+          <Sidebar width="270px" collapsewidth="80px" isCollapse={false} mode="light" direction="ltr" themeColor="#5d87ff" themeSecondaryColor="#49beff" showProfile={false}>
+            <LogoWithHover /> {/* Logo with hover effect */}
+            {shouldRenderUnauthenticatedSidebar ? (
+              <UnauthSidebarItems />
+            ) : (
+              <>
+              <Profile />
+              <SidebarItems />
+            </>
+            )}
+          </Sidebar>
+        </Box>
+      </Drawer>
     );
   }
 
-  // Render authenticated sidebar for large screens
-  if (shouldRenderAuthenticatedSidebar && lgUp) {
+  // For lgUp (large screens) rendering
+  if (lgUp) {
     return (
       <Box sx={{ width: '270px', flexShrink: 0 }}>
         <Drawer
@@ -120,10 +121,14 @@ const MSidebar = ({
           <Box sx={{ height: '100%' }}>
             <Sidebar width="270px" collapsewidth="80px" open={isSidebarOpen} themeColor="#5d87ff" themeSecondaryColor="#49beff" showProfile={false}>
               <LogoWithHover /> {/* Logo with hover effect */}
-              <Box>
-                <Profile />
-                <SidebarItems />
-              </Box>
+              {shouldRenderAuthenticatedSidebar ? (
+                <>
+                  <Profile />
+                  <SidebarItems />
+                </>
+              ) : (
+                <UnauthSidebarItems />
+              )}
             </Sidebar>
           </Box>
         </Drawer>
@@ -131,31 +136,7 @@ const MSidebar = ({
     );
   }
 
-  // Render non-authenticated sidebar for large screens
-  if (shouldRenderUnauthenticatedSidebar && lgUp) {
-    return (
-      <Box sx={{ width: '270px', flexShrink: 0 }}>
-        <Drawer
-          anchor="left"
-          open={isSidebarOpen}
-          variant="permanent"
-          PaperProps={{
-            sx: { boxSizing: 'border-box', ...scrollbarStyles },
-          }}
-        >
-          <Box sx={{ height: '100%' }}>
-            <Sidebar width="270px" collapsewidth="80px" open={isSidebarOpen} themeColor="#ff5733" themeSecondaryColor="#ff8c42" showProfile={false}>
-              <LogoWithHover /> {/* Logo with hover effect */}
-              <UnauthSidebarItems />
-
-            </Sidebar>
-          </Box>
-        </Drawer>
-      </Box>
-    );
-  }
-
-  // Sidebar logic for mobile sizes (authenticated or unauthenticated)
+  // Fallback: Return the mobile version of the sidebar for small screens
   return (
     <Drawer
       anchor="left"
@@ -168,14 +149,13 @@ const MSidebar = ({
         <Sidebar width="270px" collapsewidth="80px" isCollapse={false} mode="light" direction="ltr" themeColor="#5d87ff" themeSecondaryColor="#49beff" showProfile={false}>
           <LogoWithHover /> {/* Logo with hover effect */}
           {shouldRenderUnauthenticatedSidebar ? (
-            // Map through the items for unauthenticated users
             <UnauthSidebarItems />
-
           ) : (
-            // Render authenticated items for logged-in users
+            <>
+            <Profile />
             <SidebarItems />
+          </>
           )}
-          {shouldRenderAuthenticatedSidebar && <Profile />}
         </Sidebar>
       </Box>
     </Drawer>
