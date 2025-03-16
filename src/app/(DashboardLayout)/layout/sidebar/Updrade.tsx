@@ -1,5 +1,4 @@
 import { Box, Typography, Button } from '@mui/material';
-// import img1 from 'public/images/backgrounds/rocket.png';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -17,9 +16,6 @@ export const Upgrade = () => {
                     <Button color="primary" target="_blank" disableElevation component={Link} href="/register" variant="contained" aria-label="logout" size="small">
                         Sign Up
                     </Button>
-                </Box>
-                <Box mt="-35px" >
-                    <Image alt="Remy Sharp" src='/images/backgrounds/rocket.png' width={100} height={100} />
                 </Box>
             </>
         </Box>

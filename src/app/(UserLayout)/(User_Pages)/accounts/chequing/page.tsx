@@ -1,15 +1,14 @@
 'use client';
 import { Typography, Box, Grid, CardContent } from '@mui/material';
-import PageContainer from '../../components/container/PageContainer';
-import DashboardCard from '../../components/shared/DashboardCard';
-import BlankCard from '../../components/shared/BlankCard';
-import MonthlyEarnings from "../../components/overview/MonthlyEarnings";
+import PageContainer from '../../../components/container/PageContainer';
 import { useEffect, useState } from "react";
-import { fetchUserBalance } from "../../../api/user"; // Assuming this function fetches the user's balance from the backend
-import RecentTransactions from "../../components/overview/RecentTransactions";
+import { fetchUserBalance } from "../../../../api/user"; // Assuming this function fetches the user's balance from the backend
 import { useSession } from 'next-auth/react'; // Import useSession for session check
 import { useRouter } from 'next/navigation'; // Import useRouter for navigation
-import { dark } from '@mui/material/styles/createPalette';
+// import RecentTransactions from "../../../components/overview/RecentTransactions";
+// import ProductPerformance from '@/app/(DashboardLayout)/components/dashboard/ProductPerformance';
+import ProductPerformance from "../../../components/overview/TransactionTable";
+import RecentTransactions from "../../../components/overview/RecentTransactions";
 
 const ChequingPage = () => {
   const { data: session, status } = useSession();
@@ -53,7 +52,7 @@ const ChequingPage = () => {
 <PageContainer title="Chequing" description="This is your Chequing account overview">
   {/* Make sure the Grid container has correct props  bgcolor={"black"}*/}
   <Grid container direction="column" spacing={2}>
-    {/* Typography Examples for Chequing */}
+ 
     <Grid item xs={12}>
       <CardContent>
         <Typography variant="h2">Chequing</Typography>
@@ -72,12 +71,12 @@ const ChequingPage = () => {
       </CardContent>
     </Grid>
 
-  <Box p={5}> {/* Adds padding of 2 units around the component */}
-    <RecentTransactions />
-  </Box>
-
+    
   </Grid>
-</PageContainer>
+  <Grid>
+              <ProductPerformance />
+            </Grid>
+    </PageContainer>
 
   );
 };

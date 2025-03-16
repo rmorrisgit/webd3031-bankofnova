@@ -4,7 +4,7 @@ import { useForm, Controller } from "react-hook-form";
 import { Box, Typography, Button, TextField, MenuItem } from "@mui/material";
 import { useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { fetchUserAccounts } from "../../../../api/accounts";
+import { fetchUserAccounts } from "../../../../../api/accounts";
 
 interface Account {
   id: string;

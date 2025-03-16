@@ -5,7 +5,7 @@ import { useForm, Controller } from "react-hook-form";
 import { TextField, Button, MenuItem, Typography, Box } from "@mui/material";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import { fetchUserBalance } from "../../../api/user"; // Assuming this function is available for balance fetching
+import { fetchUserBalance } from "../../../../api/user"; // Assuming this function is available for balance fetching
 
 export default function TransferPage() {
   const { data: session, status } = useSession();
@@ -94,7 +94,7 @@ export default function TransferPage() {
   return (
     <Box sx={{ maxWidth: 500, mx: "auto", mt: 4, p: 3, borderRadius: 2, boxShadow: 2 }}>
       <Typography variant="h5" fontWeight="bold" gutterBottom>
-        Interac e-Transfer
+        e-Transfer
       </Typography>
       <Typography variant="body2" color="textSecondary" mb={2}>
         Select a contact and the account to send money from.

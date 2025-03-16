@@ -1,15 +1,15 @@
 "use client"; 
 
 import { Grid, Box, Typography, CardContent } from "@mui/material";
-import PageContainer from '../components/container/PageContainer';
+import PageContainer from '../../../components/container/PageContainer';
 // import DashboardCard from '../components/shared/DashboardCard';
 // import BlankCard from '../components/shared/BlankCard';
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-import { fetchUserBalance } from "../../api/user";
-import MonthlyEarnings from "../components/overview/MonthlyEarnings";
+import { fetchUserBalance } from "../../../../api/user";
+import MonthlyEarnings from "../../../components/overview/MonthlyEarnings";
 
 // import RecentTransactions from "../components/overview/RecentTransactions";
 
