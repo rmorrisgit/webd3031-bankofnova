@@ -2,13 +2,14 @@
 import { Typography } from '@mui/material';
 import PageContainer from '../components/container/PageContainer';
 import DashboardCard from '../components/shared/DashboardCard';
+// import Transactions from "../components/overview/TransactionTable";
 
 
 const defaultHome = () => {
   return (
     <PageContainer title="Home" description="this is Home">
       <DashboardCard title="Home">
-        <Typography>This is a Home</Typography>
+        {/* <Transactions /> */}
       </DashboardCard>
     </PageContainer>
   );

@@ -77,7 +77,7 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
   };
 
   const handleMyAccountsClick = () => {
-    window.location.href = '/userprofile'; // Navigate to "My Accounts" page using location.href
+    window.location.href = '/overview'; // Navigate to "My Accounts" page using location.href
   };
 
   // Only render after the component is mounted on the client
@@ -86,26 +86,26 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
   }
 
   // Define restricted paths for the hamburger menu
-  const restrictedPaths = ['/userprofile', '/accounts/chequing', '/accounts/savings', '/transactions'];
+  const restrictedPaths = ['/overview', '/accounts/chequing', '/accounts/savings', '/transactions'];
 
   // Check if the current pathname is a restricted path
   const isRestrictedPath = restrictedPaths.includes(pathname);
 
-  // Check if the current page is /userprofile
-  const isUserProfilePage = ['/userprofile', '/accounts/chequing', '/accounts/savings', '/transactions'].includes(pathname);
+  // Check if the current page is a user page
+  const isUserPage = ['/overview', '/transactions/transfer/confirm', '/accounts/chequing', '/accounts/savings', '/transactions', '/transactions/transfer'].includes(pathname);
 
   return (
     <AppBarStyled position="sticky" color="default">
       <ToolbarStyled>
         {/* Hamburger Menu for Mobile */}
-        {/* Hide on /userprofile page when lgUp, show on restricted paths or small screens */}
+        {/* Hide on /overview page when lgUp, show on restricted paths or small screens */}
         <IconButton
           color="inherit"
           aria-label="menu"
           onClick={toggleMobileSidebar}
           sx={{
             display: 
-              (isUserProfilePage && lgUp) ? "none" : 
+              (isUserPage && lgUp) ? "none" : 
               (isRestrictedPath || !lgUp) ? "inline" : "inline", // Combining both conditions
             position: 'absolute', // Position menu icon on the left side
             left: 10, // Distance from the left side
