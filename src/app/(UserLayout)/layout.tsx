@@ -3,6 +3,8 @@ import { styled, Container, Box } from "@mui/material";
 import React, { useState } from "react";
 import Header from "./layout/header/Header";
 import Sidebar from "./layout/sidebar/Sidebar";
+import Footer from "./footer/Footer"
+import { usePathname } from "next/navigation";
 
 const MainWrapper = styled("div")(() => ({
   display: "flex",
@@ -25,6 +27,8 @@ interface Props {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const [isSidebarOpen, setSidebarOpen] = useState(true);
   const [isMobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+  const pathname = usePathname();
+  const showFooter = ["/", "/login", "/register"].includes(pathname);
 
   // Function to toggle the mobile sidebar
   const onMobileSidebarToggle = () => {
@@ -67,6 +71,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {/* End Page */}
           {/* ------------------------------------------- */}
         </Container>
+
+
+        {showFooter && <Footer />}
+
+
       </PageWrapper>
     </MainWrapper>
   );
