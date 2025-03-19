@@ -7,8 +7,9 @@ import { useSession } from 'next-auth/react'; // Import useSession for session c
 import { useRouter } from 'next/navigation'; // Import useRouter for navigation
 // import RecentTransactions from "../../../components/overview/RecentTransactions";
 // import ProductPerformance from '@/app/(DashboardLayout)/components/dashboard/ProductPerformance';
-import ProductPerformance from "../../../components/overview/TransactionTable";
-import RecentTransactions from "../../../components/overview/RecentTransactions";
+import ProductPerformance2 from "../../../components/overview/TransactionTable";
+// import PurchaseCategories from "../../../components/overview/PurchaseCategories";
+// import Traffic from "../../../components/overview/Traffic";
 
 const ChequingPage = () => {
   const { data: session, status } = useSession();
@@ -74,8 +75,24 @@ const ChequingPage = () => {
     
   </Grid>
   <Grid>
-              <ProductPerformance />
+              <ProductPerformance2 />
             </Grid>
+            {/* <Grid>
+              <LatestOrders />
+            </Grid> */}
+    
+
+    
+            {/* <Grid>
+        <Traffic chartSeries={[63, 15, 22]} labels={['Desktop', 'Tablet', 'Phone']} sx={{ height: '100%' }} />
+      </Grid>
+
+      <Grid>
+      <PurchaseCategories 
+  chartSeries={[50, 25, 15, 10]} 
+  labels={['Groceries', 'Restaurants', 'Online Shopping', 'Transportation']} 
+/>      </Grid> */}
+
     </PageContainer>
 
   );
