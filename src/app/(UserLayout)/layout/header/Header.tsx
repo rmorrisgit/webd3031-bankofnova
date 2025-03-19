@@ -92,7 +92,7 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
   const isRestrictedPath = restrictedPaths.includes(pathname);
 
   // Check if the current page is a user page
-  const isUserPage = ['/overview', '/transactions/transfer/confirm', '/accounts/chequing', '/accounts/savings', '/transactions', '/transactions/transfer'].includes(pathname);
+  const isUserPage = ['/overview', '/transactions/transfer/confirm', '/accounts/chequing', '/accounts/savings', '/transactions', '/transactions/transfer','/transactions/deposit','/transactions/movemoney'].includes(pathname);
 
   return (
     <AppBarStyled position="sticky" color="default">

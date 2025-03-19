@@ -21,6 +21,11 @@ export interface User {
   password: string; // Add the password field here for authentication
 }
 
+
+
+
+// Function to get user accounts by userId
+// Function to get user accounts by userId
 // Function to get user accounts by userId
 export async function getUserAccountsByUserId(userId: string) {
   try {
@@ -37,6 +42,7 @@ export async function getUserAccountsByUserId(userId: string) {
     throw new Error("Failed to fetch user accounts.");
   }
 }
+
 
 // Updated function to get a user by email (simplified to return basic info)
 // Updated function to get a user by email including password
