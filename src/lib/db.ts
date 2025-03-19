@@ -1,6 +1,5 @@
 // src/lib/db.ts
-import mysql, { RowDataPacket, ResultSetHeader } from 'mysql2/promise';
-
+import mysql from 'mysql2/promise';
 
 const pool = mysql.createPool({
   host: 'localhost',
@@ -21,13 +20,8 @@ export interface User {
   password: string; // Add the password field here for authentication
 }
 
-
-
-
 // Function to get user accounts by userId
-// Function to get user accounts by userId
-// Function to get user accounts by userId
-export async function getUserAccountsByUserId(userId: string) {
+export async function getUserAccountsByUserId(userId: string): Promise<Array<{ id: string; account_number: string; account_type: string; balance: number }>> {
   try {
     const query = `
       SELECT id, account_number, account_type, balance
@@ -36,16 +30,14 @@ export async function getUserAccountsByUserId(userId: string) {
     `;
     const [rows] = await pool.execute(query, [userId]); // Using the connection pool to execute the query
 
-    return rows;
+    return rows as Array<{ id: string; account_number: string; account_type: string; balance: number }>;
   } catch (error) {
     console.error("Error fetching user accounts:", error);
     throw new Error("Failed to fetch user accounts.");
   }
 }
 
-
-// Updated function to get a user by email (simplified to return basic info)
-// Updated function to get a user by email including password
+// Function to get user accounts by email
 export const getUserByEmail = async (email: string): Promise<User | null> => {
   try {
     const [rows] = await pool.execute<mysql.RowDataPacket[]>(`
@@ -72,7 +64,7 @@ export const getUserByEmail = async (email: string): Promise<User | null> => {
 };
 
 
-// Function to get a user by account number (already updated)
+// Function to get a user by account number 
 export const getUserByAccountNumber = async (account_number: string): Promise<User | null> => {
   try {
     const [rows] = await pool.execute<mysql.RowDataPacket[]>(`
