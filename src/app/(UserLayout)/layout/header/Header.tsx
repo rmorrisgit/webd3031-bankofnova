@@ -9,6 +9,7 @@ import { IconMenu } from '@tabler/icons-react';
 import Profile from './Profile';
 import { usePathname } from 'next/navigation';
 import { useMediaQuery } from '@mui/material'; // Import useMediaQuery
+import { Logo } from 'react-mui-sidebar';
 
 interface ItemType {
   toggleMobileSidebar: (event: React.MouseEvent<HTMLElement>) => void;
@@ -40,7 +41,7 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
     } else {
       setIsOnAuthPages(false);
     }
-  }, [pathname]); // Runs whenever the pathnameachanges
+  }, [pathname]); // Runs whenever the pathname changes
 
   useEffect(() => {
     // Reset loading state when session status changes
@@ -53,7 +54,7 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
 
   const AppBarStyled = styled(AppBar)(({ theme }) => ({
     boxShadow: 'none',
-    background: theme.palette.background.paper,
+    background: session ? theme.palette.background.paper : theme.palette.background.paper  , // Change color if logged in
     justifyContent: 'center',
     backdropFilter: 'blur(4px)',
     [theme.breakpoints.up('lg')]: {
@@ -61,13 +62,15 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
     },
   }));
 
+
+  //Position
   const ToolbarStyled = styled(Toolbar)(({ theme }) => ({
     width: '100%',
     color: theme.palette.text.secondary,
     display: 'flex',
-    justifyContent: 'center', // Center content horizontally
-    alignItems: 'center', // Center the toolbar items vertically
-    position: 'relative', // Make sure the toolbar elements don't overlap
+    justifyContent: 'flex-start', // Aligns children to the left
+    alignItems: 'center', // Keeps items centered vertically
+    position: 'relative', // Ensures elements don't overlap
   }));
 
   const handleLogout = async () => {
@@ -81,8 +84,15 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
   };
 
   // Only render after the component is mounted on the client
-  if (!isMounted) {
-    return null; // Return null while the component is loading on the client side
+  if (!isMounted || status === "loading") {
+    return (
+      <AppBarStyled position="sticky" color="default">
+        <ToolbarStyled>
+          {/* Show a loading indicator or just nothing while session is loading */}
+          <Box>Loading...</Box>
+        </ToolbarStyled>
+      </AppBarStyled>
+    );
   }
 
   // Define restricted paths for the hamburger menu
@@ -92,53 +102,80 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
   const isRestrictedPath = restrictedPaths.includes(pathname);
 
   // Check if the current page is a user page
-  const isUserPage = ['/overview', '/transactions/transfer/confirm', '/accounts/chequing', '/accounts/savings', '/transactions', '/transactions/transfer','/transactions/deposit','/transactions/movemoney'].includes(pathname);
-
+  const isUserPage = ['/overview', '/transactions/transfer/confirm', '/accounts/chequing', '/accounts/savings', '/transactions', '/transactions/transfer', '/transactions/deposit', '/transactions/movemoney'].includes(pathname);
+  
+  const LogoWithHover = () => {
+    return (
+      <Link href="/" passHref>
+        <Box
+          sx={{
+            '&:hover': {
+              opacity: 0.8, // Change opacity on hover for effect
+            },
+            display: session ? "none" : "flex", // Hide logo if logged in
+            justifyContent: 'center', // Center the logo horizontally
+            alignItems: 'center', // Center the logo vertically
+            width: '100%', // Make sure it takes up full width
+          }}
+        >
+          <Logo img="/images/logos/dark-logo.svg" />
+        </Box>
+      </Link>
+    );
+  };
+  
   return (
     <AppBarStyled position="sticky" color="default">
       <ToolbarStyled>
+        {/* Wrap everything in a Box for margin on large screens */}
+        {/* Render the LogoWithHover component */}
+        <LogoWithHover />
+
         {/* Hamburger Menu for Mobile */}
         {/* Hide on /overview page when lgUp, show on restricted paths or small screens */}
-        <IconButton
-          color="inherit"
-          aria-label="menu"
-          onClick={toggleMobileSidebar}
-          sx={{
-            display: 
-              (isUserPage && lgUp) ? "none" : 
-              (isRestrictedPath || !lgUp) ? "inline" : "inline", // Combining both conditions
-            position: 'absolute', // Position menu icon on the left side
-            left: 10, // Distance from the left side
-          }}
-        >
-          <IconMenu width="20" height="20" />
-        </IconButton>
+<IconButton
+  color="inherit"
+  aria-label="menu"
+  onClick={toggleMobileSidebar}
+  sx={{
+    position: 'absolute',
+    left: session ? 10 : 'auto', // Move left if logged in
+    right: !session && isOnAuthPages ? 10 : 'auto', // Keep right if not logged in and on auth pages
+    display: (isUserPage || isOnAuthPages) && lgUp ? "none" : "block", // Hide on large screens for user pages or auth pages
+  }}
+>
+  <IconMenu width="20" height="20" />
+</IconButton>
 
         {/* Right side: Login/Logout, Profile, or My Accounts */}
-        <Stack spacing={1} direction="row" alignItems="center" sx={{ position: 'absolute', right: 10 }}>
-          {!session ? (
-            <Box sx={{ paddingTop: 2 }}>
-              <Button variant="contained" component={Link} href="/login" color="primary" sx={{ marginBottom: 2, marginRight: 2 }}>
+        {/* Stack for non-authenticated users (Login/Register) */}
+        <Stack spacing={1} direction="row" alignItems="center" sx={{ position: 'absolute', right: 50 }}>
+          {!session && (
+            <>
+              <Button variant="contained" component={Link} href="/login" color="primary">
                 Login
               </Button>
-              <Button variant="contained" component={Link} href="/register" color="primary" sx={{ marginBottom: 2 }}>
-              Register
-            </Button>
-          </Box>
-          ) : (
+              <Button variant="contained" component={Link} href="/register" color="primary">
+                Register
+              </Button>
+            </>
+          )}
+        </Stack>
+
+        {/* Separate Stack for authenticated users (My Accounts/Logout) */}
+        <Stack spacing={1} direction="row" alignItems="center" sx={{ position: 'absolute', right: 10 }}>
+          {session && (
             <>
               {isOnAuthPages ? (
-                // If on homepage, login, or register, show "My Accounts" instead of logout
                 <Button variant="contained" onClick={handleMyAccountsClick} color="primary">
                   My Accounts
                 </Button>
               ) : (
-                // Otherwise, show logout button
                 <Button variant="contained" onClick={handleLogout} color="secondary">
                   Logout
                 </Button>
               )}
-              <Profile /> {/* Only visible when the user is logged in */}
+              <Profile />
             </>
           )}
         </Stack>
