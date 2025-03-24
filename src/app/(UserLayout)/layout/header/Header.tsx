@@ -25,7 +25,8 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
   const [isMounted, setIsMounted] = useState(false); // Track if component is mounted
   const [isOnAuthPages, setIsOnAuthPages] = useState(false); // Track if on auth-related pages
   const pathname = usePathname();
-  const lgUp = useMediaQuery((theme: any) => theme.breakpoints.up("lg")); // Check for large screens (lg and up)
+  const lgUp = useMediaQuery((theme: any) => theme.breakpoints.up("lg")); 
+  const mdUp = useMediaQuery((theme: any) => theme.breakpoints.up('md'));
 
   useEffect(() => {
     // Set the mounted state to true after the component is mounted
@@ -42,9 +43,7 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
   }, [pathname]);
 
   const isOnHomePage = pathname === '/'; // Check if it's the home page
-
-
-
+  const isOnRegister = pathname === '/register'; // Check if it's the home page
 
   useEffect(() => {
     // Reset loading state when session status changes
@@ -60,7 +59,7 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
     return {
       boxShadow: "none",
       background: pathsWithBlueBackground.includes(pathname)
-        ? theme.palette.info.main
+        ? theme.palette.primary.main
         : "white", // White on homepage, blue on specified paths
       justifyContent: "center",
       backdropFilter: "blur(4px)",
@@ -69,7 +68,6 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
       },
     };
   });
-  
 
   const ToolbarStyled = styled(Toolbar)(({ theme }) => ({
     width: "100%",
@@ -139,32 +137,33 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
   // Check if the current page is a user page
   return (
     <AppBarStyled position="sticky" color="default">
-      <ToolbarStyled>
-        {/* Logo Component */}
-        <LogoWithHover />
+    <ToolbarStyled>
+      {/* LEFT SIDE*/}
 
-        {/* Hamburger Menu */}
+      {/* Logo Component */}
+      <LogoWithHover />
+      {/* Hamburger Menu */}
+      <IconButton
+        color="inherit"
+        aria-label="menu"
+        onClick={toggleMobileSidebar}
+        sx={{
+        position: "absolute",
+        left: 13,
+        display: (isUserPage) && lgUp ? "none" : "block", // Hide on large screens for user pages or auth pages
+        // display: (isUserPage || isOnAuthPages) && lgUp ? "none" : "block", // Hide on large screens for user pages or auth pages
+      }}
+      >
 
-        <IconButton
-  color="inherit"
-  aria-label="menu"
-  onClick={toggleMobileSidebar}
-  sx={{
-    position: "absolute",
-    left: session ? 10 : "auto",
-    display: (isUserPage) && lgUp ? "none" : "block", // Hide on large screens for user pages or auth pages
-    // display: (isUserPage || isOnAuthPages) && lgUp ? "none" : "block", // Hide on large screens for user pages or auth pages
+      <Box sx={{ color: isOnAuthPages ? "white" : "inherit" }}>
+        <IconMenu width="20" height="20" />
+      </Box>
 
-  }}
->
-  <Box sx={{ color: isOnAuthPages ? "white" : "inherit" }}>
-    <IconMenu width="20" height="20" />
-  </Box>
-</IconButton>
+      </IconButton>
 
-
-
+{/* RIGHT SIDE*/}
 {/* Authentication or Profile Options */}
+
 <Stack
   spacing={1}
   direction="row"
@@ -172,75 +171,84 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
   sx={{ position: "absolute", right: session ? 10 : 50 }}
 >
   {!session ? (
+  <>
+  {mdUp && (
     <>
-      {/* Hide Login and Register buttons on small screens */}
-      {lgUp && (
-        <>
+      <Box mt={2}>
+        <Stack direction="row" spacing={2}>
+          <Button
+            variant="contained"
+            component={Link}
+            href="/register"
+            color="primary"
+            size= "large"
+            disableElevation
+            sx={{
+              border: "1px solid white",
+              borderRadius: '10px' ,
+              display: isOnRegister ? "none" : "block",
+              borderColor: isOnAuthPages ? "white" : "primary.main", // Only white border on auth pages
+              color: isOnAuthPages ? "white" : "primary.main", // White text on auth pages, primary color otherwise
+              backgroundColor: isOnAuthPages ? "primary.main" : "white", // Transparent background on auth pages
+              "&:hover": {
+                backgroundColor: isOnAuthPages ? "" : "white", // Transparent background on auth pages
+              }
+            }}
+          >
+            <Typography variant="h6">
+              Register
+            </Typography>
+          </Button>
+          <Button
+            variant="contained"
+            component={Link}
+            href="/login"
+            color="primary"
+            size= "large"
 
-
-<Button
-  variant="outlined"
-  component={Link}
-  href="/register"
-  color="info"
-  disableElevation
-  sx={{
-    borderColor: isOnAuthPages ? "white" : "info.main", // Only white border on auth pages
-    color: isOnAuthPages ? "white" : "info.main", // White text on auth pages, info color otherwise
-    '&:hover': {
-      color: "white", 
-      backgroundColor: "info.main", 
-    },
-    backgroundColor: isOnAuthPages ? "transparent" : "theme.info", // Transparent background on auth pages
-  }}
->
-                Register
-</Button>
-<Button
-  variant="outlined"
-  component={Link}
-  href="/login"
-  color="info"
-  disableElevation
-  sx={{
-    borderColor: isOnAuthPages ? "white" : "info.main", // Only white border on auth pages
-    color: isOnAuthPages ? "white" : "info.main", // White text on auth pages, info color otherwise
-    '&:hover': {
-      color: "white", 
-      backgroundColor: "info.main", 
-    },
-    backgroundColor: isOnAuthPages ? "transparent" : "theme.info", // Transparent background on auth pages
-  }}
->
-                Login
-</Button>
-        </>
-      )}
-      {/* Conditionally render Profile based on lgUp */}
-      {!lgUp && <Profile />}
+            disableElevation
+            sx={{
+            borderRadius: '10px' ,
+            display: isOnRegister ? "none" : "block",
+            border: "1px solid white",
+            borderColor: isOnAuthPages ? "white" : "white", // Only white border on auth pages
+            color: isOnAuthPages ? "white" : "white", // White text on auth pages, primary color otherwise
+            backgroundColor: isOnAuthPages ? "primary.main" : "theme.primary", // Transparent background on auth pages
+            }}
+          >
+            <Typography variant="h6">
+              Login
+            </Typography>
+          </Button>
+        </Stack>
+      </Box>
     </>
-  ) : (
+    )}
+    {/* Conditionally render Profile based on lgUp */}
+    {!mdUp && <Profile />}
+    </>
+    ) : (
     <>
-{isOnAuthPages || isOnHomePage ? (
+      {isOnAuthPages || isOnHomePage ? (
         <>
-          <Button variant="outlined" onClick={handleLogout} color="info" disableElevation>
+          <Button variant="outlined" onClick={handleLogout} color="primary" disableElevation>
             Logout
           </Button>
           <Button
             variant="contained"
             onClick={handleMyAccountsClick}
-            color="info"
+            color="primary"
             disableElevation
           >
             My Accounts
           </Button>
         </>
-      ) : (
-        <Button variant="outlined" onClick={handleLogout} color="info" disableElevation>
+        ) : (
+        <Button variant="outlined" onClick={handleLogout} color="primary" disableElevation>
           Logout
         </Button>
-      )}
-     <Profile />
+        )}
+      <Profile />
     </>
   )}
 </Stack>

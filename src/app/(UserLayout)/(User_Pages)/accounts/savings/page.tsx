@@ -69,10 +69,6 @@ const SavingsPage = () => {
                 </CardContent>
             </Grid>
       </Grid>
-
-            <Grid item sm={12}>
-              <ProductPerformance />
-            </Grid>
     </PageContainer>
   );
 };

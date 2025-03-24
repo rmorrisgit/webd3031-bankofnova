@@ -5,12 +5,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { registerSchema } from "@/lib/schemas/registerSchema";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Box, Typography, Button, Stack, TextField } from "@mui/material";
-import GoogleIcon from '@mui/icons-material/Google'; // Material UI Google Icon
-import GitHubIcon from '@mui/icons-material/GitHub'; // GitHub Icon
-import { signIn } from "next-auth/react"; // Importing the signIn function
+import { Box, Typography, Button, Stack, TextField, Card, Chip, Divider } from "@mui/material";
+import GoogleIcon from "@mui/icons-material/Google";
+import GitHubIcon from "@mui/icons-material/GitHub";
+import { signIn } from "next-auth/react";
 
-// Define an interface to include subtext and subtitle props
 interface RegisterFormProps {
   subtext?: React.ReactNode;
   subtitle?: React.ReactNode;
@@ -56,30 +55,46 @@ export default function RegisterForm({ subtext, subtitle }: RegisterFormProps) {
   };
 
   return (
+
+  <Card
+    elevation={9}
+    sx={{ p: 6, zIndex: 1, width: "100%",
+        // Adding responsive styles for different breakpoints
+        "@media (max-width:600px)": {
+          p: 4, // Less padding for small screens (phones)
+          marginBottom: '25px',
+          marginLeft: "auto",
+          marginRight: "auto",
+        },
+        "@media (max-width:1044px)": {
+          p: 4, // Adjust padding for medium-sized screens (tablets)
+        },
+      }}
+    >
+    {/* Form Section */}
     <Box
       component="form"
       onSubmit={handleSubmit(onSubmit)}
-      bgcolor="white"
-      p={4}
+      display="flex"
+      flexDirection="column"
+
       width="100%"
-      sx={{
-        '@media (max-width:800px)': { p:0 }}}
     >
       <input
         type="text"
         name="fakeUsername"
-        style={{ display: 'none' }}
+        style={{ display: "none" }}
         autoComplete="username"
       />
       <input
         type="password"
         name="fakePassword"
-        style={{ display: 'none' }}
+        style={{ display: "none" }}
         autoComplete="new-password"
       />
 
-      <Typography variant="h2" fontWeight="700" mb="40px">
-        Register
+      <Typography variant="h3" fontWeight="700"  mb="33px" >
+      Register
       </Typography>
 
       {subtext && (
@@ -87,6 +102,13 @@ export default function RegisterForm({ subtext, subtitle }: RegisterFormProps) {
           {subtext}
         </Box>
       )}
+
+    <Typography variant="h3" fontWeight="700" mb="25px" >
+      Create your Username and PIN
+    </Typography>
+
+
+    <Stack spacing={2} width="100%" maxWidth="400px">
 
       {serverError && (
         <Typography color="error" textAlign="center" mb={2}>
@@ -100,124 +122,122 @@ export default function RegisterForm({ subtext, subtitle }: RegisterFormProps) {
         </Box>
       )}
 
-      {/* Name Input */}
-      <Stack spacing={2}>
-        <Typography variant="h3" fontWeight="700" mb="20px">
-          Create your Username and PIN
-        </Typography>
+      <TextField
+        label="Name"
+        fullWidth
+        {...register("name")}
+        error={!!errors.name}
+        helperText={errors.name?.message}
+        variant="outlined"
+        placeholder="Enter your name"
+        sx={{maxWidth: '320px'}}
+      />
+
+      <TextField
+        label="Password"
+        fullWidth
+        type="password"
+        {...register("password")}
+        error={!!errors.password}
+        helperText={errors.password?.message}
+        variant="outlined"
+        placeholder="Enter your password"
+        sx={{maxWidth: '320px',
+          marginBottom: '25px !important',
+          marginTop: '25px !important'
+        }}
+      />
+
+      <Typography variant="h3" fontWeight="700">
+        Enter your email address
+      </Typography>
+
+      <TextField
+  label="Email"
+  fullWidth
+  type="email"
+  {...register("email")}
+  error={!!errors.email}
+  helperText={errors.email?.message}
+  variant="outlined"
+  placeholder="Enter your email"
+  sx={{
+    marginBottom: '15px !important', // Adjust the value to your preference
+    maxWidth: '320px',
+    marginTop: '25px !important'
+
+  }}
+/>
+
+    <Button
+      color="primary"
+      variant="contained"
+      type="submit"
+      disableElevation
+      disabled={isSubmitting}
+      sx={{
+        width:"120px",
+        height: '44px',
+        marginBottom: '20px !important',
+        borderRadius: '10px' ,
+        marginTop: '6px',
+      }}
+    >
+    <Typography variant="h6">
+    {isSubmitting ? "Registering..." : "Register"}
+      </Typography>
+  </Button>
+
+    <Typography textAlign="left" color="textSecondary" variant="body2">
+      Already have an account?{" "}
+      <Typography
+        component="a"
+        href="/login"
+        sx={{
+          
+          color: "primary.main",
+          textDecoration: "none",
+          fontWeight: "bold",
+          marginLeft: '10px'
+        }}
+      >
+        Sign In
+      </Typography>
+
+    </Typography>
+  </Stack>
+</Box>
+
+<Divider sx={{ maxWidth: '406px', marginTop: '20px', display: 'flex', alignItems: 'center' }}>
+  <Typography sx={{ padding: '0 10px' }}>or</Typography>
+</Divider>
+
+    {/* Third-party Logins */}
+    <Stack direction="column" spacing={2} mt={4} width="100%" >
+      <Button
+        variant="outlined"
+        color="primary"
+        onClick={() => signIn("google")}
+        startIcon={<GoogleIcon />}
+        sx={{maxWidth: '406px'}}
+
         
-        <Box>
-          <TextField
-            label="Name"
-            fullWidth
-            {...register("name")}
-            error={!!errors.name}
-            helperText={errors.name?.message}
-            variant="outlined"
-            placeholder="Enter your name"
-            sx={{
-              width: '50%', // Default width (50% on larger screens)
-              '@media (max-width:800px)': { width: '100%' }, // Full width on small screens (sm and below)
-            }}     
-          />
-        </Box>
+      >
+        Sign up with Google
+      </Button>
 
-        {/* Password Input */}
-        <Box>
-          <TextField
-            label="Password"
-            fullWidth
-            type="password"
-            {...register("password")}
-            error={!!errors.password}
-            helperText={errors.password?.message}
-            variant="outlined"
-            placeholder="Enter your password"
-            sx={{
-              width: '50%', // Default width (50% on larger screens)
-              '@media (max-width:800px)': { width: '100%' }, // Full width on small screens (sm and below)
-            }}     
-          />
-        </Box>
+      <Button
+        variant="outlined"
+        color="primary"
+        onClick={() => signIn("github")}
+        startIcon={<GitHubIcon />}
+        sx={{maxWidth: '406px'}}
 
-        {/* Email Input */}
-        <Box>
-          <Typography variant="h3" fontWeight="700" mb="20px">
-            Enter your email address
-          </Typography>
-          <TextField
-            label="Email"
-            fullWidth
-            type="email"
-            {...register("email")}
-            error={!!errors.email}
-            helperText={errors.email?.message}
-            variant="outlined"
-            placeholder="Enter your email"
-            sx={{
-              width: '50%', // Default width (50% on larger screens)
-              '@media (max-width:800px)': { width: '100%' }, // Full width on small screens (sm and below)
-            }}     
-          />
-        </Box>
-
-        <Box mt={2}> {/* Adds spacing between the button and the link */}
-          {/* Submit Button */}
-          <Button
-            color="info"
-            variant="contained"
-            size="large"
-            type="submit"
-            disableElevation
-            disabled={isSubmitting}
-            sx={{
-              borderRadius: '16px', // Rounded corners like Chip
-              padding: '6px 16px',  // Adjust padding to make it look more like a Chip
-              textTransform: 'none' // Prevent text from being capitalized
-            }}     
-          >
-            {isSubmitting ? "Registering..." : "Register"}
-          </Button>
-
-          {/* Login Redirect */}
-          <Typography textAlign="left" color="textSecondary" variant="body2"    
-            sx={{
-              width: '50%', // Default width (50% on larger screens)
-              '@media (max-width:800px)': { width: '100%' }, // Full width on small screens (sm and below)
-            }} > Already have an account?{" "}
-            <Typography
-              component="a"
-              href="/login"
-              sx={{ 
-                color: "primary.main", textDecoration: "none", fontWeight: "bold" }}
-            >
-              Sign In
-            </Typography>
-          </Typography>
-
-          {/* Google SignUp Button */}
-          <Button
-            variant="outlined"
-            color="primary"
-            onClick={() => signIn("google")}
-            fullWidth
-            startIcon={<GoogleIcon />}
-          >
-            Sign up with Google
-          </Button>
-
-          {/* GitHub SignUp Button */}
-          <Button
-            variant="outlined"
-            color="primary"
-            onClick={() => signIn("github")}
-            fullWidth
-            startIcon={<GitHubIcon />}
-          >
-            Sign in with GitHub
-          </Button>
-        </Box>
-      </Stack>
-    </Box>
+      >
+        Sign in with GitHub
+      </Button>
+    </Stack>
+  </Card>
   );
 }
+

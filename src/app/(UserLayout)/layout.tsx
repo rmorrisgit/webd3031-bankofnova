@@ -28,7 +28,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const [isSidebarOpen, setSidebarOpen] = useState(true);
   const [isMobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const pathname = usePathname();
-  const showFooter = ["/", "/login", "/register"].includes(pathname);
+  const showFooter = ["/", "/login"].includes(pathname);
 
   // Function to toggle the mobile sidebar
   const onMobileSidebarToggle = () => {

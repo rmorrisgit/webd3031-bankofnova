@@ -1,5 +1,5 @@
 'use client';
-import { Typography, Box, Grid, CardContent } from '@mui/material';
+import { Typography, Card, Box, Grid, CardContent, Divider,Stack, Chip } from '@mui/material';
 import PageContainer from '../../../components/container/PageContainer';
 import { useEffect, useState } from "react";
 import { fetchUserBalance } from "../../../../api/user"; // Assuming this function fetches the user's balance from the backend
@@ -51,6 +51,8 @@ const ChequingPage = () => {
 
   return (
 <PageContainer title="Chequing" description="This is your Chequing account overview">
+
+
   {/* Make sure the Grid container has correct props  bgcolor={"black"}*/}
   <Grid container direction="column" spacing={2}>
  
@@ -72,13 +74,37 @@ const ChequingPage = () => {
       </CardContent>
     </Grid>
 
-    
+    <Grid item xs={12}>
+  <CardContent>
+    <Stack direction="row" spacing={1} flexWrap="wrap">
+      <Chip label="Deposit" color="primary" />
+      <Chip label="E-Transfer" color="secondary" />
+      <Chip label="Move Money" color="success" />
+    </Stack>
+  </CardContent>
+</Grid>
+
   </Grid>
   <Grid>
+    
+  <Divider />
+
   <PurchaseCategories 
   chartSeries={[50, 25, 15, 10]} 
   labels={['Groceries', 'Restaurants', 'Online Shopping', 'Transportation']} 
 />
+</Grid>
+<Grid item xs={12}>
+  <CardContent>
+    <Stack direction="row" spacing={1} flexWrap="wrap">
+      <Chip label="Groceries" color="primary" />
+      <Chip label="Restaurants" color="secondary" />
+      <Chip label="Online Shopping" color="success" />
+      <Chip label="Transportation" color="error" />
+      <Chip label="Entertainment" color="warning" />
+      {/* Add more chips as needed */}
+    </Stack>
+  </CardContent>
 </Grid>
   <Grid>
               <ProductPerformance2 />

@@ -1,12 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
-import { Box, Typography, Button, Stack, Chip } from "@mui/material";
+import { Box, Typography, Button, Stack, Chip, Card, Divider } from "@mui/material";
 import { signIn, getSession } from "next-auth/react";
 import { useRouter } from "next/navigation"; // For navigation
 import CustomTextField from "../../(DashboardLayout)/components/forms/theme-elements/CustomTextField";
 import GoogleIcon from '@mui/icons-material/Google'; // Material UI Google Icon
 import GitHubIcon from '@mui/icons-material/GitHub'; // GitHub Icon
+import Link from "next/link";
 
 interface LoginProps {
   title?: string;
@@ -68,14 +69,21 @@ const AuthLogin = ({ title, subtitle, subtext }: LoginProps) => {
   };
 
   return (
-    <>
-      {title && (
-        <Typography fontWeight="700" variant="h2" mb={1}>
-          {title}
-        </Typography>
-      )}
-
-      {subtext}
+    <Card
+    elevation={9}
+    sx={{ p: 6, zIndex: 1, width: "100%",
+        // Adding responsive styles for different breakpoints
+        "@media (max-width:600px)": {
+          p: 4, // Less padding for small screens (phones)
+          marginBottom: '25px',
+          marginLeft: "auto",
+          marginRight: "auto",
+        },
+        "@media (max-width:1044px)": {
+          p: 4, // Adjust padding for medium-sized screens (tablets)
+        },
+      }}
+    >
 
       <form onSubmit={handleLogin} autoComplete="off" // Disable autofill for the entire form
       >
@@ -95,6 +103,8 @@ const AuthLogin = ({ title, subtitle, subtext }: LoginProps) => {
           />
 
         <Stack>
+          <Typography variant="h3" fontWeight="700"  mb="33px" >Login</Typography>
+          
           <Box>
             <CustomTextField
               label="Email or Login ID"
@@ -116,6 +126,7 @@ const AuthLogin = ({ title, subtitle, subtext }: LoginProps) => {
               type="password"
               variant="outlined"
               sx={{
+                marginBottom: '15px !important', // Adjust the value to your preference
                 width: '50%', // Default width (50% on larger screens)
                 '@media (max-width:800px)': { width: '100%' }, // Full width on small screens (sm and below)
               }}              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -131,23 +142,26 @@ const AuthLogin = ({ title, subtitle, subtext }: LoginProps) => {
           )}
         </Stack>
 
-        <Box mt={2}>
+        <Box mt={3}>
           <Button
-            color="info"
+            color="primary"
             variant="contained"
             size="large"
             type="submit"
             disableElevation
             sx={{
-              borderRadius: '16px', // Rounded corners like Chip
-              padding: '6px 16px',  // Adjust padding to make it look more like a Chip
-              textTransform: 'none' // Prevent text from being capitalized
+              borderRadius: '10px' ,
+              marginTop: '6px',
+              marginBottom:  '4px',
+              height: '44px',
             }}
           >
-            Sign In
+                  <Typography variant="h6">
+                  Login
+              </Typography>
           </Button>
 
-          <Box mt={2}> {/* Adds spacing between the button and the link */}
+          <Box mt={3}> {/* Adds spacing between the button and the link */}
             <Typography
               component="a"
               href="/authentication/forgot-password"
@@ -155,6 +169,7 @@ const AuthLogin = ({ title, subtitle, subtext }: LoginProps) => {
               sx={{
                 textDecoration: 'none',
                 color: 'primary.main',
+                maxWidth: '130px',
                 display: 'block', // Ensures the link is treated as a block element, stacking it vertically
               }}
             >
@@ -162,34 +177,75 @@ const AuthLogin = ({ title, subtitle, subtext }: LoginProps) => {
             </Typography>
           </Box>
         </Box>
-
-        <Stack direction="column" spacing={2} my={2}>
-          {/* Google Login Button */}
-          <Button
-            variant="outlined"
-            color="primary"
-            onClick={() => signIn("google")}
-            fullWidth
-            startIcon={<GoogleIcon />}
-          >
-            Sign up with Google
-          </Button>
-
-          {/* GitHub SignIn Button */}
-          <Button
-            variant="outlined"
-            color="primary"
-            onClick={() => signIn("github")}
-            fullWidth
-            startIcon={<GitHubIcon />}
-          >
-            Sign in with GitHub
-          </Button>
-        </Stack>
       </form>
 
-      {subtitle}
-    </>
+      <Divider sx={{  marginTop: '20px', display: 'flex', alignItems: 'center',
+        width: '50%', // Default width (50% on larger screens)
+        '@media (max-width:800px)': { width: '100%' },
+      }}>
+        <Typography sx={{ padding: '0 10px' }}>or</Typography>
+      </Divider>
+
+
+      <Stack direction="column" spacing={2} my={2} mt={4}>
+        {/* Google Login Button */}
+        <Button
+          variant="outlined"
+          color="primary"
+          onClick={() => signIn("google")}
+          sx={{
+            width: '50%', // Default width (50% on larger screens)
+            '@media (max-width:800px)': { width: '100%' }, // Full width on small screens (sm and below)
+          }}   
+          startIcon={<GoogleIcon />}
+        >
+          Sign up with Google
+        </Button>
+
+        {/* GitHub SignIn Button */}
+        <Button
+          variant="outlined"
+          color="primary"
+          onClick={() => signIn("github")}
+          sx={{
+            width: '50%', // Default width (50% on larger screens)
+            '@media (max-width:800px)': { width: '100%' }, // Full width on small screens (sm and below)
+          }}  
+          startIcon={<GitHubIcon />}
+        >
+          Sign in with GitHub
+        </Button>
+      </Stack>
+
+      <Stack
+        direction="row"
+        spacing={1}
+        justifyContent="left"
+        mt={3}
+        sx={{
+        width: '50%', // Default width (50% on larger screens)
+        '@media (max-width:800px)': { width: '100%', justifyContent: "center" }}}
+      >
+        <Typography
+          color="textSecondary"
+          variant="h6"
+          fontWeight="500"
+        >
+          New to Bank of Nova?
+        </Typography>
+        <Typography
+          component={Link}
+          href="/register"
+          fontWeight="500"
+          sx={{
+            textDecoration: "none",
+            color: "primary.main",
+          }}
+        >
+          Create an account
+        </Typography>
+      </Stack>
+    </Card>
   );
 };
 
