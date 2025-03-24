@@ -2,9 +2,11 @@
 
 import React, { useState } from "react";
 import { Box, Typography, Button, Stack, Chip } from "@mui/material";
-import { signIn, getSession } from "next-auth/react"; 
+import { signIn, getSession } from "next-auth/react";
 import { useRouter } from "next/navigation"; // For navigation
 import CustomTextField from "../../(DashboardLayout)/components/forms/theme-elements/CustomTextField";
+import GoogleIcon from '@mui/icons-material/Google'; // Material UI Google Icon
+import GitHubIcon from '@mui/icons-material/GitHub'; // GitHub Icon
 
 interface LoginProps {
   title?: string;
@@ -128,37 +130,62 @@ const AuthLogin = ({ title, subtitle, subtext }: LoginProps) => {
             </Typography>
           )}
         </Stack>
-<Box mt={2}>
-  <Button
-    color="info"
-    variant="contained"
-    size="large"
-    type="submit"
-    disableElevation
-    sx={{
-      borderRadius: '16px', // Rounded corners like Chip
-      padding: '6px 16px',  // Adjust padding to make it look more like a Chip
-      textTransform: 'none' // Prevent text from being capitalized
-    }}
-  >
-    Sign In
-  </Button>
 
-  <Box mt={2}> {/* Adds spacing between the button and the link */}
-    <Typography
-      component="a"
-      href="/authentication/forgot-password"
-      fontWeight="500"
-      sx={{
-        textDecoration: 'none',
-        color: 'primary.main',
-        display: 'block', // Ensures the link is treated as a block element, stacking it vertically
-      }}
-    >
-      Forgot Password?
-    </Typography>
-  </Box>
-</Box>
+        <Box mt={2}>
+          <Button
+            color="info"
+            variant="contained"
+            size="large"
+            type="submit"
+            disableElevation
+            sx={{
+              borderRadius: '16px', // Rounded corners like Chip
+              padding: '6px 16px',  // Adjust padding to make it look more like a Chip
+              textTransform: 'none' // Prevent text from being capitalized
+            }}
+          >
+            Sign In
+          </Button>
+
+          <Box mt={2}> {/* Adds spacing between the button and the link */}
+            <Typography
+              component="a"
+              href="/authentication/forgot-password"
+              fontWeight="500"
+              sx={{
+                textDecoration: 'none',
+                color: 'primary.main',
+                display: 'block', // Ensures the link is treated as a block element, stacking it vertically
+              }}
+            >
+              Forgot Password?
+            </Typography>
+          </Box>
+        </Box>
+
+        <Stack direction="column" spacing={2} my={2}>
+          {/* Google Login Button */}
+          <Button
+            variant="outlined"
+            color="primary"
+            onClick={() => signIn("google")}
+            fullWidth
+            startIcon={<GoogleIcon />}
+          >
+            Sign up with Google
+          </Button>
+
+          {/* GitHub SignIn Button */}
+          <Button
+            variant="outlined"
+            color="primary"
+            onClick={() => signIn("github")}
+            fullWidth
+            startIcon={<GitHubIcon />}
+          >
+            Sign in with GitHub
+          </Button>
+        </Stack>
       </form>
 
       {subtitle}
