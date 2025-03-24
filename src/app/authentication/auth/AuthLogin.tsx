@@ -2,10 +2,11 @@
 
 import React, { useState } from "react";
 import { Box, Typography, Button, Stack } from "@mui/material";
-import { signIn, getSession } from "next-auth/react"; 
+import { signIn, getSession } from "next-auth/react";
 import { useRouter } from "next/navigation"; // For navigation
 import CustomTextField from "../../(DashboardLayout)/components/forms/theme-elements/CustomTextField";
-
+import GoogleIcon from '@mui/icons-material/Google'; // Material UI Google Icon
+import GitHubIcon from '@mui/icons-material/GitHub'; // GitHub Icon
 interface LoginProps {
   title?: string;
   subtitle?: JSX.Element | JSX.Element[];
@@ -143,6 +144,30 @@ const AuthLogin = ({ title, subtitle, subtext }: LoginProps) => {
             Sign In
           </Button>
         </Box>
+
+        <Stack direction="column" spacing={2} my={2}>
+          {/* Google Login Button */}
+          <Button
+            variant="outlined"
+            color="primary"
+            onClick={() => signIn("google")}
+            fullWidth
+            startIcon={<GoogleIcon />}
+          >
+            Sign up with Google
+          </Button>
+
+          {/* Facebook SignUp Button */}
+          <Button
+        variant="outlined"
+        color="primary"
+        onClick={() => signIn("github")}
+        fullWidth
+        startIcon={<GitHubIcon />}
+      >
+        Sign in with GitHub
+      </Button>
+        </Stack>
       </form>
 
       {subtitle}

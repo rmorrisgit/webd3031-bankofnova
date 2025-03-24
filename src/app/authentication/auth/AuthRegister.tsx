@@ -6,6 +6,9 @@ import { registerSchema } from "@/lib/schemas/registerSchema";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Box, Typography, Button, Stack, TextField } from "@mui/material";
+import GoogleIcon from '@mui/icons-material/Google'; // Material UI Google Icon
+import GitHubIcon from '@mui/icons-material/GitHub'; // GitHub Icon
+import { signIn } from "next-auth/react"; // Importing the signIn function
 
 type RegisterFormData = {
   name: string;
@@ -139,6 +142,28 @@ export default function RegisterForm() {
               Sign In
             </Typography>
           </Typography>
+
+          {/* Google SignUp Button */}
+          <Button
+            variant="outlined"
+            color="primary"
+            onClick={() => signIn("google")}
+            fullWidth
+            startIcon={<GoogleIcon />}
+          >
+            Sign up with Google
+          </Button>
+
+          {/* Facebook SignUp Button */}
+          <Button
+        variant="outlined"
+        color="primary"
+        onClick={() => signIn("github")}
+        fullWidth
+        startIcon={<GitHubIcon />}
+      >
+        Sign in with GitHub
+      </Button>
         </Stack>
       </Box>
     </Box>
