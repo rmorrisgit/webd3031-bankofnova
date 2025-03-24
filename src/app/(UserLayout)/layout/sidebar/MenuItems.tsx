@@ -51,6 +51,18 @@ const Menuitems = [
     icon: IconTransfer,
     href: "/transactions/transfer",
   },
+  {
+    id: uniqueId(),
+    title: "Deposit",
+    icon: IconTransfer,
+    href: "/transactions/deposit",
+  },
+  {
+    id: uniqueId(),
+    title: "Move Money",
+    icon: IconTransfer,
+    href: "/transactions/movemoney",
+  },
 ];
 
 export default Menuitems;

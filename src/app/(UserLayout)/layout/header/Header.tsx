@@ -1,23 +1,22 @@
 "use client"; // Ensure this runs only on the client side
 
-import React, { useState, useEffect } from 'react';
-import { Box, AppBar, Toolbar, styled, Stack, IconButton, Button } from '@mui/material';
-import PropTypes from 'prop-types';
-import Link from 'next/link';
+import React, { useState, useEffect } from "react";
+import { Box, AppBar, Toolbar, styled, Stack, IconButton, Button, Typography } from "@mui/material";
+import PropTypes from "prop-types";
+import Link from "next/link";
 import { useSession, signOut } from "next-auth/react"; // Import auth functions
-import { IconMenu } from '@tabler/icons-react';
-import Profile from './Profile';
-import { usePathname } from 'next/navigation';
-import { useMediaQuery } from '@mui/material'; // Import useMediaQuery
+import { IconMenu} from "@tabler/icons-react";
+import Profile from "./Profile";
+import { usePathname } from "next/navigation";
+import { useMediaQuery } from "@mui/material"; // Import useMediaQuery
+import { Logo } from "react-mui-sidebar";
 
 interface ItemType {
   toggleMobileSidebar: (event: React.MouseEvent<HTMLElement>) => void;
 }
 
 const Header = ({ toggleMobileSidebar }: ItemType) => {
-  return (
-    <HeaderContent toggleMobileSidebar={toggleMobileSidebar} />
-  );
+  return <HeaderContent toggleMobileSidebar={toggleMobileSidebar} />;
 };
 
 const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
@@ -26,21 +25,26 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
   const [isMounted, setIsMounted] = useState(false); // Track if component is mounted
   const [isOnAuthPages, setIsOnAuthPages] = useState(false); // Track if on auth-related pages
   const pathname = usePathname();
-  const lgUp = useMediaQuery((theme: any) => theme.breakpoints.up('lg')); // Check for large screens (lg and up)
+  const lgUp = useMediaQuery((theme: any) => theme.breakpoints.up("lg")); // Check for large screens (lg and up)
 
   useEffect(() => {
     // Set the mounted state to true after the component is mounted
     setIsMounted(true);
-  }, []); // This will run only once after the component mounts
+  }, []);
 
   useEffect(() => {
     // Set the `isOnAuthPages` state based on the pathname
-    if (pathname === '/' || pathname === '/login' || pathname === '/register') {
+    if (pathname === "/login" || pathname === "/register") {
       setIsOnAuthPages(true);
     } else {
       setIsOnAuthPages(false);
     }
-  }, [pathname]); // Runs whenever the pathnameachanges
+  }, [pathname]);
+
+  const isOnHomePage = pathname === '/'; // Check if it's the home page
+
+
+
 
   useEffect(() => {
     // Reset loading state when session status changes
@@ -50,41 +54,82 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
       setLoading(false);
     }
   }, [status]);
-
-  const AppBarStyled = styled(AppBar)(({ theme }) => ({
-    boxShadow: 'none',
-    background: theme.palette.background.paper,
-    justifyContent: 'center',
-    backdropFilter: 'blur(4px)',
-    [theme.breakpoints.up('lg')]: {
-      minHeight: '70px',
-    },
-  }));
+  const AppBarStyled = styled(AppBar)(({ theme }) => {
+    const pathsWithBlueBackground = ["/login", "/register"];
+    
+    return {
+      boxShadow: "none",
+      background: pathsWithBlueBackground.includes(pathname)
+        ? theme.palette.info.main
+        : "white", // White on homepage, blue on specified paths
+      justifyContent: "center",
+      backdropFilter: "blur(4px)",
+      [theme.breakpoints.up("lg")]: {
+        minHeight: "70px",
+      },
+    };
+  });
+  
 
   const ToolbarStyled = styled(Toolbar)(({ theme }) => ({
-    width: '100%',
+    width: "100%",
     color: theme.palette.text.secondary,
-    display: 'flex',
-    justifyContent: 'center', // Center content horizontally
-    alignItems: 'center', // Center the toolbar items vertically
-    position: 'relative', // Make sure the toolbar elements don't overlap
+    display: "flex",
+    justifyContent: "flex-start", // Aligns children to the left
+    alignItems: "center", // Keeps items centered vertically
+    position: "relative", // Ensures elements don't overlap
   }));
 
   const handleLogout = async () => {
     await signOut({ redirect: false }); // Log out without redirecting
-    // Optionally you can redirect to login page after logout
-    window.location.href = '/login'; // Manually trigger a page reload
+    window.location.href = "/login"; // Manually trigger a page reload
   };
 
   const handleMyAccountsClick = () => {
-    window.location.href = '/overview'; // Navigate to "My Accounts" page using location.href
+    window.location.href = "/overview"; // Navigate to "My Accounts" page
   };
 
-  // Only render after the component is mounted on the client
-  if (!isMounted) {
-    return null; // Return null while the component is loading on the client side
+  if (!isMounted || status === "loading") {
+    return (
+      <AppBarStyled position="sticky" color="default">
+        <ToolbarStyled>
+          {/* Show a loading indicator or just nothing while session is loading */}
+          <Box>Loading...</Box>
+        </ToolbarStyled>
+      </AppBarStyled>
+    );
   }
 
+  const isUserPage = [
+    "/overview",
+    "/transactions/transfer/confirm",
+    "/accounts/chequing",
+    "/accounts/savings",
+    "/transactions",
+    "/transactions/transfer",
+    "/transactions/deposit",
+    "/transactions/movemoney",
+  ].includes(pathname);
+
+  const LogoWithHover = () => (
+    <Link href="/" passHref>
+      <Box
+        sx={{
+          "&:hover": {
+            opacity: 0.8, // Change opacity on hover
+          },
+          display: isOnAuthPages || !session ? "flex" : "none", // Show logo on auth pages or if no session
+          alignItems: "center", // Center the logo vertically
+          width: "100%", // Make sure it takes up full width
+          marginLeft: "14px",
+        }}
+      >
+        {/* Conditionally render the logo */}
+        <Logo img={isOnAuthPages ? "/images/logos/dark-logo4.svg" : "/images/logos/dark-logo3.svg"} />
+      </Box>
+    </Link>
+  );
+  
   // Define restricted paths for the hamburger menu
   const restrictedPaths = ['/overview', '/accounts/chequing', '/accounts/savings', '/transactions'];
 
@@ -92,56 +137,114 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
   const isRestrictedPath = restrictedPaths.includes(pathname);
 
   // Check if the current page is a user page
-  const isUserPage = ['/overview', '/transactions/transfer/confirm', '/accounts/chequing', '/accounts/savings', '/transactions', '/transactions/transfer'].includes(pathname);
-
   return (
     <AppBarStyled position="sticky" color="default">
       <ToolbarStyled>
-        {/* Hamburger Menu for Mobile */}
-        {/* Hide on /overview page when lgUp, show on restricted paths or small screens */}
-        <IconButton
-          color="inherit"
-          aria-label="menu"
-          onClick={toggleMobileSidebar}
-          sx={{
-            display: 
-              (isUserPage && lgUp) ? "none" : 
-              (isRestrictedPath || !lgUp) ? "inline" : "inline", // Combining both conditions
-            position: 'absolute', // Position menu icon on the left side
-            left: 10, // Distance from the left side
-          }}
-        >
-          <IconMenu width="20" height="20" />
-        </IconButton>
+        {/* Logo Component */}
+        <LogoWithHover />
 
-        {/* Right side: Login/Logout, Profile, or My Accounts */}
-        <Stack spacing={1} direction="row" alignItems="center" sx={{ position: 'absolute', right: 10 }}>
-          {!session ? (
-            <Box sx={{ paddingTop: 2 }}>
-              <Button variant="contained" component={Link} href="/login" color="primary" sx={{ marginBottom: 2, marginRight: 2 }}>
+        {/* Hamburger Menu */}
+
+        <IconButton
+  color="inherit"
+  aria-label="menu"
+  onClick={toggleMobileSidebar}
+  sx={{
+    position: "absolute",
+    left: session ? 10 : "auto",
+    display: (isUserPage) && lgUp ? "none" : "block", // Hide on large screens for user pages or auth pages
+    // display: (isUserPage || isOnAuthPages) && lgUp ? "none" : "block", // Hide on large screens for user pages or auth pages
+
+  }}
+>
+  <Box sx={{ color: isOnAuthPages ? "white" : "inherit" }}>
+    <IconMenu width="20" height="20" />
+  </Box>
+</IconButton>
+
+
+
+{/* Authentication or Profile Options */}
+<Stack
+  spacing={1}
+  direction="row"
+  alignItems="center"
+  sx={{ position: "absolute", right: session ? 10 : 50 }}
+>
+  {!session ? (
+    <>
+      {/* Hide Login and Register buttons on small screens */}
+      {lgUp && (
+        <>
+
+
+<Button
+  variant="outlined"
+  component={Link}
+  href="/register"
+  color="info"
+  disableElevation
+  sx={{
+    borderColor: isOnAuthPages ? "white" : "info.main", // Only white border on auth pages
+    color: isOnAuthPages ? "white" : "info.main", // White text on auth pages, info color otherwise
+    '&:hover': {
+      color: "white", 
+      backgroundColor: "info.main", 
+    },
+    backgroundColor: isOnAuthPages ? "transparent" : "theme.info", // Transparent background on auth pages
+  }}
+>
+                Register
+</Button>
+<Button
+  variant="outlined"
+  component={Link}
+  href="/login"
+  color="info"
+  disableElevation
+  sx={{
+    borderColor: isOnAuthPages ? "white" : "info.main", // Only white border on auth pages
+    color: isOnAuthPages ? "white" : "info.main", // White text on auth pages, info color otherwise
+    '&:hover': {
+      color: "white", 
+      backgroundColor: "info.main", 
+    },
+    backgroundColor: isOnAuthPages ? "transparent" : "theme.info", // Transparent background on auth pages
+  }}
+>
                 Login
-              </Button>
-              <Button variant="contained" component={Link} href="/register" color="primary" sx={{ marginBottom: 2 }}>
-              Register
-            </Button>
-          </Box>
-          ) : (
-            <>
-              {isOnAuthPages ? (
-                // If on homepage, login, or register, show "My Accounts" instead of logout
-                <Button variant="contained" onClick={handleMyAccountsClick} color="primary">
-                  My Accounts
-                </Button>
-              ) : (
-                // Otherwise, show logout button
-                <Button variant="contained" onClick={handleLogout} color="secondary">
-                  Logout
-                </Button>
-              )}
-              <Profile /> {/* Only visible when the user is logged in */}
-            </>
-          )}
-        </Stack>
+</Button>
+        </>
+      )}
+      {/* Conditionally render Profile based on lgUp */}
+      {!lgUp && <Profile />}
+    </>
+  ) : (
+    <>
+{isOnAuthPages || isOnHomePage ? (
+        <>
+          <Button variant="outlined" onClick={handleLogout} color="info" disableElevation>
+            Logout
+          </Button>
+          <Button
+            variant="contained"
+            onClick={handleMyAccountsClick}
+            color="info"
+            disableElevation
+          >
+            My Accounts
+          </Button>
+        </>
+      ) : (
+        <Button variant="outlined" onClick={handleLogout} color="info" disableElevation>
+          Logout
+        </Button>
+      )}
+     <Profile />
+    </>
+  )}
+</Stack>
+
       </ToolbarStyled>
     </AppBarStyled>
   );

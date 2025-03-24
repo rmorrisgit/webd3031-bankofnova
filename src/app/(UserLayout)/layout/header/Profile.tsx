@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation"; // Import usePathname for current route detection
 import {
-  Avatar,
   Box,
   Menu,
   Button,
@@ -9,12 +9,17 @@ import {
   MenuItem,
   ListItemIcon,
   ListItemText,
+  Stack,
+  Typography
 } from "@mui/material";
 import { IconListCheck, IconMail, IconUser } from "@tabler/icons-react";
-import { signOut } from "next-auth/react"; // Import signOut from next-auth
+import { signOut, useSession } from "next-auth/react";
 
 const Profile = () => {
   const [anchorEl2, setAnchorEl2] = useState(null);
+  const { data: session } = useSession();
+  const pathname = usePathname(); // Get the current route
+
   const handleClick2 = (event: any) => {
     setAnchorEl2(event.currentTarget);
   };
@@ -22,40 +27,36 @@ const Profile = () => {
     setAnchorEl2(null);
   };
 
-  // Handle logout functionality
   const handleLogout = async () => {
-    await signOut({ redirect: false }); // Log out without redirecting
-    // Optionally, you can redirect to a specific page after logout, e.g., the login page
-    window.location.href = '/login'; // Redirect to the login page manually
+    await signOut({ redirect: false });
+    window.location.href = "/login";
   };
+
+  // Check if the current route is specifically /login or /register
+  const isAuthPage = pathname === "/login" || pathname === "/register";
 
   return (
     <Box>
       <IconButton
         size="large"
-        aria-label="show 11 new notifications"
+        aria-label="profile menu"
         color="inherit"
         aria-controls="msgs-menu"
         aria-haspopup="true"
         sx={{
-          ...(typeof anchorEl2 === "object" && {
-            color: "primary.main",
-          }),
+          ...(typeof anchorEl2 === "object" && { color: "primary.main" }),
         }}
         onClick={handleClick2}
       >
-        <Avatar
-          src="/images/profile/user-1.jpg"
-          alt="image"
-          sx={{
-            width: 35,
-            height: 35,
+        <IconUser
+          width={35}
+          style={{
+            color: isAuthPage ? "#FFFFFF" : "inherit", // White on /login and /register, default elsewhere
           }}
         />
       </IconButton>
-      {/* ------------------------------------------- */}
-      {/* Message Dropdown */}
-      {/* ------------------------------------------- */}
+
+      {/* Dropdown menu */}
       <Menu
         id="msgs-menu"
         anchorEl={anchorEl2}
@@ -70,34 +71,75 @@ const Profile = () => {
           },
         }}
       >
-        <MenuItem>
-          <ListItemIcon>
-            <IconUser width={20} />
-          </ListItemIcon>
-          <ListItemText>My Profile</ListItemText>
-        </MenuItem>
-        <MenuItem>
-          <ListItemIcon>
-            <IconMail width={20} />
-          </ListItemIcon>
-          <ListItemText>My Account</ListItemText>
-        </MenuItem>
-        <MenuItem>
-          <ListItemIcon>
-            <IconListCheck width={20} />
-          </ListItemIcon>
-          <ListItemText>My Tasks</ListItemText>
-        </MenuItem>
-        <Box mt={1} py={1} px={2}>
-          <Button
-            variant="outlined"
-            color="primary"
-            onClick={handleLogout} // Trigger logout when clicked
-            fullWidth
-          >
-            Logout
-          </Button>
-        </Box>
+        {session ? (
+          <>
+            <MenuItem>
+              <ListItemIcon>
+                <IconUser width={20} />
+              </ListItemIcon>
+              <ListItemText>My Profile</ListItemText>
+            </MenuItem>
+            <MenuItem>
+              <ListItemIcon>
+                <IconMail width={20} />
+              </ListItemIcon>
+              <ListItemText>My Account</ListItemText>
+            </MenuItem>
+            <MenuItem>
+              <ListItemIcon>
+                <IconListCheck width={20} />
+              </ListItemIcon>
+              <ListItemText>My Tasks</ListItemText>
+            </MenuItem>
+            <Box mt={1} py={1} px={2}>
+              <Button
+                variant="outlined"
+                color="primary"
+                onClick={handleLogout}
+                fullWidth
+              >
+                Logout
+              </Button>
+            </Box>
+          </>
+        ) : (
+          <Box mt={2}>
+            <Stack direction="row" spacing={2} justifyContent="center">
+             
+            <Button
+                variant="outlined"
+                component={Link}
+                href="/register"
+                color="info"
+                size= "large"
+                disableElevation
+                sx={{
+                  backgroundColor: "white",
+                  color: "info.main",
+                  "&:hover": {
+                    backgroundColor: "info.main",
+                    borderColor: "info.main",
+                    color: "white",
+                  },
+                }}
+              >
+                Register
+              </Button>
+             
+              <Button
+                variant="contained"
+                component={Link}
+                size= "large"
+                href="/login"
+                color="info"
+                disableElevation
+              >
+                Login
+              </Button>
+
+            </Stack>
+          </Box>
+        )}
       </Menu>
     </Box>
   );

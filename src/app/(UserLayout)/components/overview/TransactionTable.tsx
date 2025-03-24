@@ -6,9 +6,13 @@ import {
     TableCell,
     TableHead,
     TableRow,
-    Chip
+    CardHeader,
+    Chip,
+    Divider,
+    CardActions,
+    Button
 } from '@mui/material';
-import DashboardCard from '../shared/DashboardCard';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 const products = [
     {
@@ -17,8 +21,8 @@ const products = [
         date: "March 14",
         // priority: "Low",
         // pbg: "primary.main",
-        amount: "2.4",
-        balance: "3.9",
+        amount: "2.42",
+        balance: "3.99",
     },
     {
         description: "e-Transfer From: JOHN DOE",
@@ -27,7 +31,7 @@ const products = [
         // priority: "Medium",
         // pbg: "secondary.main",
         amount: "2.99",
-        balance: "24100.52",
+        balance: "200890.52",
     },
     {
         description: "Purchase",
@@ -35,8 +39,8 @@ const products = [
         date: "March 14",
         // priority: "High",
         // pbg: "error.main",
-        amount: "2.4",
-        balance: "12.8",
+        amount: "2.99",
+        balance: "12.81",
     },
     {
         description: "Purchase",
@@ -44,120 +48,118 @@ const products = [
         date: "March 14",
         // priority: "Critical",
         // pbg: "success.main",
-        amount: "2.4",
-        balance: "2.4",
+        amount: "2.40",
+        balance: "2.40",
     },
 ];
 
 
-const ProductPerformance = () => {
+const ProductPerformance2 = () => {
     return (
 
-        <DashboardCard title="Transaction Breakdown">
-            <Box sx={{ overflow: 'auto'}}>
-                <Table
-                    aria-label="simple table"
-                    sx={{
-                        whiteSpace: "nowrap",
-                        mt: 2
-                    }}
-                >
-                    <TableHead>
-                        <TableRow>
-                        <TableCell>
-                                <Typography variant="subtitle2" fontWeight={600}>
-                                    Date
-                                </Typography>
-                            </TableCell>
-                            <TableCell>
-                                <Typography variant="subtitle2" fontWeight={600}>
-                                    Description
-                                </Typography>
-                            </TableCell>
-                      
-                            {/* <TableCell>
-                                <Typography variant="subtitle2" fontWeight={600}>
-                                    Priority
-                                </Typography>
-                            </TableCell> */}
-                                  <TableCell align="right">
-                                <Typography variant="subtitle2" fontWeight={600}>
-                                    Amount
-                                </Typography>
-                            </TableCell>
-                            <TableCell align="right">
-                                <Typography variant="subtitle2" fontWeight={600}>
-                                    Balance
-                                </Typography>
-                            </TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {products.map((product) => (
-                            <TableRow key={product.date}>
-                        
-                                <TableCell>
-                                    <Typography color="textSecondary" variant="subtitle2" fontWeight={400}>
-                                        {product.date}
-                                    </Typography>
-                                </TableCell>
-                                <TableCell>
-    <Box
-                 sx={(theme) => ({
-                    // backgroundColor: 'black', 
-                    maxWidth: '520px',  // Smaller max width for small screens
-                    overflow: 'hidden',  // Hide overflowed text
-                    textOverflow: 'ellipsis',  // Display ellipsis when text overflows
-                    whiteSpace: 'nowrap',  // Prevent text from wrapping
-                    [theme.breakpoints.down('md')]: {
-                        maxWidth: '150px',  // Apply maxWidth on smaller screens
-                    },
-                    [theme.breakpoints.down('sm')]: {
-                        width: '112px'
-                    },
-                })}
-    >
-        <Box>
-            <Typography variant="subtitle2" fontWeight={600}>
-                {product.description}
-            </Typography>
-            <Typography
-                color="textSecondary"
-                sx={{
-                    fontSize: "13px",
-                }}
+    <Box>
+              <CardHeader title="Latest Transactions" />
+              <Divider />
+        <Table
+            aria-label="simple table"
+            sx={(theme) => ({
+            whiteSpace: "nowrap",
+            mt: 2,
+            })}
+        >
+        <TableHead>
+            <TableRow>
+            <TableCell>
+                    <Typography variant="subtitle2" fontWeight={600}>
+                        Date
+                    </Typography>
+                </TableCell>
+                <TableCell>
+                    <Typography variant="subtitle2" fontWeight={600}>
+                        Description
+                    </Typography>
+                </TableCell>
+        
+                {/* <TableCell>
+                    <Typography variant="subtitle2" fontWeight={600}>
+                        Priority
+                    </Typography>
+                </TableCell> */}
+                    <TableCell align="right">
+                    <Typography variant="subtitle2" fontWeight={600}>
+                        Amount
+                    </Typography>
+                </TableCell>
+                <TableCell align="right">
+                    <Typography variant="subtitle2" fontWeight={600}>
+                        Balance
+                    </Typography>
+                </TableCell>
+            </TableRow>
+        </TableHead>
+        <TableBody>
+            {products.map((product) => (
+                <TableRow hover key={product.date}>
+            
+                    <TableCell>
+                        <Typography color="textSecondary" variant="subtitle2" fontWeight={400}>
+                            {product.date}
+                        </Typography>
+                    </TableCell>
+                    <TableCell>
+                    <Box
+                        sx={(theme) => ({
+                            maxWidth: '350px', // Reduce from 520px to 350px for better fit
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                            [theme.breakpoints.down('md')]: {
+                            maxWidth: '200px', // Reduce further for medium screens
+                            },
+                            [theme.breakpoints.down('sm')]: {
+                            maxWidth: '125px',
+                            },
+                        })}
+                        >
+                        <Box>
+                            <Typography variant="subtitle2" fontWeight={600}>
+                                {product.description}
+                            </Typography>
+                            <Typography
+                                color="textSecondary"
+                                sx={{
+                                    fontSize: "13px",
+                                }}
+                            >
+                                {product.post}
+                            </Typography>
+                        </Box>
+                        </Box>
+                </TableCell>
+                <TableCell align="right">
+                    <Typography variant="h6">${product.amount}</Typography>
+                </TableCell>
+                <TableCell align="right">
+                    <Typography variant="h6">${product.balance}</Typography>
+                </TableCell>
+            </TableRow>
+            ))}
+        </TableBody>
+    </Table>
+          <Divider />
+          <CardActions sx={{ justifyContent: 'flex-end' }}>
+            <Button
+              color="inherit"
+              endIcon={<ArrowForwardIosIcon fontSize="small" />}
+              size="small"
+              variant="text"
             >
-                {product.post}
-            </Typography>
-        </Box>
-    </Box>
-</TableCell>
+              View all
+            </Button>
+          </CardActions>
+</Box>
 
-                                {/* <TableCell>
-                                    <Chip
-                                        sx={{
-                                            px: "4px",
-                                            backgroundColor: product.pbg,
-                                            color: "#fff",
-                                        }}
-                                        size="small"
-                                        label={product.priority}
-                                    ></Chip>
-                                </TableCell> */}
-
-                                <TableCell align="right">
-                                    <Typography variant="h6">${product.amount}</Typography>
-                                </TableCell>
-                                <TableCell align="right">
-                                    <Typography variant="h6">${product.balance}</Typography>
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </Box>
-        </DashboardCard>
     );
 };
 
-export default ProductPerformance;
+export default ProductPerformance2;

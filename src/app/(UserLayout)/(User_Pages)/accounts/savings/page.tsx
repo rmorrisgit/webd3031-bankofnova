@@ -48,19 +48,17 @@ const SavingsPage = () => {
 
   return (
     <PageContainer title="Savings" description="This is your Savings account overview">
-      <Grid container spacing={3}>
-        <Grid item sm={12}>
-          <Grid container spacing={3}>
-            {/* Typography Examples for Savings */}
-            <Grid item sm={12}>
-                <CardContent>
-                  <Typography variant="h2">Savings</Typography>
-                  <Typography variant="body1" color="textSecondary">
-                    Savings Account
-                  </Typography>
-                </CardContent>
-            </Grid>
-            
+      {/* Make sure the Grid container has correct props  bgcolor={"black"}*/}
+      <Grid container direction="column" spacing={2}>
+     
+        <Grid item xs={12}>
+          <CardContent>
+            <Typography variant="h2">Savings</Typography>
+            <Typography variant="body1" color="textSecondary">
+              Chequing Account
+            </Typography>
+          </CardContent>
+        </Grid>
             {/* Savings Balance Display */}
         {/* Balance Display */}
         <Grid item sm={12}>
@@ -70,16 +68,11 @@ const SavingsPage = () => {
                   <Typography variant="body1" color="textSecondary">Current Balance</Typography>
                 </CardContent>
             </Grid>
+      </Grid>
 
-            <Grid item sm={12}>
-              <RecentTransactions />
-            </Grid>
             <Grid item sm={12}>
               <ProductPerformance />
             </Grid>
-          </Grid>
-        </Grid>
-      </Grid>
     </PageContainer>
   );
 };

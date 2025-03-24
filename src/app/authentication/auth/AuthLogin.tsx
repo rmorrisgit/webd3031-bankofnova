@@ -1,12 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
-import { Box, Typography, Button, Stack } from "@mui/material";
+import { Box, Typography, Button, Stack, Chip } from "@mui/material";
 import { signIn, getSession } from "next-auth/react";
 import { useRouter } from "next/navigation"; // For navigation
 import CustomTextField from "../../(DashboardLayout)/components/forms/theme-elements/CustomTextField";
 import GoogleIcon from '@mui/icons-material/Google'; // Material UI Google Icon
 import GitHubIcon from '@mui/icons-material/GitHub'; // GitHub Icon
+
 interface LoginProps {
   title?: string;
   subtitle?: JSX.Element | JSX.Element[];
@@ -76,23 +77,33 @@ const AuthLogin = ({ title, subtitle, subtext }: LoginProps) => {
 
       {subtext}
 
-      <form onSubmit={handleLogin}>
+      <form onSubmit={handleLogin} autoComplete="off" // Disable autofill for the entire form
+      >
+          {/* Hidden Dummy Inputs to Trick Browsers for Autofill Prevention */}
+          {/* Some browsers ignore autoComplete="off", so adding dummy fields can help */}
+          <input
+            type="text"
+            name="fakeUsername"
+            style={{ display: 'none' }}
+            autoComplete="username"
+          />
+          <input
+            type="password"
+            name="fakePassword"
+            style={{ display: 'none' }}
+            autoComplete="new-password"
+          />
+
         <Stack>
           <Box>
-            <Typography
-              variant="subtitle1"
-              fontWeight={600}
-              component="label"
-              htmlFor="email"
-              mb="5px"
-            >
-              Email or Account Number
-            </Typography>
             <CustomTextField
+              label="Email or Login ID"
+              type="login"
               variant="outlined"
-              fullWidth
-              value={identifier}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              sx={{
+                width: '50%', // Default width (50% on larger screens)
+                '@media (max-width:800px)': { width: '100%' }, // Full width on small screens (sm and below)
+              }}              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setIdentifier(e.target.value)
               }
               error={!!identifierError} // Apply error styling if validation fails
@@ -100,49 +111,56 @@ const AuthLogin = ({ title, subtitle, subtext }: LoginProps) => {
             />
           </Box>
           <Box mt="25px">
-            <Typography
-              variant="subtitle1"
-              fontWeight={600}
-              component="label"
-              htmlFor="password"
-              mb="5px"
-            >
-              Password or PIN
-            </Typography>
-
             <CustomTextField
+              label="Password"
               type="password"
               variant="outlined"
-              fullWidth
-              value={password}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              sx={{
+                width: '50%', // Default width (50% on larger screens)
+                '@media (max-width:800px)': { width: '100%' }, // Full width on small screens (sm and below)
+              }}              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setPassword(e.target.value)
               }
             />
           </Box>
 
           {error && (
-            <Typography color="error" mt={2} textAlign="center">
+            <Typography color="error" mt={2} textAlign="left">
               {error}
             </Typography>
           )}
+        </Stack>
 
-          <Stack justifyContent="space-between" direction="row" alignItems="center" my={2}>
+        <Box mt={2}>
+          <Button
+            color="info"
+            variant="contained"
+            size="large"
+            type="submit"
+            disableElevation
+            sx={{
+              borderRadius: '16px', // Rounded corners like Chip
+              padding: '6px 16px',  // Adjust padding to make it look more like a Chip
+              textTransform: 'none' // Prevent text from being capitalized
+            }}
+          >
+            Sign In
+          </Button>
+
+          <Box mt={2}> {/* Adds spacing between the button and the link */}
             <Typography
               component="a"
               href="/authentication/forgot-password"
               fontWeight="500"
-              sx={{ textDecoration: "none", color: "primary.main" }}
+              sx={{
+                textDecoration: 'none',
+                color: 'primary.main',
+                display: 'block', // Ensures the link is treated as a block element, stacking it vertically
+              }}
             >
               Forgot Password?
             </Typography>
-          </Stack>
-        </Stack>
-
-        <Box>
-          <Button color="primary" variant="contained" size="large" fullWidth type="submit">
-            Sign In
-          </Button>
+          </Box>
         </Box>
 
         <Stack direction="column" spacing={2} my={2}>
@@ -157,16 +175,16 @@ const AuthLogin = ({ title, subtitle, subtext }: LoginProps) => {
             Sign up with Google
           </Button>
 
-          {/* Facebook SignUp Button */}
+          {/* GitHub SignIn Button */}
           <Button
-        variant="outlined"
-        color="primary"
-        onClick={() => signIn("github")}
-        fullWidth
-        startIcon={<GitHubIcon />}
-      >
-        Sign in with GitHub
-      </Button>
+            variant="outlined"
+            color="primary"
+            onClick={() => signIn("github")}
+            fullWidth
+            startIcon={<GitHubIcon />}
+          >
+            Sign in with GitHub
+          </Button>
         </Stack>
       </form>
 
