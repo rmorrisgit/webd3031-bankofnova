@@ -55,7 +55,7 @@ const ChequingPage = () => {
 
   {/* Make sure the Grid container has correct props  bgcolor={"black"}*/}
   <Grid container direction="column" spacing={2}>
- 
+
     <Grid item xs={12}>
       <CardContent>
         <Typography variant="h2">Chequing</Typography>
@@ -75,57 +75,43 @@ const ChequingPage = () => {
     </Grid>
 
     <Grid item xs={12}>
-  <CardContent>
-    <Stack direction="row" spacing={1} flexWrap="wrap">
-      <Chip label="Deposit" color="primary" />
-      <Chip label="E-Transfer" color="secondary" />
-      <Chip label="Move Money" color="success" />
-    </Stack>
-  </CardContent>
-</Grid>
+      <CardContent>
+        <Stack direction="row" spacing={1} flexWrap="wrap">
+          <Chip label="Deposit" color="primary" />
+          <Chip label="E-Transfer" color="secondary" />
+          <Chip label="Move Money" color="success" />
+        </Stack>
+      </CardContent>
+    </Grid>
 
   </Grid>
+
   <Grid>
-    
-  <Divider />
+    <Divider />
+    <PurchaseCategories 
+    chartSeries={[50, 25, 15, 10]} 
+    labels={['Groceries', 'Restaurants', 'Online Shopping', 'Transportation']} 
+  />
+  </Grid>
+  <Grid item xs={12}>
+    <CardContent>
+      <Stack direction="row" spacing={1} flexWrap="wrap">
+        <Chip label="Groceries" color="primary" />
+        <Chip label="Restaurants" color="secondary" />
+        <Chip label="Online Shopping" color="success" />
+        <Chip label="Transportation" color="error" />
+        <Chip label="Entertainment" color="warning" />
+        {/* Add more chips as needed */}
+      </Stack>
+    </CardContent>
+  </Grid>
 
-  <PurchaseCategories 
-  chartSeries={[50, 25, 15, 10]} 
-  labels={['Groceries', 'Restaurants', 'Online Shopping', 'Transportation']} 
-/>
-</Grid>
-<Grid item xs={12}>
-  <CardContent>
-    <Stack direction="row" spacing={1} flexWrap="wrap">
-      <Chip label="Groceries" color="primary" />
-      <Chip label="Restaurants" color="secondary" />
-      <Chip label="Online Shopping" color="success" />
-      <Chip label="Transportation" color="error" />
-      <Chip label="Entertainment" color="warning" />
-      {/* Add more chips as needed */}
-    </Stack>
-  </CardContent>
-</Grid>
-  <Grid>
-              <ProductPerformance2 />
-            </Grid>
-            {/* <Grid>
-              <LatestOrders />
-            </Grid> */}
-    
 
-    
-            {/* <Grid>
-        <Traffic chartSeries={[63, 15, 22]} labels={['Desktop', 'Tablet', 'Phone']} sx={{ height: '100%' }} />
-      </Grid>
+    {/* <Grid>
+      <ProductPerformance2 />
+    </Grid> */}
 
-      <Grid>
-      <PurchaseCategories 
-  chartSeries={[50, 25, 15, 10]} 
-  labels={['Groceries', 'Restaurants', 'Online Shopping', 'Transportation']} 
-/>      </Grid> */}
-
-    </PageContainer>
+  </PageContainer>
 
   );
 };

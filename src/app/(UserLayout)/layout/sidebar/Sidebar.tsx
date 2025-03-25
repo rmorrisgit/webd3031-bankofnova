@@ -1,5 +1,5 @@
 "use client";
-import { useMediaQuery, Box, Drawer } from '@mui/material';
+import { Box, Drawer } from '@mui/material';
 import { useSession } from 'next-auth/react';
 import { usePathname } from 'next/navigation';
 import SidebarItems from './SidebarItems';
@@ -58,14 +58,13 @@ const MSidebar = ({
   const shouldRenderUnauthenticatedSidebar = status === 'unauthenticated';
   const isSpecialPage = ['/', '/login', '/register'].includes(pathname);
 
-  // Determine sidebar position
-  const sidebarAnchor = 'left';
+
 
   // Force mobile sidebar on special pages
   if (isSpecialPage) {
     return (
       <Drawer
-        anchor={sidebarAnchor} // Dynamically set the anchor based on login state and page
+        anchor="left" 
         open={isMobileSidebarOpen}
         onClose={onSidebarClose}
         variant="temporary"
@@ -121,6 +120,5 @@ const MSidebar = ({
     </Drawer>
   );
 };
-
 
 export default MSidebar;
