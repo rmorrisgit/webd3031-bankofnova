@@ -107,9 +107,9 @@ const ChequingPage = () => {
   </Grid>
 
 
-    {/* <Grid>
-      <ProductPerformance2 />
-    </Grid> */}
+    <Grid>
+    <ProductPerformance2 accountType="chequing" /> {/* Pass account type as prop */}
+    </Grid>
 
   </PageContainer>
 

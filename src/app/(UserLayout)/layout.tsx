@@ -6,6 +6,7 @@ import Sidebar from "./layout/sidebar/Sidebar";
 import Footer from "./footer/Footer"
 import { usePathname } from "next/navigation";
 import Footersmall from "./footer2/smallFooter"
+import BankCardRow from "./components/blocks/BankCardRow";
 
 const MainWrapper = styled("div")(() => ({
   display: "flex",
@@ -30,7 +31,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const [isMobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const pathname = usePathname();
   const showFooter = ["/", "/login"].includes(pathname);
-
+  const showHomeCard = "/".includes(pathname);
   const showFootersmall = ["/accounts/chequing", "/overview", "/accounts/savings"].includes(pathname);
 
 
@@ -76,7 +77,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {/* ------------------------------------------- */}
         </Container>
 
-
+        {showHomeCard && <BankCardRow />}
         {showFooter && <Footer />}
 
         {/* {showFootersmall && <Footersmall />} */}
