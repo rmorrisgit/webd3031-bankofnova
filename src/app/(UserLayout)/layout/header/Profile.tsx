@@ -63,7 +63,10 @@ const Profile = () => {
   </IconButton>
 
       {/* Dropdown menu */}
-  <Menu
+
+  {session ? (
+    <>
+      <Menu
     id="msgs-menu"
     anchorEl={anchorEl2}
     keepMounted
@@ -73,12 +76,10 @@ const Profile = () => {
     transformOrigin={{ horizontal: "right", vertical: "top" }}
     sx={{
       "& .MuiMenu-paper": {
-        width: session ? "200px" : "auto", 
+        width: "200px",
       },
     }}
   >
-  {session ? (
-    <>
       <MenuItem>
         <ListItemIcon>
           <IconUser width={20} />
@@ -107,55 +108,69 @@ const Profile = () => {
           Logout
         </Button>
       </Box>
+      </Menu>
+
     </>
   ) : (
     <>
-    <MenuItem>
-      <Button
-        component={Link}
-        href="/register"
-        variant="outlined"
-        size="large"
-        disableElevation
-        sx={{
-          height: "45px",
-          border: "none",
-          width: isSmallScreen ? "100px" : "100px", // Fixed width on small screens
-          "&:hover": {
-            opacity: 0.8, // Change opacity on hover
-            border: "none",
-
-          },
-        }}
-      >
-        <Typography variant="h6">Register</Typography>
-      </Button>
-    </MenuItem>
-
-    <MenuItem>
-      <Button
-        component={Link}
-        size="large"
-        href="/login"
-        variant="outlined"
-        disableElevation
-        sx={{
-          height: "45px",
-          border: "none",
-          width: isSmallScreen ? "100px" : "100px", // Fixed width on small screens
-          "&:hover": {
-            opacity: 0.8, // Change opacity on hover
-            border: "none",
-
-          },
-        }}
-      >
-        <Typography variant="h6">Login</Typography>
-      </Button>
-    </MenuItem>
-    </>
+             <Menu
+          id="msgs-menu"
+          anchorEl={anchorEl2}
+          keepMounted
+          open={Boolean(anchorEl2)}
+          onClose={handleClose2}
+          anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+          transformOrigin={{ horizontal: "right", vertical: "top" }}
+          sx={{
+            "& .MuiMenu-paper": {
+              width: "200px",
+            },
+          }}
+        >
+          <MenuItem>
+            <Button
+              component={Link}
+              href="/register"
+              variant="outlined"
+              size="large"
+              disableElevation
+              sx={{
+                width: "100%",
+                height: "45px",
+                border: "none",
+                "&:hover": {
+                  opacity: 0.8,
+                  border: "none",
+                },
+              }}
+            >
+              <Typography variant="h6">Register</Typography>
+            </Button>
+          </MenuItem>
+          <MenuItem>
+            <Button
+              component={Link}
+              size="large"
+              href="/login"
+              variant="outlined"
+              disableElevation
+              sx={{
+                width: "100%",
+                height: "45px",
+                border: "none",
+                "&:hover": {
+                  opacity: 0.8,
+                  border: "none",
+                },
+              }}
+            >
+              <Typography variant="h6">Login</Typography>
+            </Button>
+          </MenuItem>
+        </Menu>
+        </>
     )}
-</Menu>
+{/* </Menu> */}
   </Box>
   );
 };

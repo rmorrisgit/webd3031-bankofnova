@@ -1,6 +1,5 @@
 "use client";
-import Link from "next/link";
-import { Grid, Box, Card, Stack, Typography } from "@mui/material";
+import { Card } from "@mui/material";
 // components
 import PageContainer from "../../components/container/PageContainer";
 // import Logo from "../layout/shared/logo/Logo";
@@ -36,7 +35,7 @@ const Login2 = () => {
               },
             }}
           >
-              <AuthLogin />
+          <AuthLogin />
         </Card>
     </PageContainer>
   );

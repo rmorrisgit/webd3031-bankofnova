@@ -79,71 +79,72 @@ const Footer = () => {
           </Typography>
         </Grid>
     
-            {/* Quick Links */}
-            <Grid item xs={12} md={3}>
-              <Typography variant="h6" color="#fff" gutterBottom>
-                Features
-              </Typography>
-              <Box display="flex" flexDirection="column" gap={1}>
-                {["Expense Tracker", "About"].map((link) => (
+          {/* Quick Links */}
+          <Grid item xs={12} md={3}>
+            <Typography variant="h6" color="#fff" gutterBottom>
+              Features
+            </Typography>
+            <Box display="flex" flexDirection="column" gap={1}>
+              {["Expense Tracker", "About"].map((link) => (
 
-                  <Quicklinks key={link} variant="subtitle1">{link}</Quicklinks>
-                ))}
-              </Box>
-            </Grid>
-    
-            {/* Contact primary */}
-            <Grid item xs={12} md={3}>
-              <Typography variant="h6" color="#fff" gutterBottom>
-                Contact
-              </Typography>
-              <Typography variant="body2" pr={4} color="rgba(255,255,255,0.7)">
-                Halifax, Nova Scotia, Canada
-                https://github.com/NSCC-ITC-Winter2025-WEBD3031-700-MCa/webd3031-project-bankofnova
-              </Typography>
-            </Grid>
-    
-            {/* Newsletter Subscription */}
-            <Grid item xs={7} md={3}>
-              <Typography variant="h6"  color="#fff" gutterBottom>
-                Stay Connected
-              </Typography>
-              <Box mb={2}       sx={{
-                  paddingRight: {
-                    sm: '55px',
-                    md: '55px',
-                    lg: '0px'
-                  },
-                  }}>
-                <NewsletterInput
-                  fullWidth
-                  label="Subscribe to Newsletter"
-                  variant="outlined"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-            
-               
-                />
-                <Button
-                  onClick={handleSubscribe}
-                  sx={{
-                    minWidth: "auto", p: 1, color: "#fff",
-                    "&:hover": { background: "rgba(255,255,255,0.1)" }
-                  }}
-                >
-                  Send
-                </Button>
-              </Box>
-            </Grid>
+                <Quicklinks key={link} variant="subtitle1">{link}</Quicklinks>
+              ))}
+            </Box>
           </Grid>
-    
+  
+          {/* Contact primary */}
+          <Grid item xs={12} md={3}>
+            <Typography variant="h6" color="#fff" gutterBottom>
+              Contact
+            </Typography>
+            <Typography variant="body2" pr={4} color="rgba(255,255,255,0.7)">
+              Halifax, Nova Scotia, Canada
+              https://github.com/NSCC-ITC-Winter2025-WEBD3031-700-MCa/webd3031-project-bankofnova
+            </Typography>
+          </Grid>
+  
+          {/* Newsletter Subscription */}
+          <Grid item xs={7} md={3}>
+            <Typography variant="h6"  color="#fff" gutterBottom>
+              Stay Connected
+            </Typography>
+            <Box mb={2}       sx={{
+                paddingRight: {
+                  sm: '55px',
+                  md: '55px',
+                  lg: '0px'
+                },
+                }}>
+              <NewsletterInput
+                fullWidth
+                label="Subscribe to Newsletter"
+                variant="outlined"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+          
+              
+              />
+              <Button
+                onClick={handleSubscribe}
+                sx={{
+                  minWidth: "auto", p: 1, color: "#fff",
+                  "&:hover": { background: "rgba(255,255,255,0.1)" }
+                }}
+              >
+                Send
+              </Button>
+            </Box>
+          </Grid>
+        </Grid>
+
+        </Container>
+            
           {/* Footer Bottom */}
           <Box mt={8} pt={3} borderTop={1} borderColor="rgba(255,255,255,0.1)">
             <Typography variant="body2" color="rgba(255,255,255,0.7)" align="center">
               © {new Date().getFullYear()} Bank Of Nova. All rights reserved.
             </Typography>
           </Box>
-        </Container>
       </FooterBox>
     );
     

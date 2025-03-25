@@ -5,6 +5,7 @@ import Header from "./layout/header/Header";
 import Sidebar from "./layout/sidebar/Sidebar";
 import Footer from "./footer/Footer"
 import { usePathname } from "next/navigation";
+import Footersmall from "./footer2/smallFooter"
 
 const MainWrapper = styled("div")(() => ({
   display: "flex",
@@ -29,6 +30,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const [isMobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const pathname = usePathname();
   const showFooter = ["/", "/login"].includes(pathname);
+
+  const showFootersmall = ["/accounts/chequing", "/overview", "/accounts/savings"].includes(pathname);
+
 
   // Function to toggle the mobile sidebar
   const onMobileSidebarToggle = () => {
@@ -75,6 +79,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
         {showFooter && <Footer />}
 
+        {/* {showFootersmall && <Footersmall />} */}
 
       </PageWrapper>
     </MainWrapper>
