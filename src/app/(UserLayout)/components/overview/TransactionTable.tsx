@@ -58,8 +58,6 @@ const ProductPerformance2 = () => {
     return (
 
     <Box>
-              <CardHeader title="Latest Transactions" />
-              <Divider />
         <Table
             aria-label="simple table"
             sx={(theme) => ({

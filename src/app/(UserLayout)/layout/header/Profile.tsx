@@ -10,15 +10,21 @@ import {
   ListItemIcon,
   ListItemText,
   Stack,
-  Typography
+  Typography,
+  useTheme,
+  useMediaQuery
 } from "@mui/material";
 import { IconListCheck, IconMail, IconUser } from "@tabler/icons-react";
+
 import { signOut, useSession } from "next-auth/react";
 
 const Profile = () => {
   const [anchorEl2, setAnchorEl2] = useState(null);
   const { data: session } = useSession();
   const pathname = usePathname(); // Get the current route
+  const theme = useTheme();
+
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm")); // Detect small screens
 
   const handleClick2 = (event: any) => {
     setAnchorEl2(event.currentTarget);
@@ -36,112 +42,121 @@ const Profile = () => {
   const isAuthPage = pathname === "/login" || pathname === "/register";
 
   return (
-    <Box>
-      <IconButton
-        size="large"
-        aria-label="profile menu"
-        color="inherit"
-        aria-controls="msgs-menu"
-        aria-haspopup="true"
-        sx={{
-          ...(typeof anchorEl2 === "object" && { color: "primary.main" }),
-        }}
-        onClick={handleClick2}
-      >
-        <IconUser
-          width={35}
-          style={{
-            color: isAuthPage ? "#FFFFFF" : "inherit", // White on /login and /register, default elsewhere
-          }}
-        />
-      </IconButton>
+<Box>
+  <IconButton
+    size="large"
+    aria-label="profile menu"
+    color="inherit"
+    aria-controls="msgs-menu"
+    aria-haspopup="true"
+    sx={{
+      ...(typeof anchorEl2 === "object" && { color: "primary.main" }),
+    }}
+    onClick={handleClick2}
+  >
+    <IconUser
+      width={35}
+      style={{
+        color: isAuthPage ? "#FFFFFF" : "inherit", // White on /login and /register, default elsewhere
+      }}
+    />
+  </IconButton>
 
       {/* Dropdown menu */}
-      <Menu
-        id="msgs-menu"
-        anchorEl={anchorEl2}
-        keepMounted
-        open={Boolean(anchorEl2)}
-        onClose={handleClose2}
-        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
-        transformOrigin={{ horizontal: "right", vertical: "top" }}
+  <Menu
+    id="msgs-menu"
+    anchorEl={anchorEl2}
+    keepMounted
+    open={Boolean(anchorEl2)}
+    onClose={handleClose2}
+    anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+    transformOrigin={{ horizontal: "right", vertical: "top" }}
+    sx={{
+      "& .MuiMenu-paper": {
+        width: session ? "200px" : "auto", 
+      },
+    }}
+  >
+  {session ? (
+    <>
+      <MenuItem>
+        <ListItemIcon>
+          <IconUser width={20} />
+        </ListItemIcon>
+        <ListItemText>My Profile</ListItemText>
+      </MenuItem>
+      <MenuItem>
+        <ListItemIcon>
+          <IconMail width={20} />
+        </ListItemIcon>
+        <ListItemText>My Account</ListItemText>
+      </MenuItem>
+      <MenuItem>
+        <ListItemIcon>
+          <IconListCheck width={20} />
+        </ListItemIcon>
+        <ListItemText>My Tasks</ListItemText>
+      </MenuItem>
+      <Box mt={1} py={1} px={2}>
+        <Button
+          variant="outlined"
+          color="primary"
+          onClick={handleLogout}
+          fullWidth
+        >
+          Logout
+        </Button>
+      </Box>
+    </>
+  ) : (
+    <>
+    <MenuItem>
+      <Button
+        component={Link}
+        href="/register"
+        variant="outlined"
+        size="large"
+        disableElevation
         sx={{
-          "& .MuiMenu-paper": {
-            width: "200px",
+          height: "45px",
+          border: "none",
+          width: isSmallScreen ? "100px" : "100px", // Fixed width on small screens
+          "&:hover": {
+            opacity: 0.8, // Change opacity on hover
+            border: "none",
+
           },
         }}
       >
-        {session ? (
-          <>
-            <MenuItem>
-              <ListItemIcon>
-                <IconUser width={20} />
-              </ListItemIcon>
-              <ListItemText>My Profile</ListItemText>
-            </MenuItem>
-            <MenuItem>
-              <ListItemIcon>
-                <IconMail width={20} />
-              </ListItemIcon>
-              <ListItemText>My Account</ListItemText>
-            </MenuItem>
-            <MenuItem>
-              <ListItemIcon>
-                <IconListCheck width={20} />
-              </ListItemIcon>
-              <ListItemText>My Tasks</ListItemText>
-            </MenuItem>
-            <Box mt={1} py={1} px={2}>
-              <Button
-                variant="outlined"
-                color="primary"
-                onClick={handleLogout}
-                fullWidth
-              >
-                Logout
-              </Button>
-            </Box>
-          </>
-        ) : (
-          <Box mt={2}>
-            <Stack direction="row" spacing={2} justifyContent="center">
-             
-            <Button
-                variant="outlined"
-                component={Link}
-                href="/register"
-                color="info"
-                size= "large"
-                disableElevation
-                sx={{
-                  backgroundColor: "white",
-                  color: "info.main",
-                  "&:hover": {
-                    backgroundColor: "info.main",
-                    borderColor: "info.main",
-                    color: "white",
-                  },
-                }}
-              >
-                Register
-              </Button>
-             
-              <Button
-                variant="contained"
-                component={Link}
-                size= "large"
-                href="/login"
-                color="info"
-                disableElevation
-              >
-                Login
-              </Button>
+        <Typography variant="h6">Register</Typography>
+      </Button>
+    </MenuItem>
 
-            </Stack>
-          </Box>
-        )}
-      </Menu>
-    </Box>
+    <MenuItem>
+      <Button
+        component={Link}
+        size="large"
+        href="/login"
+        variant="outlined"
+        disableElevation
+        sx={{
+          height: "45px",
+          border: "none",
+          width: isSmallScreen ? "100px" : "100px", // Fixed width on small screens
+          "&:hover": {
+            opacity: 0.8, // Change opacity on hover
+            border: "none",
+
+          },
+        }}
+      >
+        <Typography variant="h6">Login</Typography>
+      </Button>
+    </MenuItem>
+    </>
+    )}
+</Menu>
+  </Box>
   );
 };
 
