@@ -2,14 +2,11 @@
 import { Typography, Card, Box, Grid, CardContent, Divider,Stack, Chip } from '@mui/material';
 import PageContainer from '../../../components/container/PageContainer';
 import { useEffect, useState } from "react";
-import { fetchUserBalance } from "../../../../api/user"; // Assuming this function fetches the user's balance from the backend
+import { fetchUserBalance } from "../../../../api/user"; 
 import { useSession } from 'next-auth/react'; // Import useSession for session check
 import { useRouter } from 'next/navigation'; // Import useRouter for navigation
-// import RecentTransactions from "../../../components/overview/RecentTransactions";
-// import ProductPerformance from '@/app/(DashboardLayout)/components/dashboard/ProductPerformance';
-import ProductPerformance2 from "../../../components/overview/TransactionTable";
+import TransactionTable from "../../../components/overview/TransactionTable";
 import PurchaseCategories from "../../../components/blocks/PurchaseCategories";
-// import Traffic from "../../../components/overview/Traffic";
 
 const ChequingPage = () => {
   const { data: session, status } = useSession();
@@ -74,7 +71,7 @@ const ChequingPage = () => {
       </CardContent>
     </Grid>
 
-    <Grid item xs={12}>
+    {/* <Grid item xs={12}>
       <CardContent>
         <Stack direction="row" spacing={1} flexWrap="wrap">
           <Chip label="Deposit" color="primary" />
@@ -82,11 +79,18 @@ const ChequingPage = () => {
           <Chip label="Move Money" color="success" />
         </Stack>
       </CardContent>
-    </Grid>
+    </Grid> */}
 
   </Grid>
 
-  <Grid>
+
+
+    <Grid>
+    <TransactionTable accountType="chequing" /> {/* Pass account type as prop */}
+    </Grid>
+
+
+    <Grid>
     <Divider />
     <PurchaseCategories 
     chartSeries={[50, 25, 15, 10]} 
@@ -106,10 +110,6 @@ const ChequingPage = () => {
     </CardContent>
   </Grid>
 
-
-    <Grid>
-    <ProductPerformance2 accountType="chequing" /> {/* Pass account type as prop */}
-    </Grid>
 
   </PageContainer>
 

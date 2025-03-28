@@ -7,6 +7,7 @@ import Footer from "./footer/Footer"
 import { usePathname } from "next/navigation";
 import Footersmall from "./footer2/smallFooter"
 import BankCardRow from "./components/blocks/BankCardRow";
+import Subheader from "./subheader/subheader"; // Import your Subheader component
 
 const MainWrapper = styled("div")(() => ({
   display: "flex",
@@ -35,6 +36,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const showFootersmall = ["/accounts/chequing", "/overview", "/accounts/savings"].includes(pathname);
 
 
+
+    // Define pages where subheader should appear
+    const isSubheaderPage = [
+      "/overview",
+      "/transactions/transfer/confirm",
+      "/accounts/chequing",
+      "/accounts/savings",
+      "/transactions/transfer",
+      "/transactions/deposit",
+      "/transactions/movemoney",
+    ].includes(pathname);
+
   // Function to toggle the mobile sidebar
   const onMobileSidebarToggle = () => {
     setMobileSidebarOpen(!isMobileSidebarOpen);
@@ -59,6 +72,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* Header */}
         {/* ------------------------------------------- */}
         <Header toggleMobileSidebar={onMobileSidebarToggle} />
+              {/* Conditionally render Subheader */}
+      {/* {isSubheaderPage && <Subheader toggleMobileSidebar={onMobileSidebarToggle} />} */}
         {/* ------------------------------------------- */}
         {/* PageContent */}
         {/* ------------------------------------------- */}
@@ -79,9 +94,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
         {showHomeCard && <BankCardRow />}
         {showFooter && <Footer />}
-
         {/* {showFootersmall && <Footersmall />} */}
-
       </PageWrapper>
     </MainWrapper>
   );
