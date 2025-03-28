@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import ReactApexChart from "react-apexcharts";
 import { ApexOptions } from "apexcharts"; // ✅ Import correct type
 import { MenuItem, Select, Typography } from "@mui/material";
+import DashboardCard from '../shared/DashboardCard';
 
 interface RegistrationData {
   period: string;
@@ -59,9 +60,8 @@ const UserRegistrationsChart = () => {
   };
 
   return (
-    <div style={{ padding: "20px" }}>
-      <Typography variant="h6">User Registrations</Typography>
-
+    <DashboardCard title="User Registerations">
+      <>
       <Select
         value={filter}
         onChange={(e) => setFilter(e.target.value as "day" | "month" | "year")}
@@ -83,7 +83,8 @@ const UserRegistrationsChart = () => {
       ) : (
         <Typography>No data available</Typography>
       )}
-    </div>
+      </>
+    </DashboardCard>
   );
 };
 

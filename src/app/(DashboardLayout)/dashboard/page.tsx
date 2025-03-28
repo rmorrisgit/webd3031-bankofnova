@@ -2,7 +2,7 @@
 import { Grid, Box } from '@mui/material';
 import PageContainer from '../components/container/PageContainer';
 // components
-import SalesOverview from '../components/dashboard/SalesOverview';
+import SalesOverview from '../components/dashboard/UserRegistration';
 import YearlyBreakup from '../components/dashboard/YearlyBreakup';
 import RecentTransactions from '../components/dashboard/RecentTransactions';
 import ProductPerformance from '../components/dashboard/ProductPerformance';
