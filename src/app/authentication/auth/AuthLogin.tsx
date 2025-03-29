@@ -27,17 +27,12 @@ const AuthLogin = ({ title, subtitle, subtext }: LoginProps) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   };
 
-  // Function to check if input is a valid 10-digit number
-  const isValidAccountNumber = (accountNumber: string) => {
-    return /^\d{10}$/.test(accountNumber);
-  };
-
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
     // Validate the identifier (it must be either a 10-digit number or a valid email)
-    if (!isValidAccountNumber(identifier) && !isValidEmail(identifier)) {
-      setIdentifierError("Enter a valid 10-digit account number or a valid email address.");
+    if (!isValidEmail(identifier)) {
+      setIdentifierError("Enter a valid email address.");
       return;
     } else {
       setIdentifierError(""); // Clear error if valid
@@ -107,7 +102,7 @@ const AuthLogin = ({ title, subtitle, subtext }: LoginProps) => {
           
           <Box>
             <CustomTextField
-              label="Email or Login ID"
+              label="Email"
               type="login"
               variant="outlined"
               sx={{
