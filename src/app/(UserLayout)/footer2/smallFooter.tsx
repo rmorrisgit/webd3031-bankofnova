@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Typography, useTheme } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
 import { styled } from "@mui/system";
 
 // Define a custom interface for ContentBox props
@@ -7,6 +7,7 @@ interface ContentBoxProps {
   footerHeight: number; // Accept footerHeight prop
 }
 
+// Styled component for the footer
 const FooterBox = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
   padding: theme.spacing(2),
@@ -14,7 +15,9 @@ const FooterBox = styled(Box)(({ theme }) => ({
 }));
 
 // ContentBox does not need minHeight anymore, but adds flexGrow to push footer down
-const ContentBox = styled(Box)<ContentBoxProps>(({ theme, footerHeight }) => ({
+const ContentBox = styled(Box, {
+  shouldForwardProp: (prop) => prop !== "footerHeight", // Prevent `footerHeight` from being passed to the DOM
+})<ContentBoxProps>(({ footerHeight }) => ({
   display: "flex",
   flexDirection: "column",
   flexGrow: 1, // This will allow the content area to grow and push the footer down
@@ -23,7 +26,7 @@ const ContentBox = styled(Box)<ContentBoxProps>(({ theme, footerHeight }) => ({
 
 const Footersmall = () => {
   const theme = useTheme();
-  const footerHeight = 56; // Approximate footer height (can be adjusted as per your footer's height)
+  const footerHeight = 60; // Approximate footer height (can be adjusted as per your footer's height)
 
   return (
     <Box
@@ -40,8 +43,6 @@ const Footersmall = () => {
           {/* Main page content */}
         </Box>
       </ContentBox>
-
-
     </Box>
   );
 };

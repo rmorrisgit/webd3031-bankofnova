@@ -3,7 +3,7 @@ import Image from "next/image";
 import { useSession, signOut } from "next-auth/react";
 import LogoutIcon from '@mui/icons-material/Logout'; // Material UI Logout Icon
 
-export const Profile = () => {
+export const SidebarProfile = () => {
   const { data: session } = useSession(); // Get the session data
   const userName = session?.user?.name || "Guest"; // Default to "Guest" if not logged in
 
@@ -12,7 +12,7 @@ export const Profile = () => {
       display="flex"
       alignItems="center"
       gap={2}
-      sx={{ m: 3, p: 3, bgcolor: "primary.light", borderRadius: "8px" }}
+      sx={{ m: 3, p: 2,  }}
     >
       <Box>
         <Typography variant="h5" fontSize="16px" mb={1}>

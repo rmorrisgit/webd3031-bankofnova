@@ -1,0 +1,117 @@
+import { Box, Drawer, IconButton } from "@mui/material";
+import UnauthenticatedSidebarItems from "./UnauthenticatedSidebarItems";
+import { Sidebar } from 'react-mui-sidebar';
+import { usePathname } from 'next/navigation';
+import MenuIcon from '@mui/icons-material/Menu'; // Import Menu Icon
+import { useState } from 'react';
+import Link from 'next/link';
+
+interface ItemType {
+  isMobileSidebarOpen: boolean;
+  onSidebarClose: (event: React.MouseEvent<HTMLElement>) => void;
+  isSidebarOpen: boolean;
+  onMobileSidebarToggle: () => void;
+}
+
+const Sidebar2 = ({
+  isMobileSidebarOpen,
+  onSidebarClose,
+  isSidebarOpen,
+  onMobileSidebarToggle,
+}: ItemType) => {
+  const pathname = usePathname();
+  const isSpecialPage = ['/', '/login', '/register'].includes(pathname);
+
+  // For the top-right IconMenu Button
+  const TopRightMenuButton = () => (
+    <IconButton
+      color="inherit"
+      aria-label="menu"
+      onClick={onMobileSidebarToggle} // Toggle the mobile sidebar on button click
+      sx={{
+        position: 'fixed',
+        top: 11,
+        right: 10,
+        zIndex: 9999, // Ensure the button appears on top
+        backgroundColor: 'white', 
+        borderRadius: '4px', // Optional: round the button
+      }}
+    >
+      <MenuIcon />
+    </IconButton>
+  );
+
+  // Logo component to ensure it stays on top permanently
+  const LogoWithHover = () => (
+    <Link href="/" passHref>
+      <Box
+        sx={{
+          position: "fixed", // Fix the logo position to stay on top
+          top: 10, // Adjust top position to ensure it's visible
+          left: "50%",
+          transform: "translateX(-50%)", // Center the logo horizontally
+          zIndex: 9999, // Ensure the logo stays on top
+          width: 'auto',
+        }}
+      >
+        <img src="/images/logos/dark-logo3.svg" alt="Logo" style={{ height: 'auto' }} />
+      </Box>
+    </Link>
+  );
+
+  if (isSpecialPage) {
+    return (
+      <>
+        <TopRightMenuButton />
+        
+        {/* Logo stays permanently above the sidebar */}
+        <LogoWithHover />
+
+        <Drawer
+          anchor="left"
+          open={isMobileSidebarOpen}
+          onClose={onSidebarClose}
+          variant="temporary"
+          ModalProps={{
+            keepMounted: true,
+            disableScrollLock: true, // Prevents scroll locking
+          }}
+          BackdropProps={{
+            sx: { 
+              backgroundColor: 'transparent',
+              cursor: 'default',
+              zIndex: 100, // Lower z-index for the sidebar backdrop
+            },
+          }}
+          PaperProps={{
+            sx: { 
+              width: '250px', // Set fixed width for sidebar
+              borderTop: 'none !important',
+              borderBottom: (theme) => theme.shadows[3],
+              zIndex: 100, // Lower z-index for the sidebar
+            },
+          }}
+        >
+          <Box px={2}>
+            <Sidebar
+              width="100%"
+              collapsewidth="80px"
+              isCollapse={false}
+              mode="light"
+              direction="ltr"
+              themeColor="#5d87ff"
+              themeSecondaryColor="#49beff"
+              showProfile={false}
+            >
+              <UnauthenticatedSidebarItems />
+            </Sidebar>
+          </Box>
+        </Drawer>
+      </>
+    );
+  }
+
+  return null;
+};
+
+export default Sidebar2;

@@ -33,7 +33,9 @@ interface ItemType {
 const NavItem = ({ item, level, pathDirect, onClick }: ItemType) => {
   const Icon = item.icon;
   const theme = useTheme();
-  const itemIcon = <Icon stroke={1.5} size="1.3rem" />;
+
+  // Conditionally set itemIcon only if Icon exists
+  const itemIcon = Icon ? <Icon stroke={1.5} size="1.3rem" /> : null;
 
   const ListItemStyled = styled(ListItem)(() => ({
     padding: 0,
@@ -41,7 +43,7 @@ const NavItem = ({ item, level, pathDirect, onClick }: ItemType) => {
       whiteSpace: "nowrap",
       marginBottom: "2px",
       padding: "8px 10px",
-      borderRadius: "8px",
+      borderRadius: "4px",
       backgroundColor: level > 1 ? "transparent !important" : "inherit",
       color: theme.palette.text.secondary,
       paddingLeft: "10px",
@@ -51,9 +53,10 @@ const NavItem = ({ item, level, pathDirect, onClick }: ItemType) => {
       },
       "&.Mui-selected": {
         color: "white",
+
         backgroundColor: theme.palette.primary.main,
         "&:hover": {
-          backgroundColor: theme.palette.primary.main,
+          backgroundColor: theme.palette.primary.light,
           color: "white",
         },
       },
@@ -71,15 +74,18 @@ const NavItem = ({ item, level, pathDirect, onClick }: ItemType) => {
           target={item.external ? "_blank" : ""}
           onClick={onClick}
         >
-          <ListItemIcon
-            sx={{
-              minWidth: "36px",
-              p: "3px 0",
-              color: "inherit",
-            }}
-          >
-            {itemIcon}
-          </ListItemIcon>
+          {/* Render ListItemIcon only if itemIcon is not null */}
+          {itemIcon && (
+            <ListItemIcon
+              sx={{
+                minWidth: "36px",
+                p: "3px 3px",
+                color: "inherit",
+              }}
+            >
+              {itemIcon}
+            </ListItemIcon>
+          )}
           <ListItemText>
             <>{item.title}</>
           </ListItemText>

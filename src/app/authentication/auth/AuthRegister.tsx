@@ -203,7 +203,6 @@ export default function RegisterForm({ subtext, subtitle }: RegisterFormProps) {
                     width: "80px",
                     height: "44px",
                     marginBottom: "20px !important",
-                    borderRadius: "10px",
                     marginTop: "6px",
                   }}
                 >

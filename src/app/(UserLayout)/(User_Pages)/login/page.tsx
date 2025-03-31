@@ -5,8 +5,23 @@ import PageContainer from "../../components/container/PageContainer";
 // import Logo from "../layout/shared/logo/Logo";
 import AuthLogin from "../../../authentication/auth/AuthLogin";
 // import DashboardCard from '@/app/(DashboardLayout)/components/shared/DashboardCard';
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 
-const Login2 = () => {
+
+export default function Login2() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
+
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      router.push("/overview");
+    }
+
+  }, [session, status, router]);
+
   return (
     <PageContainer title="Login" description="this is Login page">
           <Card
@@ -15,8 +30,8 @@ const Login2 = () => {
               p: 2,
               zIndex: 1,
               width: "100%",
-              marginTop: '45px',
-              marginBottom: '35px',
+              marginTop: '15px',
+              paddingBottom: '25px',
               // Adding responsive styles for different breakpoints
               "@media (max-width:600px)": {
                 p: 0, // Less padding for small screens (phones)
@@ -40,4 +55,3 @@ const Login2 = () => {
     </PageContainer>
   );
 };
-export default Login2;

@@ -5,7 +5,7 @@ import { Box, AppBar, Toolbar, styled, Stack, IconButton, Button, Typography } f
 import PropTypes from "prop-types";
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react"; // Import auth functions
-import { IconMenu } from "@tabler/icons-react";
+import MenuIcon from "@mui/icons-material/Menu";
 import Profile from "./Profile";
 import { usePathname } from "next/navigation";
 import { useMediaQuery } from "@mui/material"; // Import useMediaQuery
@@ -26,14 +26,14 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
   const mdUp = useMediaQuery((theme: any) => theme.breakpoints.up("md"));
   const smUp = useMediaQuery((theme: any) => theme.breakpoints.up("sm"));
 
-  const blueBackground = ["/login", "/register",].includes(pathname);
+  const blueBackground = ["/register"].includes(pathname);
 
   const AppBarStyled = styled(AppBar)(({ theme }) => ({
     boxShadow: "none",
     background: blueBackground ? theme.palette.primary.main : "white", // Use blueBackground state
     justifyContent: "center",
     backdropFilter: "blur(4px)",
-    position: "relative",  // This will make the header behave as a normal element
+    position: "sticky", // This will make the header behave as a normal element
 
     [theme.breakpoints.up("lg")]: {
       minHeight: "70px",
@@ -46,7 +46,7 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
     display: "flex",
     justifyContent: "flex-start",
     alignItems: "center",
-    position: "relative",
+    // position: "relative",
   }));
 
   const handleLogout = async () => {
@@ -58,76 +58,65 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
     window.location.href = "/overview"; // Navigate to "My Accounts" page
   };
 
-  if (status === "loading") {
-    return (
-      <AppBarStyled position="sticky" color="default">
-        <ToolbarStyled>
-          <Box>Loading...</Box>
-        </ToolbarStyled>
-      </AppBarStyled>
-    );
-  }
+  // if (status === "loading") {
+  //   return (
+  //     <AppBarStyled position="sticky" color="default">
+  //       <ToolbarStyled>
+  //         <Box>Loading...</Box>
+  //       </ToolbarStyled>
+  //     </AppBarStyled>
+  //   );
+  // }
 
-  const isOnAuthPages = pathname === "/login" || pathname === "/register";
+  const isOnAuthPages = pathname === "/login";
   const isOnHomePage = pathname === "/";
   const isOnRegister = pathname === "/register";
-  const isUserPage = [
-    "/overview",
-    "/transactions/transfer/confirm",
-    "/accounts/chequing",
-    "/accounts/savings",
-    "/transactions/transfer",
-    "/transactions/deposit",
-    "/transactions/movemoney",
-  ].includes(pathname);
 
   const LogoWithHover = () => (
     <Link href="/" passHref>
       <Box
         sx={{
           "&:hover": {
-            opacity: 0.8, // Change opacity on hover
+            opacity: 0.8, 
           },
-          display: isOnAuthPages || !session ? "flex" : "none", // Show logo on auth pages or if no session
-          alignItems: "center", // Center the logo vertically
-          width: "100%", // Make sure it takes up full width
-          marginLeft: "14px",
+          display: "flex", 
+          width: '100%', 
+          marginLeft: '-23px',
+          marginTop: '-6px',
+          // zIndex: 9999, //doesnt work
         }}
       >
-        <Logo img={isOnAuthPages ? "/images/logos/dark-logo4.svg" : "/images/logos/dark-logo3.svg"} />
-        </Box>
+        <Logo img={blueBackground ? "/images/logos/dark-logo4.svg" : "/images/logos/dark-logo3.svg"} />
+      </Box>
     </Link>
   );
-  // Define restricted paths for the hamburger menu
-  const restrictedPaths = ['/overview', '/accounts/chequing', '/accounts/savings', '/transactions'];
-
-  // Check if the current pathname is a restricted path
-  const isRestrictedPath = restrictedPaths.includes(pathname);
 
   return (
     <AppBarStyled position="sticky" color="default">
       <ToolbarStyled>
         {/* LEFT SIDE */}
-        <LogoWithHover />
+        {(isOnRegister) && <LogoWithHover />}
+
+
+
         {/* Hamburger Menu */}
-        <IconButton
+        {/* <IconButton
           color="inherit"
           aria-label="menu"
           onClick={toggleMobileSidebar}
           sx={{
             position: "absolute",
-            left: 13,
-             display: (isUserPage || isOnAuthPages) && lgUp ? "none" : "block",
+            marginTop: "1px",
+            right: isOnAuthPages || isOnHomePage ? 10 : 0,
+            display: isOnAuthPages || isOnHomePage ? "block" : "none",
           }}
         >
-          <Box sx={{ color: blueBackground ? "white" : "inherit" }}>
-            <IconMenu width="20" height="20" />
-          </Box>
-        </IconButton>
+          <MenuIcon sx={{ color: blueBackground ? "white" : "inherit" }} />
+        </IconButton> */}
 
         {/* RIGHT SIDE */}
-        <Stack spacing={1} direction="row" alignItems="center" sx={{ position: "absolute", right: session ? 10 : 50 }}>
-          {!session ? (
+        <Stack spacing={1} direction="row" alignItems="center" sx={{ position: "absolute", right: session ? 80 : 80 }}>
+          {!session && !isOnRegister ? ( // Hide Register and Login buttons on /register page
             <>
               {smUp && (
                 <Box mt={2}>
@@ -140,12 +129,11 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
                       size="large"
                       disableElevation
                       sx={{
+                        height: "44px",
                         border: "1px solid white",
-                        borderRadius: "10px",
-                        display: isOnRegister ? "none" : "block",
                         borderColor: blueBackground ? "white" : "primary.main",
-                        color: blueBackground ? "white" : "primary.main",
                         backgroundColor: blueBackground ? "primary.main" : "white",
+                        color: blueBackground ? "white" : "primary.main",
                         "&:hover": {
                           backgroundColor: blueBackground ? "" : "white",
                         },
@@ -161,8 +149,6 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
                       size="large"
                       disableElevation
                       sx={{
-                        borderRadius: "10px",
-                        display: isOnRegister ? "none" : "block",
                         border: "1px solid white",
                         borderColor: blueBackground ? "white" : "white",
                         color: blueBackground ? "white" : "white",
@@ -174,69 +160,57 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
                   </Stack>
                 </Box>
               )}
-              {!smUp && <Profile />}
+             {!smUp && <Profile />}
+
             </>
           ) : (
             <>
-              {isOnAuthPages || isOnHomePage ? (
+              {(isOnAuthPages || isOnHomePage) && session  ? (
                 <>
-                  <Button variant="outlined" onClick={handleLogout} 
-                  color="primary" 
-                  disableElevation
-                  
-                  sx={{
-                    borderRadius: "10px",
-
-                    backgroundColor: blueBackground ? "white" : "theme.primary",
-                    color: blueBackground ? "theme.primary" : "theme.primary",
-                    "&:hover": {
-                      backgroundColor: blueBackground ? "white" : "",
-                      border:blueBackground ? "1px solid #cdcdcd" : "",
-                    },
-                  }}
-                  >
-                    Logout
-                  </Button>
-                  <Button 
-                    variant="contained" 
-                    onClick={handleMyAccountsClick} 
+                  <Button
+                    variant="outlined"
+                    onClick={handleLogout}
                     color="primary"
                     disableElevation
                     sx={{
-                      borderRadius: "10px",
-
-                      border: "1px solid white",
-                      backgroundColor: "theme.primary",
-                      color: "theme.primary !important",
-                 
+                      height: "44px",
+                      backgroundColor: blueBackground ? "white" : "theme.primary",
+                      color: blueBackground ? "theme.primary" : "theme.primary",
+                      "&:hover": {
+                        backgroundColor: blueBackground ? "white" : "",
+                        border: blueBackground ? "1px solid #cdcdcd" : "",
+                      },
                     }}
-                   >
-                    My Accounts
+                  >
+                    Logout
                   </Button>
-                </>
-              ) : (
-                <>
-
-
-                  {/* <Button
-                    variant="outlined"
+                  <Button
+                    variant="contained"
                     onClick={handleMyAccountsClick}
                     color="primary"
                     disableElevation
                     sx={{
-                      backgroundColor: blueBackground ? "white" : "theme.primary",
-                      color: blueBackground ? "theme.primary !important" : "theme.primary !important",
-                      "&:hover": {
-                        backgroundColor: blueBackground ? "white" : "",
-                      },
+                      height: "44px",
+                      border: "1px solid white",
+                      backgroundColor: "theme.primary",
+                      color: "theme.primary !important",
                     }}
                   >
                     My Accounts
-                  </Button> */}
+                  </Button>
                 </>
+              ) : (
+                <></>
               )}
-              <Profile />
-            </>
+                  {(isOnAuthPages || !isOnHomePage) && session ? (  // Check if on auth or home page
+      <>
+        {/* <Profile />  */}
+        
+        </>
+    ) : (
+      <></>
+    )}
+  </>
           )}
         </Stack>
       </ToolbarStyled>

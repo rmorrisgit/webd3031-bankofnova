@@ -90,7 +90,7 @@ const ChequingPage = () => {
     </Grid>
 
 
-    <Grid>
+    {/* <Grid>
     <Divider />
     <PurchaseCategories 
     chartSeries={[50, 25, 15, 10]} 
@@ -105,10 +105,9 @@ const ChequingPage = () => {
         <Chip label="Online Shopping" color="success" />
         <Chip label="Transportation" color="error" />
         <Chip label="Entertainment" color="warning" />
-        {/* Add more chips as needed */}
       </Stack>
     </CardContent>
-  </Grid>
+  </Grid> */}
 
 
   </PageContainer>

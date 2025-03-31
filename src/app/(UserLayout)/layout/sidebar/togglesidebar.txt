@@ -2,7 +2,7 @@
 
 import { Box, Drawer, IconButton, AppBar, Toolbar, Typography } from "@mui/material";
 import SidebarItems from './SidebarItems';
-// import { SidebarProfile } from './SidebarProfile';
+import { SidebarProfile } from './SidebarProfile';
 import MenuIcon from "@mui/icons-material/Menu";
 import { Sidebar, Logo } from 'react-mui-sidebar';
 import Profile from "../header/Profile";
@@ -120,10 +120,10 @@ const MSidebar = ({
             },
           }}
         >
-          <Box sx={{ height: '100%', mt: '84px' }}>
+          <Box sx={{ height: '100%' }}>
             <Sidebar width={`${SIDEBAR_WIDTH}px`} collapsewidth="80px" showProfile={false}>
               {/* SidebarItems component handles the actual sidebar content */}
-              {/* <SidebarProfile /> */}
+              <SidebarProfile />
 
              
               <SidebarItems />
