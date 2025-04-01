@@ -2,10 +2,13 @@
 
 import { Box, Drawer, IconButton, AppBar, Toolbar, Typography } from "@mui/material";
 import SidebarItems from './SidebarItems';
-import { SidebarProfile } from './SidebarProfile';
+// import { SidebarProfile } from './SidebarProfile';
 import MenuIcon from "@mui/icons-material/Menu";
 import { Sidebar, Logo } from 'react-mui-sidebar';
 import Profile from "../header/Profile";
+import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined"; // Closed menu icon
+import MenuOpenOutlinedIcon from "@mui/icons-material/MenuOpenOutlined"; // Open menu icon
+
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -82,8 +85,10 @@ const MSidebar = ({
   <Toolbar sx={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
     {/* Left side: Menu Icon and Logo */}
     <IconButton onClick={toggleSidebar} edge="start">
-      <MenuIcon />
-    </IconButton>
+  {isSidebarToggled ? <MenuOpenOutlinedIcon /> : <MenuOutlinedIcon />}
+</IconButton>
+
+
     <LogoWithHover />
     
     {/* Right side: Profile */}
@@ -120,10 +125,10 @@ const MSidebar = ({
             },
           }}
         >
-          <Box sx={{ height: '100%' }}>
+          <Box sx={{ height: '100%', mt: '84px' }}>
             <Sidebar width={`${SIDEBAR_WIDTH}px`} collapsewidth="80px" showProfile={false}>
               {/* SidebarItems component handles the actual sidebar content */}
-              <SidebarProfile />
+              {/* <SidebarProfile /> */}
 
              
               <SidebarItems />

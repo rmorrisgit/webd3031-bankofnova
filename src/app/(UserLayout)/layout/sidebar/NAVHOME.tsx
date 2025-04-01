@@ -1,17 +1,16 @@
-
 import { Box, Drawer, IconButton } from "@mui/material";
-import UnauthenticatedSidebarItems from "./UnauthenticatedSidebarItems";
-import MenuIcon from '@mui/icons-material/Menu'; // Import Menu Icon
-import { Sidebar, Logo } from 'react-mui-sidebar';
-import Link from 'next/link';
 
+import UnauthSidebarItems from "./UnauthSidebarItems";
+import { Sidebar } from 'react-mui-sidebar';
 import { usePathname } from 'next/navigation';
+import CloseIcon from '@mui/icons-material/Close';
 
-
-import { useSession } from 'next-auth/react';
-
-
-
+import MenuIcon from '@mui/icons-material/Menu'; // Import Menu Icon
+import { useState } from 'react';
+import Link from 'next/link';
+import Profile from "../header/Profile";
+import { SidebarProfile } from "./SidebarProfile";
+import theme from "@/utils/theme";
 
 interface ItemType {
   isMobileSidebarOpen: boolean;
@@ -20,141 +19,64 @@ interface ItemType {
   onMobileSidebarToggle: () => void;
 }
 
-const LogoWithHover = () => (
-  <Link href="/" passHref>
-    <Box
-      sx={{
-        marginLeft: '-15px',
-        display: 'flex',
-        alignItems: 'center',
-        cursor: 'default', // Default cursor for the row area
-      }}
-    >
-      <Box
-        sx={{
-          cursor: 'pointer', // Pointer cursor for the logo itself
-          position: 'fixed', // Fixed at the top of the screen
-          top: 0, // Adjust top position as needed
-          left: 0,
-          zIndex: 9999, // Ensure the logo stays on top of everything
-          maxWidth: '180px',
-          '&:hover': {
-            opacity: 0.8, // Hover effect for the logo
-          },
-        }}
-      >
-        <Logo
-          img="/images/logos/dark-logo3.svg"
-          sx={{
-            height: 'auto',
-          }}
-        />
-      </Box>
-    </Box>
-  </Link>
-);
-
 const Sidebar2 = ({
   isMobileSidebarOpen,
   onSidebarClose,
   isSidebarOpen,
   onMobileSidebarToggle,
 }: ItemType) => {
-  const { data: session, status } = useSession();
   const pathname = usePathname();
-
   const isSpecialPage = ['/', '/login', '/register'].includes(pathname);
 
-
   // For the top-right IconMenu Button
-  const TopRightMenuButton = () => (
+  const MenuButton = () => (
     <IconButton
       color="inherit"
       aria-label="menu"
-        aria-controls="msgs-menu"
-  aria-haspopup="true"
       onClick={onMobileSidebarToggle} // Toggle the mobile sidebar on button click
       sx={{
         position: 'fixed',
         top: 11,
-        marginTop: '-1px',
-        right: 10,
+        left: 10,
         zIndex: 9999, // Ensure the button appears on top
-        backgroundColor: 'transparent', // Transparent background
+        backgroundColor: isMobileSidebarOpen ? 'white' : 'none !important', 
+        borderRadius: isMobileSidebarOpen ? '4px' : 'none !important', // Conditionally set borderRadius based on sidebar state
+        // borderRadius: '4px', 
+    
       }}
     >
-      <MenuIcon />
-    </IconButton>
+      {isMobileSidebarOpen ? <CloseIcon /> : <MenuIcon />}
+      </IconButton>
   );
 
-
-  // Check if the page is special and return null if true to avoid rendering the sidebar
-  if (!isSpecialPage || status !== 'unauthenticated') {
-    return  (
-      <>
-        <TopRightMenuButton />
-
-        {/* Logo at the top-left corner */}
-
-  {/* Logo at the top-left corner */}
-  <Link href="/" passHref>
-  <Box sx={{ position: 'absolute', top: 0, left: 0, zIndex: 99999, padding: '10px' }}>
-  <img src="/images/logos/dark-logo3.svg" alt="Logo" style={{ height: 'auto' }} />
-</Box>
-</Link>
-        <Drawer
-          anchor="top"
-          open={isMobileSidebarOpen}
-          onClose={onSidebarClose}
-          variant="temporary"
-          ModalProps={{
-            keepMounted: true,
-            disableScrollLock: true, // Prevents scroll locking
-          }}
-          BackdropProps={{
-            sx: { backgroundColor: 'transparent', cursor: 'default' }, // No pointer cursor on backdrop
-          }}
-          PaperProps={{
-            sx: { 
-              borderTop: 'none !important',
-              borderBottom: (theme) => theme.shadows[3],
-              height: '250px', 
-              cursor: 'default', // fixes gap issue
-            },
-          }}
-        >
-          <Box px={2}>
-            <Sidebar
-              width="100%"
-              collapsewidth="80px"
-              isCollapse={false}
-              mode="light"
-              direction="ltr" // No changes to the direction
-              themeColor="#5d87ff"
-              themeSecondaryColor="#49beff"
-              showProfile={false}
-            > 
-              <UnauthenticatedSidebarItems />
-            </Sidebar>
-          </Box>
-        </Drawer>
-              </>  )
-  }
-
-
+  // Logo component to ensure it stays on top permanently
+  const LogoWithHover = () => (
+    <Link href="/" passHref>
+      <Box
+        sx={{
+          position: "fixed", // Fix the logo position to stay on top
+          top: 10, // Adjust top position to ensure it's visible
+          left: "170px",
+          transform: "translateX(-50%)", // Center the logo horizontally
+          zIndex: 9999, // Ensure the logo stays on top
+          width: 'auto',
+        }}
+      >
+        <img src="/images/logos/dark-logo3.svg" alt="Logo" style={{ height: 'auto' }} />
+      </Box>
+    </Link>
+  );
 
   if (isSpecialPage) {
     return (
       <>
-        {/* Top Right Menu Button */}
-        <TopRightMenuButton />
+        <MenuButton />
         
-        {/* Logo stays fixed at the top of the screen */}
+        {/* Logo stays permanently above the sidebar */}
         <LogoWithHover />
 
-        {/* Drawer for the sidebar */}
         <Drawer
-          anchor="top"
+          anchor="left"
           open={isMobileSidebarOpen}
           onClose={onSidebarClose}
           variant="temporary"
@@ -163,29 +85,36 @@ const Sidebar2 = ({
             disableScrollLock: true, // Prevents scroll locking
           }}
           BackdropProps={{
-            sx: { backgroundColor: 'transparent', cursor: 'default' }, // No pointer cursor on backdrop
+            sx: { 
+              backgroundColor: 'transparent',
+              cursor: 'default',
+              zIndex: 100, // Lower z-index for the sidebar backdrop
+            },
           }}
           PaperProps={{
             sx: { 
               borderTop: 'none !important',
-              borderBottom: (theme) => theme.shadows[3],
-              height: '250px', 
-              cursor: 'default', // fixes gap issue
+              backgroundColor: '#cdcdcd',
+              zIndex: 100, // Lower z-index for the sidebar
+              boxShadow: 'none',      //borderRight
             },
           }}
         >
           <Box px={2}>
             <Sidebar
-              width="100%"
               collapsewidth="80px"
               isCollapse={false}
               mode="light"
-              direction="ltr" // No changes to the direction
+              direction="ltr"
               themeColor="#5d87ff"
               themeSecondaryColor="#49beff"
               showProfile={false}
-            > 
-              <UnauthenticatedSidebarItems />
+            >
+
+              {/* // Sidebar Items*/}
+              <UnauthSidebarItems />
+              {/* <SidebarProfile />    // Signup or username */}
+
             </Sidebar>
           </Box>
         </Drawer>

@@ -1,19 +1,40 @@
 import React from "react";
 import Menuitems from "./MenuItems";
 import { usePathname } from "next/navigation";
-import { Box, List, Divider } from "@mui/material";
+import { Box, List, Divider, Typography } from "@mui/material";
 import NavItem from "./NavItem";
 import NavGroup from "./NavGroup/NavGroup";
 
-const SidebarItems = ({ toggleMobileSidebar }: any) => {
+const SidebarItems = ({ toggleMobileSidebar, isSidebarToggled }: any) => {
   const pathname = usePathname();
   const pathDirect = pathname;
 
   return (
-    <Box sx={{ px: 3 }}>
-      <List sx={{ pt: 0 }} className="sidebarNav" component="div">
+    // <Box sx={{ px: 3 }}>
+
+    <Box
+    sx={{ padding: isSidebarToggled ? '7px' : "7px",
+      marginTop: isSidebarToggled ? '35px' : "60px",
+      overflowX: "hidden",
+     }}
+  >
+      <List sx={{ pt: 6 }} className="sidebarNav" component="div">
         {Menuitems.map((item, index) => {
-          // Add a divider above "Settings" item
+          // If item has subheader, use NavGroup // marginLeft: "10px",
+
+          if (item.subheader) {
+            return (
+              <NavGroup
+                item={item}
+                key={item.subheader}
+                sx={{
+                  display: isSidebarToggled ? "block" : "none",
+                }}
+              />
+            );
+          }
+
+          // Divider before "Settings"
           if (item.title === "Settings" && index > 0) {
             return (
               <React.Fragment key={item.id || `divider-${index}`}>
@@ -23,7 +44,17 @@ const SidebarItems = ({ toggleMobileSidebar }: any) => {
                   key={item.id || `navitem-${index}`}
                   pathDirect={pathDirect}
                   onClick={toggleMobileSidebar}
-                />
+                >
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      marginLeft: "10px",
+                      display: isSidebarToggled ? "block" : "none",
+                    }}
+                  >
+                    {item.title}
+                  </Typography>
+                </NavItem>
               </React.Fragment>
             );
           }
@@ -34,11 +65,22 @@ const SidebarItems = ({ toggleMobileSidebar }: any) => {
               key={item.id || `navitem-${index}`}
               pathDirect={pathDirect}
               onClick={toggleMobileSidebar}
-            />
+            >
+              <Typography
+                variant="body2"
+                sx={{
+                  marginLeft: "10px",
+                  display: isSidebarToggled ? "block" : "none",
+                }}
+              >
+                {item.title}
+              </Typography>
+            </NavItem>
           );
         })}
       </List>
     </Box>
   );
 };
+
 export default SidebarItems;

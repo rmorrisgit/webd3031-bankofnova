@@ -100,19 +100,19 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
 
 
         {/* Hamburger Menu */}
-        {/* <IconButton
+       <IconButton
           color="inherit"
           aria-label="menu"
           onClick={toggleMobileSidebar}
           sx={{
             position: "absolute",
             marginTop: "1px",
-            right: isOnAuthPages || isOnHomePage ? 10 : 0,
-            display: isOnAuthPages || isOnHomePage ? "block" : "none",
+            left: 33,
+            display: isOnAuthPages || !isOnHomePage ? "none" : "none",
           }}
         >
           <MenuIcon sx={{ color: blueBackground ? "white" : "inherit" }} />
-        </IconButton> */}
+        </IconButton> 
 
         {/* RIGHT SIDE */}
         <Stack spacing={1} direction="row" alignItems="center" sx={{ position: "absolute", right: session ? 80 : 80 }}>

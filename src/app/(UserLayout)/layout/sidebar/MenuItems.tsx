@@ -13,10 +13,19 @@ import { uniqueId } from "lodash";
 // Menu Items with Settings and Divider
 const Menuitems = [
   {
+    navlabel: true,
+    subheader: "Home",
+  },
+
+  {
     id: uniqueId(),
     title: "Overview",
     icon: IconHome,
     href: "/overview",
+  },
+  {
+    navlabel: true,
+    subheader: "Accounts",
   },
   {
     id: uniqueId(),
@@ -29,6 +38,10 @@ const Menuitems = [
     title: "Savings",
     icon: IconWallet,
     href: "/accounts/savings",
+  },
+  {
+    navlabel: true,
+    subheader: "Transactions",
   },
   {
     id: uniqueId(),

@@ -8,7 +8,6 @@ import {
   ListItemText,
   useTheme,
   ListItemButton,
-  Box
 } from "@mui/material";
 import Link from "next/link";
 
@@ -29,18 +28,12 @@ interface ItemType {
   hideMenu?: any;
   level?: number | any;
   pathDirect: string;
-  children?: React.ReactNode;  // Allow children to be passed to the component
-
 }
 
-
-
-const NavItem = ({ item, level, pathDirect, onClick, children}: ItemType) => {
+const UnauthNavItem = ({ item, level, pathDirect, onClick }: ItemType) => {
   const Icon = item.icon;
   const theme = useTheme();
-
-  // Conditionally set itemIcon only if Icon exists
-  const itemIcon = Icon ? <Icon stroke={1.5} size="1.3rem" /> : null;
+  const itemIcon = <Icon stroke={1.5} size="1.3rem" />;
 
   const ListItemStyled = styled(ListItem)(() => ({
     padding: 0,
@@ -49,9 +42,11 @@ const NavItem = ({ item, level, pathDirect, onClick, children}: ItemType) => {
       marginBottom: "2px",
       padding: "8px 10px",
       marginTop: "5px",
-      // borderRadius: "4px",
+
+      borderRadius: "4px",
       backgroundColor: level > 1 ? "transparent !important" : "inherit",
       color: theme.palette.text.secondary,
+      paddingLeft: "10px",
       "&:hover": {
         backgroundColor: theme.palette.primary.light,
         color: theme.palette.primary.main,
@@ -60,7 +55,7 @@ const NavItem = ({ item, level, pathDirect, onClick, children}: ItemType) => {
         color: "white",
         backgroundColor: theme.palette.primary.main,
         "&:hover": {
-          backgroundColor: theme.palette.primary.light,
+          backgroundColor: theme.palette.primary.main,
           color: "white",
         },
       },
@@ -77,35 +72,23 @@ const NavItem = ({ item, level, pathDirect, onClick, children}: ItemType) => {
           selected={pathDirect === item.href}
           target={item.external ? "_blank" : ""}
           onClick={onClick}
-
         >
-          {/* Render ListItemIcon only if itemIcon is not null */}
-          {itemIcon && (
-     <ListItemIcon
-     sx={{
-      minWidth: "36px",
-      p: "3px 0",
-
-      color: "inherit",
-       marginLeft: "9px", //move icon here
-     }}
-   >
-     <Box sx={{ display: "flex",
-       }}>
-       {itemIcon}
-     </Box>
-   </ListItemIcon>
-          )}
-          {/* Render children (like title) */}
-          {children || (
-            <ListItemText>
-              <>{item.title}</>
-            </ListItemText>
-          )}
+          <ListItemIcon
+            sx={{
+              minWidth: "36px",
+              p: "3px 0",
+              color: "inherit",
+            }}
+          >
+            {itemIcon}
+          </ListItemIcon>
+          <ListItemText>
+            <>{item.title}</>
+          </ListItemText>
         </ListItemButton>
       </ListItemStyled>
     </List>
   );
 };
 
-export default NavItem;
+export default UnauthNavItem;

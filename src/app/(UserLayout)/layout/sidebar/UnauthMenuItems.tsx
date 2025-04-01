@@ -1,22 +1,20 @@
 import {
-  IconAperture,
-  IconCopy,
-  IconLayoutDashboard,
   IconLogin,
-  IconMoodHappy,
-  IconTypography,
   IconUserPlus,
-  IconHome,
   IconCurrencyDollar,
-  IconBuildingBank, // Alternative to IconBank
-  IconTransfer,
-  IconWallet, // 
+  IconWallet,
 } from "@tabler/icons-react";
-
 import { uniqueId } from "lodash";
 
-const UnauthenticatedMenuItems = [
+interface MenuItem {
+  id: string;
+  title: string;
+  icon: (props: any) => JSX.Element;
+  href: string;
+  subheader?: string; // Optional subheader
+}
 
+const UnauthMenuItems: MenuItem[] = [
   {
     id: uniqueId(),
     title: "Login",
@@ -29,7 +27,6 @@ const UnauthenticatedMenuItems = [
     icon: IconUserPlus,
     href: "/register",
   },
-
   {
     id: uniqueId(),
     title: "Save",
@@ -42,7 +39,6 @@ const UnauthenticatedMenuItems = [
     icon: IconCurrencyDollar,
     href: "/utilities/spend",
   },
-
 ];
 
-export default UnauthenticatedMenuItems;
+export default UnauthMenuItems;

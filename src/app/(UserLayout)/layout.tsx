@@ -39,7 +39,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const showHomeNav = ["/", "/login"].includes(pathname);
 
   // Define pages where subheader should appear
-  const isSubheaderPage = [
+  const isLargerContainer = [
     "/overview",
     "/transactions/transfer/confirm",
     "/accounts/chequing",
@@ -54,17 +54,22 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     setMobileSidebarOpen(!isMobileSidebarOpen);
   };
 
+
+
+  
   return (
     <MainWrapper className="mainwrapper">
       {/* ------------------------------------------- */}
       {/* Sidebar */}
       {/* ------------------------------------------- */}
+      
       <Sidebar
         isSidebarOpen={isSidebarOpen}
         isMobileSidebarOpen={isMobileSidebarOpen}
-        onSidebarClose={() => setMobileSidebarOpen(false)}
+        onSidebarClose={() => setMobileSidebarOpen(true)}
         onMobileSidebarToggle={onMobileSidebarToggle} // Passing the toggle function here
       />
+
 
       {/* Conditionally render Sidebar2 only on showHomeNav pages */}
       {showHomeNav && (
@@ -87,24 +92,25 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* ------------------------------------------- */}
         {/* PageContent */}
         {/* ------------------------------------------- */}
+
+
+              {/* ------------------------------------------- */}
+      {/* TO:DO: MAKE MEDIA QUERYS TO CONTROL maxWidth BREAKPOINTS */}
+      {/* ------------------------------------------- */}
+      
         <Container
-          sx={{
-            paddingTop: "20px",
-            maxWidth: "1200px",
-          }}
-        >
-          {/* ------------------------------------------- */}
-          {/* Page Route */}
-          {/* ------------------------------------------- */}
-          <Box sx={{ minHeight: "calc(100vh - 170px)" }}>{children}</Box>
-          {/* ------------------------------------------- */}
-          {/* End Page */}
-          {/* ------------------------------------------- */}
-        </Container>
+  sx={{
+    paddingTop: "20px",
+    maxWidth: isLargerContainer ? "1600px !important" : "1200px", // Default to 1200px, 2500px for specific pages
+  }}
+>
+  {/* Page Content */}
+  <Box sx={{ minHeight: "calc(100vh - 170px)" }}>{children}</Box>
+</Container>
 
         {showHomeCard && <BankCardRow />}
         {showFooter && <Footer />}
-        {/* {showFootersmall && <Footersmall />} */}
+        {showFootersmall && <Footersmall />}
       </PageWrapper>
     </MainWrapper>
   );

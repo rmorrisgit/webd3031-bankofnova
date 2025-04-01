@@ -1,135 +1,168 @@
-"use client";
-
-import { Box, Drawer, IconButton, AppBar, Toolbar, Typography } from "@mui/material";
+import { Box, Drawer, IconButton, AppBar, Toolbar, Backdrop } from "@mui/material";
 import SidebarItems from './SidebarItems';
-// import { SidebarProfile } from './SidebarProfile';
-import MenuIcon from "@mui/icons-material/Menu";
+import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined"; // Closed menu icon
+import MenuOpenOutlinedIcon from "@mui/icons-material/MenuOpenOutlined"; // Open menu icon
+
 import { Sidebar, Logo } from 'react-mui-sidebar';
 import Profile from "../header/Profile";
-
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
+import { useMediaQuery, useTheme } from "@mui/material";
 
 const HEADER_HEIGHT = 64; // Adjust based on your design
-const SIDEBAR_WIDTH = 200; // Sidebar width when open
-const SIDEBAR_HEIGHT = 270;
+const SIDEBAR_WIDTH = 256; // Sidebar width when open
+const SIDEBAR_COLLAPSED_WIDTH = 73; // Sidebar width when collapsed (skinny)
+const SIDEBAR_HEIGHT = 200;
+const SIDEBAR_WIDTH_XS = 270; // New width for isXs
+
+
+
+
 
 interface ItemType {
   isMobileSidebarOpen: boolean;
   onSidebarClose: (event: React.MouseEvent<HTMLElement>) => void;
   isSidebarOpen: boolean;
-  onMobileSidebarToggle: () => void; // Add this for toggle functionality
+  onMobileSidebarToggle: () => void;
 }
 
 const LogoWithHover = () => (
   <Link href="/" passHref>
-    <Box
-      sx={{
-        '&:hover': {
-          opacity: 0.8, // Change opacity on hover for effect
-        },
-        display: 'flex',
-        justifyContent: 'center', // Center the logo horizontally
-        alignItems: 'center', // Center the logo vertically
-        width: '100%', // Make sure it takes up full width
-      }}
-    >
+        <Box
+          sx={{
+            position: 'fixed',
+            top: 0,
+            marginTop: '-1px',
+            left: 40,
+            zIndex: 9999,
+          }}
+        >
       <Logo img="/images/logos/dark-logo3.svg" />
     </Box>
   </Link>
 );
 
-const MSidebar = ({
-  isSidebarOpen,
-}: ItemType) => {
+const MSidebar = ({ isSidebarOpen }: ItemType) => {
   const { data: session, status } = useSession();
   const pathname = usePathname();
+  const theme = useTheme();
 
-  // Always call the hooks in the same order, even if the session is still loading
-  const [mdUp, setLgUp] = useState(false);
-  const [isTemporary, setIsTemporary] = useState(false); // Determines behavior based on screen size
-  const [isSidebarToggled, setIsSidebarToggled] = useState(isSidebarOpen); // New state for toggle
+  // Media queries for breakpoints
+  const isSmUp = useMediaQuery(theme.breakpoints.up('sm'));
+  const isMdUp = useMediaQuery(theme.breakpoints.up('md'));
+  const isXlUp = useMediaQuery(theme.breakpoints.up('xl'));
 
+  // New query for small screens
+  const isXs = useMediaQuery('(max-width: 900px)'); // Custom xs breakpoint
+
+  const [isSidebarToggled, setIsSidebarToggled] = useState(false);
+
+  // Toggle the sidebar on small screens
   const toggleSidebar = () => {
     setIsSidebarToggled((prev) => !prev); // Toggle the sidebar state
+    console.log(isSidebarToggled ? "Sidebar Open" : "Sidebar Collapsed");
   };
 
+  // Default sidebar behavior based on breakpoints
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const mediaQuery = window.matchMedia('(min-width: 1200px)');
-      setLgUp(mediaQuery.matches);
-  
-      const handleResize = () => setLgUp(mediaQuery.matches);
-      mediaQuery.addEventListener('change', handleResize);
-  
-      return () => mediaQuery.removeEventListener('change', handleResize);
+    if (isXlUp) {
+      setIsSidebarToggled(true); // Sidebar open on lgUp
+    } else if (isMdUp) {
+      setIsSidebarToggled(false); // Sidebar permanently closed on mdUp
+    } else if (isSmUp) {
+      setIsSidebarToggled(false); // Sidebar closed on smUp
     }
-  }, []);
+  }, [isXlUp, isMdUp, isSmUp]);
 
   const isSpecialPage = ['/', '/login'].includes(pathname || '');
 
-  // Check if the page is special and return null if true to avoid rendering the sidebar
   if (isSpecialPage || status !== 'authenticated') {
     return null;
   }
+
+  // Close sidebar when backdrop is clicked
+  const handleBackdropClick = () => {
+    setIsSidebarToggled(false);
+  };
 
   return (
     <Box sx={{ display: 'flex' }}>
       {/* Header */}
       <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1, backgroundColor: "transparent", boxShadow: "none" }}>
-  <Toolbar sx={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
-    {/* Left side: Menu Icon and Logo */}
-    <IconButton onClick={toggleSidebar} edge="start">
-      <MenuIcon />
-    </IconButton>
-    <LogoWithHover />
-    
-    {/* Right side: Profile */}
-    <Box sx={{ display: "flex", alignItems: "center", justifyContent: "flex-end", width: "100%" }}>
-      <Profile />
-    </Box>
-  </Toolbar>
-</AppBar>
+        <Toolbar sx={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
+          <IconButton onClick={toggleSidebar} edge="start">
+            {isSidebarToggled ? <MenuOpenOutlinedIcon /> : <MenuOutlinedIcon />}
+          </IconButton>
+
+          <LogoWithHover />
+
+          <Box sx={{ display: "flex", alignItems: "center", justifyContent: "flex-end", width: "100%" }}>
+            <Profile />
+          </Box>
+        </Toolbar>
+      </AppBar>
 
       {/* Main Content */}
       <Box
         sx={{
           display: 'flex',
           flex: 1,
-          marginTop: `${HEADER_HEIGHT}px`,
-          marginLeft: isSidebarToggled ? `${SIDEBAR_WIDTH}px` : 0, // Use toggle state for sidebar margin
-          transition: 'margin-left 0.3s ease', // Smooth transition for content when sidebar toggles
+          // marginLeft: isMdUp || isXlUp ? (isSidebarToggled || isXlUp ? `${SIDEBAR_WIDTH}px` : `${SIDEBAR_COLLAPSED_WIDTH}px`) : 0, // Only add margin on mdUp
+          transition: 'margin-left 0.3s ease',
+          marginLeft: isXlUp
+          ? (isSidebarToggled ? `${SIDEBAR_WIDTH}px` : `${SIDEBAR_COLLAPSED_WIDTH}px`)  // Adjust margin for lgUp based on sidebar state
+          : isMdUp  // For mdUp and below, apply similar logic
+          ? (isSidebarToggled ? `${SIDEBAR_WIDTH}px` : `${SIDEBAR_COLLAPSED_WIDTH}px`)
+          : 0, // No margin for xs or sm
         }}
       >
         <Drawer
           anchor="left"
           open={isSidebarToggled}
-          variant={isTemporary ? 'temporary' : 'persistent'}
-          onClose={isTemporary ? toggleSidebar : undefined} // Close on backdrop click for temporary mode
+          variant={isMdUp || isXlUp ? 'permanent' : 'persistent'}
+          onClose={isMdUp ? () => {} : undefined}  // No closing automatically in permanent mode
           PaperProps={{
             sx: {
-              width: `${SIDEBAR_WIDTH}px`,
+              width: `${isXs ? SIDEBAR_WIDTH_XS : isSidebarToggled ? SIDEBAR_WIDTH : SIDEBAR_COLLAPSED_WIDTH}px`,
               height: `${SIDEBAR_HEIGHT}`,
               boxShadow: 'none',
-              borderRight: 'none',
+              // borderRight: 'none',
               display: 'flex',
+              overflowX: "hidden",
+
               flexDirection: 'column',
-              marginTop: isTemporary ? 0 : `${HEADER_HEIGHT}px`, // Adjust for header only in persistent mode
+              // marginTop: isMdUp ? 0 : `${HEADER_HEIGHT}px`,
             },
           }}
         >
-          <Box sx={{ height: '100%', mt: '84px' }}>
-            <Sidebar width={`${SIDEBAR_WIDTH}px`} collapsewidth="80px" showProfile={false}>
-              {/* SidebarItems component handles the actual sidebar content */}
-              {/* <SidebarProfile /> */}
+          <Box sx={{ height: '100%',  }}>
+            <Sidebar
+              width={`${isSidebarToggled ? SIDEBAR_WIDTH : SIDEBAR_COLLAPSED_WIDTH}px`}
+              collapsewidth={`${SIDEBAR_COLLAPSED_WIDTH}px`} // Ensures proper collapse
+              showProfile={false}
+              sx={{
+                
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center", // Centers items vertically
+                justifyContent: "center", // Ensures alignment
+              }}
+            >
+          <SidebarItems isSidebarToggled={isSidebarToggled} />
+      </Sidebar>
+    </Box>
+  </Drawer>
 
-             
-              <SidebarItems />
-            </Sidebar>
-          </Box>
-        </Drawer>
+        {/* Backdrop for xs screens */}
+        {isXs && isSidebarToggled && (
+          <Backdrop
+            open={isSidebarToggled}
+            onClick={handleBackdropClick}
+            sx={{ zIndex: (theme) => theme.zIndex.drawer - 1 }}
+          />
+        )}
       </Box>
     </Box>
   );
