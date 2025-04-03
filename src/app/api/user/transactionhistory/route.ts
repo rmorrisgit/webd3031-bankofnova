@@ -20,68 +20,91 @@ interface Transaction {
 export async function GET(req: Request) {
   try {
     const session = await getServerSession(authOptions);
-
     if (!session) {
       return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
     }
 
-    const userId = session.user.id; // Assuming user ID is available in session
+    const userId = session.user.id;
     const url = new URL(req.url);
-    const accountType = url.searchParams.get('accountType'); // Get account type from query parameter (chequing or savings)
+    const accountType = url.searchParams.get('accountType');
 
-    // Ensure the account type is valid
     if (!accountType || !['chequing', 'savings'].includes(accountType)) {
       return NextResponse.json({ success: false, message: 'Invalid account type' }, { status: 400 });
     }
 
-    // Fetch the corresponding account ID based on the account type
+    // Get the correct account ID
     const [accountResult] = await pool.query(
-      `SELECT id FROM bank_accounts WHERE user_id = ? AND account_type = ?`,
+      `SELECT id, balance FROM bank_accounts WHERE user_id = ? AND account_type = ?`,
       [userId, accountType]
     );
 
-    const account = accountResult as { id: string }[]; // Cast result to expected type
+    const account = accountResult as { id: string; balance: number }[];
 
     if (!account || account.length === 0) {
       return NextResponse.json({ success: false, message: 'Account not found' }, { status: 404 });
     }
 
     const accountId = account[0].id;
+    let currentBalance = account[0].balance; // Get actual account balance
 
-    // Query to fetch transactions for the specified account
+    // Get transactions ordered from OLDEST to NEWEST
     const [transactionsResult] = await pool.query(
-      `
-        SELECT 
-          t.id,
-          t.sender_id,
-          t.sender_account_id,
-          t.receiver_id,
-          t.receiver_account_id,
-          t.transaction_type,
-          t.amount,
-          t.status,
-          t.created_at
-        FROM transactions t
-        WHERE t.receiver_account_id = ? OR t.sender_account_id = ?
-        ORDER BY t.created_at DESC
-        LIMIT 10
-      `,
+      `SELECT 
+        t.id,
+        t.sender_id,
+        t.sender_account_id,
+        t.receiver_id,
+        t.receiver_account_id,
+        t.transaction_type,
+        t.amount,
+        t.status,
+        t.created_at
+      FROM transactions t
+      WHERE t.receiver_account_id = ? OR t.sender_account_id = ?
+      ORDER BY t.created_at ASC`, // Oldest first
       [accountId, accountId]
     );
 
-    const transactions = transactionsResult as Transaction[]; // Type assertion for rows
+    const transactions = transactionsResult as Transaction[];
 
-    // Add a `direction` property to each transaction
-    const transactionsWithDirection = transactions.map((transaction) => ({
-      ...transaction,
-      direction: transaction.sender_account_id === accountId ? 'sent' : 'received',
-    }));
-
-    if (transactionsWithDirection.length === 0) {
+    if (transactions.length === 0) {
       return NextResponse.json({ success: true, message: 'No transactions found', transactions: [] });
     }
 
-    return NextResponse.json({ success: true, transactions: transactionsWithDirection });
+    const sortedTransactions = transactions.sort(
+      (a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+    );
+    
+    let runningBalance = 0; // Start from zero and build up
+    const transactionsWithBalance = sortedTransactions.map((transaction, index) => {
+      // Ensure the amount is parsed as a float
+      const transactionAmount = parseFloat(transaction.amount);
+    
+      // If it's the first transaction, initialize runningBalance based on it
+      if (index === 0) {
+        runningBalance = transactionAmount;
+      } else {
+        // Modify balance based on transaction type
+        if (transaction.sender_account_id === accountId) {
+          runningBalance -= transactionAmount; // Deduct for sent transactions
+        } else if (transaction.receiver_account_id === accountId) {
+          runningBalance += transactionAmount; // Add for received transactions
+        }
+      }
+    
+      return {
+        ...transaction,
+        direction: transaction.sender_account_id === accountId ? 'sent' : 'received',
+        balance: runningBalance.toFixed(2), // Properly formatted balance at that point
+      };
+    });
+    
+    // Reverse back to newest first for frontend display
+    transactionsWithBalance.reverse();
+    
+
+
+    return NextResponse.json({ success: true, transactions: transactionsWithBalance });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ success: false, message: 'An error occurred while fetching transaction history' }, { status: 500 });

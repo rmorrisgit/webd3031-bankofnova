@@ -13,11 +13,11 @@ import {
   Typography,
   Avatar,
   useTheme,
-  useMediaQuery
+  useMediaQuery,
 } from "@mui/material";
 import { IconListCheck, IconMail, IconUser } from "@tabler/icons-react";
-
 import { signOut, useSession } from "next-auth/react";
+import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlined';
 
 const Profile = () => {
   const [anchorEl2, setAnchorEl2] = useState(null);
@@ -51,33 +51,47 @@ const Profile = () => {
 
   return (
     <Box>
-      <IconButton
-        size="large"
-        aria-label="profile menu"
-        color="inherit"
-        aria-controls="msgs-menu"
-        aria-haspopup="true"
+<IconButton
+  size="large"
+  aria-label="profile menu"
+  color="inherit"
+  aria-controls="msgs-menu"
+  aria-haspopup="true"
+  onClick={handleClick2}
+  disableRipple={!!session}  // Disable ripple only if session exists
         sx={{
-          ...(typeof anchorEl2 === "object" && { color: "primary.main" }),
+          ...(typeof anchorEl2 === "object" && {
+            color: "primary.main",
+            padding: "0px",
+          }),
         }}
-        onClick={handleClick2}
       >
         {session?.user?.name ? (
           <Avatar
+          variant="square"
             {...stringAvatar(session.user.name)} // Display the first letter of the user's name
             sx={{
-              backgroundColor: pathsWithBlueBackground ? "#FFFFFF" : "black", // White on /login and /register
-              color: pathsWithBlueBackground ? "#000000" : "white",
+              borderRadius: "4px",
+              backgroundColor: pathsWithBlueBackground ? "primary.main" : "primary.main", // White on /login and /register
+              color: pathsWithBlueBackground ? "white" : "white",
+              marginRight: "15px",
             }}
           />
         ) : (
           <Avatar
-            {...stringAvatar("Guest")} // Fallback if no session or name available
+          variant="rounded"
             sx={{
-              backgroundColor: pathsWithBlueBackground ? "#FFFFFF" : "inherit",
-              color: pathsWithBlueBackground ? "#000000" : "inherit",
+              backgroundColor: 'white', // White on /login and /register
+              color: pathsWithBlueBackground ? "#000000" : "#000000",
+              // backgroundColor: "primary.light", 
+              // color: "Black",
+              borderRadius: "50%",
+
             }}
-          />
+          >
+          <ManageAccountsOutlinedIcon  />
+</Avatar>
+          
         )}
       </IconButton>
 
@@ -92,6 +106,8 @@ const Profile = () => {
             onClose={handleClose2}
             anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
             transformOrigin={{ horizontal: "right", vertical: "top" }}
+            disableScrollLock={true}  // Disable scroll lock
+
             sx={{
               "& .MuiMenu-paper": {
                 width: "200px",
@@ -104,7 +120,7 @@ const Profile = () => {
               </ListItemIcon>
               <ListItemText>My Profile</ListItemText>
             </MenuItem>
-            <MenuItem>
+            {/* <MenuItem>
               <ListItemIcon>
                 <IconMail width={20} />
               </ListItemIcon>
@@ -115,7 +131,7 @@ const Profile = () => {
                 <IconListCheck width={20} />
               </ListItemIcon>
               <ListItemText>My Tasks</ListItemText>
-            </MenuItem>
+            </MenuItem> */}
             <Box mt={1} py={1} px={2}>
               <Button
                 variant="outlined"
@@ -130,60 +146,59 @@ const Profile = () => {
         </>
       ) : (
         <>
-          <Menu
-            id="msgs-menu"
-            anchorEl={anchorEl2}
-            keepMounted
-            open={Boolean(anchorEl2)}
-            onClose={handleClose2}
-            anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
-            transformOrigin={{ horizontal: "right", vertical: "top" }}
-            sx={{
-              "& .MuiMenu-paper": {
-                width: "200px",
-              },
-            }}
-          >
-            <MenuItem>
+        <Menu
+          id="msgs-menu"
+          anchorEl={anchorEl2}
+          keepMounted
+          open={Boolean(anchorEl2)}
+          onClose={handleClose2}
+          anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+          transformOrigin={{ horizontal: "right", vertical: "top" }}
+          disableScrollLock={true}  // Disable scroll lock
+          sx={{
+            "& .MuiMenu-paper": {
+              width: "200px",
+            },
+          }}
+        >            
+            <Box  py={1} px={2}>
               <Button
                 component={Link}
                 href="/register"
                 variant="outlined"
-                size="large"
+                color="primary"
+                fullWidth
                 disableElevation
                 sx={{
                   width: "100%",
-                  height: "45px",
-                  border: "none",
                   "&:hover": {
                     opacity: 0.8,
-                    border: "none",
                   },
                 }}
               >
-                <Typography variant="h6">Register</Typography>
+              Register
               </Button>
-            </MenuItem>
-            <MenuItem>
+              </Box>
+
+            <Box  px={2}>
               <Button
                 component={Link}
-                size="large"
                 href="/login"
                 variant="outlined"
+                color="primary"
+
+                fullWidth
                 disableElevation
                 sx={{
                   width: "100%",
-                  height: "45px",
-                  border: "none",
                   "&:hover": {
                     opacity: 0.8,
-                    border: "none",
                   },
                 }}
               >
-                <Typography variant="h6">Login</Typography>
+               Login
               </Button>
-            </MenuItem>
+              </Box>
           </Menu>
         </>
       )}

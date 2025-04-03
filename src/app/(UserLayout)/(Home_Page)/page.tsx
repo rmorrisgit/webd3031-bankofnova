@@ -5,7 +5,8 @@ import { Grid } from '@mui/material';
 import BankCard from "../components/blocks/BankCard";
 import CTA from "../components/blocks/CTA";
 import React from "react";
-
+import MuiQuickstart from "../components/overview/MyCard";
+import InfoPage from "../components/overview/MyCard2";
 // Dynamically load the Footer component as a Client Component
 
 
@@ -35,38 +36,35 @@ const HomePage = () => {
     <CTA />
   </Grid>
 
-  {/* Empty Grid with pointer-events and user-select disabled */}
   <Grid
     item
     xs={12}
     md={6}
     sx={{
-      pointerEvents: 'none',   // Disables interaction for this grid
-      userSelect: 'none',      // Prevents text selection
+      pointerEvents: 'none',   
+      userSelect: 'none',      
     }}
   >
-    {/* No content here */}
   </Grid>
 
-  <Grid
+  {/* <Grid
     item
     xs={12}
     sm={12}
     md={6}
     lg={6}
     sx={{
-      pointerEvents: 'none',   // Disables interaction for this grid
-      userSelect: 'none',      // Prevents text selection
+      pointerEvents: 'none',   
+      userSelect: 'none',     
       display: 'flex',
       flexDirection: 'column',
       marginLeft: {
-        xs: 0, // 0px on extra small screens
+        xs: 0, 
         md: 'auto',
         lg: 'auto',
       },
     }}
   >
-    {/* Another empty Grid */}
   </Grid>
 
   <Grid
@@ -80,9 +78,17 @@ const HomePage = () => {
     }}
   >
     <BankCard />
-  </Grid>
+  </Grid> */}
+
 </Grid>
 
+{/* <Grid item xs={12} lg={8}>
+            <MuiQuickstart />
+            </Grid>
+            
+            <Grid item xs={12} lg={8}>
+            <InfoPage />
+            </Grid>  */}
 
 
     </>

@@ -2,8 +2,25 @@
 import { Card } from "@mui/material";
 import PageContainer from "../../components/container/PageContainer";
 import AuthRegister from "../../../authentication/auth/AuthRegister";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 
-const Register2 = () => (
+
+export default function Register2() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
+
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      router.push("/overview");
+    }
+
+  }, [session, status, router]);
+
+
+  return (
   <PageContainer title="Register" description="this is Register page">
     <Card
       elevation={0}
@@ -35,5 +52,4 @@ const Register2 = () => (
     </Card>
   </PageContainer>
 );
-
-export default Register2;
+};

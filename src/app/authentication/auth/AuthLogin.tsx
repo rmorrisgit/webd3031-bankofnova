@@ -137,23 +137,20 @@ const AuthLogin = ({ title, subtitle, subtext }: LoginProps) => {
           )}
         </Stack>
 
-        <Box mt={3}>
-          <Button
-            color="primary"
-            variant="contained"
-            size="large"
-            type="submit"
-            disableElevation
-            sx={{
-              borderRadius: '10px' ,
-              marginTop: '6px',
-              marginBottom:  '4px',
-              height: '44px',
-            }}
-          >
-                  <Typography variant="h6">
-                  Login
-              </Typography>
+          <Box mt={3}>
+            <Button
+              color="primary"
+              variant="contained"
+              size="large"
+              type="submit"
+              disableElevation
+              sx={{
+                height: '44px',
+              }}
+            >
+              <Typography variant="h6">
+                Login
+            </Typography>
           </Button>
 
           <Box mt={3}> {/* Adds spacing between the button and the link */}

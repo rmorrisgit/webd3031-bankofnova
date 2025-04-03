@@ -109,28 +109,28 @@ const handleDeposit = async (accountType: "chequing" | "savings") => {
 
           {/* Deposit Amount Input */}
           <TextField
-  label="Deposit Amount"
-  type="number"
-  variant="outlined"
-  value={depositAmount}
-  onChange={(e) => setDepositAmount(e.target.value)} // Store as string
-  fullWidth
-  sx={{ marginBottom: 2 }}
-  InputProps={{
-    inputMode: 'decimal', // Prevent the number input spinner on mobile devices
-    disableUnderline: true, // Optional: Remove underline if you don't want it
-    sx: {
-      maxWidth: "320px",
+            label="Deposit Amount"
+            type="number"
+            variant="outlined"
+            value={depositAmount}
+            onChange={(e) => setDepositAmount(e.target.value)} // Store as string
+            fullWidth
+            sx={{ marginBottom: 2 }}
+            InputProps={{
+              inputMode: 'decimal', // Prevent the number input spinner on mobile devices
+              sx: {
+                maxWidth: "320px",
+          '& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button': {
+            display: 'none', // Remove the spinner in webkit-based browsers (Chrome/Safari)
+          },
+          '& input[type=number]': {
+            WebkitAppearance: 'textfield', // For Webkit-based browsers
+          },
 
-      '& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button': {
-        display: 'none', // Remove the spinner in webkit-based browsers (Chrome/Safari)
-      },
-      '& input[type=number]': {
-        '-moz-appearance': 'textfield', // Firefox
-      },
-    },
-  }}
-/>
+              },
+            }}
+          />
+
 
 
 

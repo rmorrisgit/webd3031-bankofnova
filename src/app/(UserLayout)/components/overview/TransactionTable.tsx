@@ -8,7 +8,6 @@ import {
   TableRow,
   Card
 } from '@mui/material';
-import DashboardCard from '../shared/DashboardCard';
 import { useEffect, useState } from 'react';
 import { fetchTransactions } from '../../../api/user'; // Replace with your actual fetch function
 
@@ -34,16 +33,9 @@ const TransactionTable = ({ accountType }: ProductPerformanceProps) => {
   }, [accountType]);
 
   return (
-    <Card             elevation={0}
-    title={`${accountType.charAt(0).toUpperCase() + accountType.slice(1)} Transaction History`}>
+    <Card elevation={0} title={`${accountType.charAt(0).toUpperCase() + accountType.slice(1)} Transaction History`}>
       <Box sx={{ overflow: 'auto' }}>
-        <Table
-          aria-label="transaction table"
-          sx={{
-            whiteSpace: 'nowrap',
-            mt: 2,
-          }}
-        >
+        <Table aria-label="transaction table" sx={{ whiteSpace: 'nowrap', mt: 2 }}>
           <TableHead>
             <TableRow>
               <TableCell>
@@ -66,12 +58,18 @@ const TransactionTable = ({ accountType }: ProductPerformanceProps) => {
                   Amount
                 </Typography>
               </TableCell>
+              {/* New Balance Column */}
+              <TableCell align="right">
+                <Typography variant="subtitle2" fontWeight={600}>
+                  Balance
+                </Typography>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {transactions.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={4}>
+                <TableCell colSpan={5}>
                   <Typography align="center" color="textSecondary">
                     No transactions available.
                   </Typography>
@@ -103,6 +101,12 @@ const TransactionTable = ({ accountType }: ProductPerformanceProps) => {
                       }}
                     >
                       {transaction.direction === 'sent' ? '-' : '+'}${transaction.amount}
+                    </Typography>
+                  </TableCell>
+                  {/* New Balance Column */}
+                  <TableCell align="right">
+                    <Typography variant="h6" fontWeight={400}>
+                      ${transaction.balance}
                     </Typography>
                   </TableCell>
                 </TableRow>

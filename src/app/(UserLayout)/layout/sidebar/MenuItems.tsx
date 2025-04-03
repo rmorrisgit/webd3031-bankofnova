@@ -1,20 +1,22 @@
 import {
   IconHome,
   IconCurrencyDollar,
-  IconBuildingBank, // Alternative to IconBank
   IconArrowRight,  // Icon for E-Transfer
   IconDownload,    // Icon for Deposit
   IconArrowsLeftRight, // Icon for Move Money
-  IconWallet, // Alternative to IconPiggyBank
+  IconWallet,      // Alternative to IconPiggyBank
+  IconSettings,    // Settings icon
 } from "@tabler/icons-react";
 
 import { uniqueId } from "lodash";
 
+// Menu Items with Settings and Divider
 const Menuitems = [
   {
     navlabel: true,
-    subheader: "Overview",
+    subheader: "Home",
   },
+
   {
     id: uniqueId(),
     title: "Overview",
@@ -58,6 +60,13 @@ const Menuitems = [
     title: "Move Money",
     icon: IconArrowsLeftRight,
     href: "/transactions/movemoney",
+  },
+
+  {
+    id: uniqueId(),
+    title: "Settings",
+    icon: IconSettings,
+    href: "/settings",
   },
 ];
 

@@ -21,7 +21,6 @@ const CTA = () => {
                 color="primary"
                 size="large"
                 sx={{
-                  borderRadius: '10px',
                   marginTop: '6px',
                   marginBottom: '4px',
                   height: '44px',
