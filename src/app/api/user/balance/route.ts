@@ -29,9 +29,11 @@ export async function GET(req: NextRequest) {
 
     // Format response to include both chequing and savings balances
     const balances = accounts.reduce((acc, account) => {
-      acc[account.account_type] = account.balance;
+      const balanceNumber = parseFloat(account.balance); // Ensure it's a number
+      acc[account.account_type] = balanceNumber.toLocaleString('en-US', { minimumFractionDigits: 2 });
       return acc;
-    }, {} as Record<string, number>);
+    }, {} as Record<string, string>);
+    
 
     return jsonResponse({ balances }, 200);
   } catch (error) {

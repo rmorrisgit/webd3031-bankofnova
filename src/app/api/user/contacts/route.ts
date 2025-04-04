@@ -1,5 +1,3 @@
-// src/app/api/user/contacts/route.ts
-
 import { NextResponse } from 'next/server';
 import pool from '../../../../lib/db'; // Your MySQL pool
 import { getServerSession } from 'next-auth';
@@ -17,17 +15,25 @@ interface UserWithAccounts {
   bankAccounts: BankAccount[];
 }
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
     const session = await getServerSession(authOptions);
 
-    // If you want to check the session, you can add logic here
+    // Check if the session is valid (i.e., user is logged in)
     if (!session) {
       return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
     }
 
-    // Create a query to fetch the latest 10 users along with their bank accounts
-    const [rows] = await pool.query(
+    const { searchParams } = new URL(req.url);
+    const email = searchParams.get('email'); // Get email from query parameters
+
+    // Validate that the email is provided
+    if (!email) {
+      return NextResponse.json({ success: false, message: 'Email is required' }, { status: 400 });
+    }
+
+    // Query to fetch user by email and their associated bank accounts
+    const queryResult = await pool.query(
       `
         SELECT 
           u.id AS user_id, 
@@ -37,44 +43,33 @@ export async function GET() {
           ba.account_type 
         FROM users u
         LEFT JOIN bank_accounts ba ON ba.user_id = u.id
-        ORDER BY u.created_at DESC
-        LIMIT 10
-      `
+        WHERE u.email = ?
+      `,
+      [email] // Use email as parameter to prevent SQL injection
     );
 
-    // Ensure `rows` is treated as an array
-    const users = rows as any[];
+    const rows = queryResult[0] as any[]; // Explicitly cast to array of rows
 
-    // Transform the data to group bank accounts by user
-    const usersWithAccounts = users.reduce<UserWithAccounts[]>((acc, user) => {
-      const { user_id, name, email, account_id, account_type } = user;
-
-      // Check if the user already exists in the accumulator
-      let userEntry = acc.find(u => u.id === user_id);
-
-      if (!userEntry) {
-        userEntry = { id: user_id, name, email, bankAccounts: [] };
-        acc.push(userEntry);
-      }
-
-      if (account_id) {
-        userEntry.bankAccounts.push({
-          id: account_id,
-          account_type,
-        });
-      }
-
-      return acc;
-    }, []);
-
-    // Check if no users were found
-    if (usersWithAccounts.length === 0) {
-      return NextResponse.json({ success: true, message: "No users found", users: [] });
+    // If no user is found
+    if (rows.length === 0) {
+      return NextResponse.json({ success: false, message: 'Recipient not found' }, { status: 404 });
     }
 
-    return NextResponse.json({ success: true, users: usersWithAccounts });
+    // Transform the data to group bank accounts by user
+    const userWithAccounts: UserWithAccounts = {
+      id: rows[0].user_id,
+      name: rows[0].name,
+      email: rows[0].email,
+      bankAccounts: rows.map(user => ({
+        id: user.account_id,
+        account_type: user.account_type,
+      })),
+    };
+
+    // Return the user data with accounts
+    return NextResponse.json({ success: true, user: userWithAccounts });
   } catch (error) {
-    console.error(error);
-    return NextResponse.json({ success: false, message: 'An error occurred while fetching users' }, { status: 500 });
+    console.error("Error occurred while fetching user data:", error);
+    return NextResponse.json({ success: false, message: 'An error occurred while fetching user' }, { status: 500 });
   }
 }

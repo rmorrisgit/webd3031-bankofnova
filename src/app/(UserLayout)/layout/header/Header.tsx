@@ -72,32 +72,31 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
   const isOnHomePage = pathname === "/";
   const isOnRegister = pathname === "/register";
 
-  const LogoWithHover = () => (
-    <Link href="/" passHref>
-      <Box
-        sx={{
-          "&:hover": {
-            opacity: 0.8, 
-          },
-          display: "flex", 
-          width: '100%', 
-          marginLeft: '-23px',
-          marginTop: '-6px',
-          // zIndex: 9999, //doesnt work
-        }}
-      >
-        <Logo img={blueBackground ? "/images/logos/dark-logo4.svg" : "/images/logos/dark-logo3.svg"} />
-      </Box>
-    </Link>
-  );
 
   return (
     <AppBarStyled position="sticky" color="default">
       <ToolbarStyled>
         {/* LEFT SIDE */}
-        {(isOnRegister) && <LogoWithHover />}
-
-
+        {/* {(isOnRegister) && <LogoWithHover />} */}
+        {isOnRegister && (
+  <Link href="/" passHref>
+    <Box
+      sx={{
+        "&:hover": {
+          opacity: 0.8, 
+        },
+        alignItems: "center",  // Vertically center logo
+        marginTop: '-6px',
+      }}
+    >
+      <img 
+        src={blueBackground ? "/images/logos/dark-logo4.svg" : "/images/logos/dark-logo3.svg"} 
+        alt="Logo"
+        style={{ width: 'auto', }} // Adjust size as needed
+      />
+    </Box>
+  </Link>
+)}
 
         {/* Hamburger Menu */}
        <IconButton
@@ -116,7 +115,7 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
 
         {/* RIGHT SIDE */}
         <Stack spacing={1} direction="row" alignItems="center" sx={{ position: "absolute", right: session ? 80 : 80 }}>
-          {!session && !isOnRegister ? ( // Hide Register and Login buttons on /register page
+        {!session && !isOnRegister ? ( // Hide Register and Login buttons on /register page
             <>
               {smUp && (
                 <Box mt={2}>

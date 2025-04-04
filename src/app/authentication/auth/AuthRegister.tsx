@@ -130,7 +130,7 @@ export default function RegisterForm({ subtext, subtitle }: RegisterFormProps) {
               )}
 
               <Typography variant="h3" fontWeight="700" mb="25px">
-                Create your Username and PIN
+                Create your Username and Password
               </Typography>
 
               <Stack spacing={2} width="100%" maxWidth="400px">

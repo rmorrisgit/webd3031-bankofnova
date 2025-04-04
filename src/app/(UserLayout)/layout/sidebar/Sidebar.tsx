@@ -128,7 +128,7 @@ const MSidebar = ({ isSidebarOpen }: ItemType) => {
               width: `${isXs ? SIDEBAR_WIDTH_XS : isSidebarToggled ? SIDEBAR_WIDTH : SIDEBAR_COLLAPSED_WIDTH}px`,
               height: `${SIDEBAR_HEIGHT}`,
               boxShadow: 'none',
-              // borderRight: 'none',
+              borderRight: 'none',
               display: 'flex',
               overflowX: "hidden",
 
