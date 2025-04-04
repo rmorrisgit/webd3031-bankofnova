@@ -3,8 +3,10 @@ import { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { Box, Typography, Button, TextField, MenuItem } from "@mui/material";
 import { useSession } from "next-auth/react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { fetchUserAccounts } from "../../../../../api/accounts";
+import { fetchUserBalance } from "../../../../../api/user"; // Fetches balance
+import { useTransferContext } from "../../../../../context/TransferContext"; // Import the context
 
 interface Account {
   id: string;
@@ -16,13 +18,12 @@ interface Account {
 export default function ConfirmTransactionPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
-  const searchParams = useSearchParams();
 
-  const recipientAccountId = parseInt(searchParams.get("receiverAccount") || "0", 10);
-  const senderAccountId = parseInt(searchParams.get("account") || "0", 10);
-  
-  console.log("Recipient Account ID:", recipientAccountId);
-  console.log("Sender Account ID:", senderAccountId);
+  // Access transfer data from context
+  const { transferData } = useTransferContext();
+  const recipientAccountId = transferData.receiverAccount;
+  const recipientEmail = transferData.toContact || "Loading...";
+  const senderAccountId = transferData.fromAccount;
 
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -30,59 +31,74 @@ export default function ConfirmTransactionPage() {
 
   const { control, handleSubmit, formState: { errors }, setValue } = useForm();
 
-  useEffect(() => {
-    if (!session?.user?.id) {
-      router.push("/login");
-      return;
-    }
-
-    const loadAccounts = async () => {
-      setIsLoading(true);
-      try {
-        const userAccounts = await fetchUserAccounts(session.user.id);
-        console.log("Fetched Accounts:", userAccounts);
-        setAccounts(userAccounts);
-    
-        // Set the default sender account
-        if (userAccounts.length > 0) {
-          setValue("fromAccount", userAccounts[0].id);
-        }
-      } catch (error) {
-        setError(error instanceof Error ? error.message : "Failed to load data.");
-      } finally {
-        setIsLoading(false);
+    useEffect(() => {
+      if (!session?.user?.id) {
+        router.push("/login");
+        return;
       }
-    };
-
-    loadAccounts();
-  }, [session, router, setValue]);
+    
+      const loadAccounts = async () => {
+        setIsLoading(true);
+        try {
+          const userAccounts = await fetchUserAccounts(session.user.id);
+          const balances = await fetchUserBalance();
+    
+          // Map balances by account_type, matching with the user accounts
+          const accountsWithBalance: Account[] = userAccounts.map((account: Account) => ({
+            ...account,
+            balance: balances[account.account_type] ? parseFloat(balances[account.account_type].replace(/,/g, '')) : 0,  // Use account_type for matching
+          }));
+    
+          console.log("Accounts with Balance:", accountsWithBalance); // Log the updated account data
+    
+          setAccounts(accountsWithBalance);
+    
+          if (userAccounts.length > 0 && senderAccountId) {
+            const validAccount = userAccounts.find((account: Account) => account.id === senderAccountId);
+            if (validAccount) {
+              setValue("fromAccount", senderAccountId); // Set value only if account exists
+            }
+          }
+        } catch (error) {
+          setError(error instanceof Error ? error.message : "Failed to load data.");
+        } finally {
+          setIsLoading(false);
+        }
+      };
+    
+      loadAccounts();
+    }, [session, router, setValue, senderAccountId]);
+    
 
   const onSubmit = async (data: any) => {
     try {
       if (!session?.user?.id) {
         throw new Error("User is not logged in.");
       }
-      
+
       setIsLoading(true);
       setError(null);
+      console.log("Recipient Email:", recipientEmail);
+      console.log(transferData);  // Add this line to inspect the structure of transferData
 
-      if (!recipientAccountId || isNaN(Number(recipientAccountId))) {
+      // Ensure recipientAccountId is correctly passed and valid
+      if (!recipientAccountId) {
         throw new Error("Receiver bank account ID is missing or invalid.");
       }
 
-      const transferData = {
-        sender_account_id: Number(data.fromAccount),
-        receiver_account_id: Number(recipientAccountId),
-        amount: Number(data.amount),
-        sender_user_id: Number(session.user.id),
+      // Transfer Data to send to the backend
+      const transferRequestData = {
+        sender_account_id: Number(data.fromAccount), // sender's account ID
+        receiver_account_id: recipientAccountId, // recipient's account ID
+        amount: Number(data.amount), // transaction amount
+        sender_user_id: Number(session.user.id), // user ID
       };
 
-      console.log("Sending Transfer Data:", transferData);
-
+      // Make the API call to process the transfer
       const response = await fetch("/api/user/transfer", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(transferData),
+        body: JSON.stringify(transferRequestData),
       });
 
       const result = await response.json();
@@ -91,7 +107,6 @@ export default function ConfirmTransactionPage() {
         throw new Error(result.error || "Transaction failed.");
       }
 
-      console.log("Transfer successful:", result);
       router.push("/success"); // Redirect to success page
 
     } catch (error) {
@@ -116,45 +131,48 @@ export default function ConfirmTransactionPage() {
       <form onSubmit={handleSubmit(onSubmit)}>
         <Box sx={{ mb: 2 }}>
           {/* From Account Dropdown */}
-          <Controller
-            name="fromAccount"
-            control={control}
-            defaultValue=""
-            rules={{ required: "Please select an account" }}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                fullWidth
-                select
-                label="From Account"
-                error={!!errors.fromAccount}
-                helperText={errors.fromAccount?.message as string}
-                margin="normal"
-              >
-                {/* Ensure accounts is an array before mapping */}
-                {Array.isArray(accounts) && accounts.length > 0 ? (
-                  accounts.map((acc) => (
-                    <MenuItem key={acc.id} value={acc.id}>
-                      <Box sx={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
-                        <Typography>{acc.name} ({acc.account_type})</Typography>
-                        <Typography variant="body2" color="textSecondary">
-                          ${Number(acc.balance || 0).toFixed(2)}  {/* Ensure it's a number */}
-                        </Typography>
-                      </Box>
-                    </MenuItem>
-                  ))
-                ) : (
-                  <MenuItem disabled>No accounts available</MenuItem> // Fallback UI if no accounts are available
-                )}
-              </TextField>
-            )}
-          />
+         {/* From Account Dropdown */}
+         <Controller
+  name="fromAccount"
+  control={control}
+  defaultValue={accounts.some(acc => acc.id === senderAccountId) ? senderAccountId : ""}
+  rules={{ required: "Please select an account" }}
+  render={({ field }) => (
+    <TextField
+      {...field}
+      fullWidth
+      select
+      label="From Account"
+      error={!!errors.fromAccount}
+      helperText={errors.fromAccount?.message as string}
+      margin="normal"
+    >
+      {accounts.length > 0 ? (
+        accounts.map((acc) => (
+          <MenuItem key={acc.id} value={acc.id}>
+            <Box sx={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
+              <Typography>{acc.account_type}</Typography>
+              <Typography variant="body2" color="textSecondary">
+                {acc.balance !== undefined && acc.balance !== null
+                  ? acc.balance.toFixed(2) 
+                  : "0.00"}
+              </Typography>
+            </Box>
+          </MenuItem>
+        ))
+      ) : (
+        <MenuItem disabled>No accounts available</MenuItem>
+      )}
+    </TextField>
+  )}
+/>
 
-          {/* Recipient Field (Read-Only) */}
+
+          {/* Recipient Email (Display Only) */}
           <TextField
             fullWidth
-            label="Recipient Account ID"
-            value={recipientAccountId || "Loading..."} // Directly show the recipient ID
+            label="Recipient Email"
+            value={recipientEmail}
             InputProps={{ readOnly: true }}
             margin="normal"
           />

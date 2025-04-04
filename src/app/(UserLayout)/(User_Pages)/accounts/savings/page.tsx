@@ -38,12 +38,6 @@ const SavingsPage = () => {
   }, [session]); // Runs when the session changes
   
 
-  const formatBalance = (balance: number | null) => {
-    if (balance === null || isNaN(Number(balance))) {
-      return 'Loading...'; // Return loading message if balance is null or invalid
-    }
-    return `$${Number(balance).toFixed(2)}`; // Ensure balance is a number before using toFixed()
-  };
 
   return (
     <PageContainer title="Savings" description="This is your Savings account overview">
@@ -54,7 +48,7 @@ const SavingsPage = () => {
           <CardContent>
             <Typography variant="h2">Savings</Typography>
             <Typography variant="body1" color="textSecondary">
-              Chequing Account
+              Savings Account
             </Typography>
           </CardContent>
         </Grid>
@@ -62,8 +56,8 @@ const SavingsPage = () => {
         {/* Balance Display */}
         <Grid item sm={12}>
                 <CardContent>
-                  <Typography variant="h1" fontWeight="700">{formatBalance(savingsBalance)}</Typography>
-                  {error && <Typography variant="body2" color="error">{error}</Typography>}
+                <Typography variant="h1" fontWeight="700">${savingsBalance ?? 'Loading...'}</Typography>
+                {error && <Typography variant="body2" color="error">{error}</Typography>}
                   <Typography variant="body1" color="textSecondary">Current Balance</Typography>
                 </CardContent>
             </Grid>

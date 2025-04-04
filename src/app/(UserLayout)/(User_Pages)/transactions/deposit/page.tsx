@@ -1,6 +1,6 @@
 "use client";
 
-import { Card, Box, Typography, CardContent, Button, TextField, MenuItem, Select, InputLabel, FormControl } from "@mui/material";
+import { Card, Grid, Box, Typography, CardContent, Button, TextField, MenuItem, Select, InputLabel, FormControl } from "@mui/material";
 import PageContainer from "../../../components/container/PageContainer";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
@@ -60,9 +60,9 @@ const handleDeposit = async (accountType: "chequing" | "savings") => {
 
 
   return (
-    <PageContainer title="" description="">
+    <PageContainer title="Deposit" description="This is your Deposit page">
     <Card
-      elevation={9}
+      elevation={0}
       sx={{
         p: 2,
         zIndex: 1,
@@ -91,8 +91,11 @@ const handleDeposit = async (accountType: "chequing" | "savings") => {
         <div>Loading...</div>
       ) : session ? (
         <Box>
-          <Typography variant="h1" mb={3}>Deposit</Typography>
-
+        <Grid item xs={12}>
+          <CardContent>
+            <Typography variant="h2">Deposit</Typography>
+          </CardContent>
+        </Grid>
           {/* Account Type Selection */}
           <FormControl fullWidth sx={{ marginBottom: 2 , maxWidth: "320px",
 }}>

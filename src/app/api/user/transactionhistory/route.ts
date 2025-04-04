@@ -95,7 +95,8 @@ export async function GET(req: Request) {
       return {
         ...transaction,
         direction: transaction.sender_account_id === accountId ? 'sent' : 'received',
-        balance: runningBalance.toFixed(2), // Properly formatted balance at that point
+        amount: transactionAmount.toLocaleString('en-US', { minimumFractionDigits: 2 }),
+        balance: runningBalance.toLocaleString('en-US', { minimumFractionDigits: 2 }), // Properly formatted with commas
       };
     });
     

@@ -39,12 +39,7 @@ const ChequingPage = () => {
   }, [session]); // Runs when the session changes
   
 
-  const formatBalance = (balance: number | null) => {
-    if (balance === null || isNaN(Number(balance))) {
-      return 'Loading...'; // Return loading message if balance is null or invalid
-    }
-    return `$${Number(balance).toFixed(2)}`; // Ensure balance is a number before using toFixed()
-  };
+  
 
   return (
 <PageContainer title="Chequing" description="This is your Chequing account overview">
@@ -63,13 +58,13 @@ const ChequingPage = () => {
     </Grid>
 
     {/* Chequing Balance Display */}
-    <Grid item xs={12}>
-      <CardContent>
-        <Typography variant="h1" fontWeight="700">{formatBalance(chequingBalance)}</Typography>
-        {error && <Typography variant="body2" color="error">{error}</Typography>}
-        <Typography variant="body1" color="textSecondary">Current Balance</Typography>
-      </CardContent>
-    </Grid>
+    <Grid item sm={12}>
+                <CardContent>
+                <Typography variant="h1" fontWeight="700">${chequingBalance ?? 'Loading...'}</Typography>
+                {error && <Typography variant="body2" color="error">{error}</Typography>}
+                  <Typography variant="body1" color="textSecondary">Current Balance</Typography>
+                </CardContent>
+            </Grid>
 
     {/* <Grid item xs={12}>
       <CardContent>
