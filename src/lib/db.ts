@@ -41,7 +41,7 @@ export async function getUserAccountsByUserId(userId: string): Promise<Array<{ i
 export const getUserByEmail = async (email: string): Promise<User | null> => {
   try {
     const [rows] = await pool.execute<mysql.RowDataPacket[]>(`
-      SELECT id, email, name, role, password
+      SELECT id, email, name, role, password, github_id, google_id
       FROM users
       WHERE email = ?`, [email]);
 
@@ -52,6 +52,8 @@ export const getUserByEmail = async (email: string): Promise<User | null> => {
         name: rows[0].name,
         role: rows[0].role,
         password: rows[0].password, // Include password for authentication
+        github_id: rows[0].github_id,
+        google_id: rows[0].google_id,
       };
       return user;
     }
@@ -64,6 +66,7 @@ export const getUserByEmail = async (email: string): Promise<User | null> => {
 };
 
 
+
 // Function to get a user by account number 
 export const getUserByAccountNumber = async (account_number: string): Promise<User | null> => {
   try {
@@ -72,11 +75,11 @@ export const getUserByAccountNumber = async (account_number: string): Promise<Us
       FROM users
       LEFT JOIN bank_accounts ON users.id = bank_accounts.user_id
       WHERE bank_accounts.account_number = ?`, [account_number]);
-  
+
     if (rows.length > 0) {
       return rows[0] as User;
     }
-    
+
     return null;
   } catch (error) {
     console.error('Error fetching user by account number:', error);
@@ -84,5 +87,31 @@ export const getUserByAccountNumber = async (account_number: string): Promise<Us
   }
 };
 
+// Function to create a new user
+export const createUser = async (user: { 
+  email: string; 
+  name: string; 
+  role: string; 
+  password: string; 
+  github_id?: string | null;  // Allow null or string for github_id
+  google_id?: string | null;  // Allow null or string for google_id
+}) => {
+  try {
+    const query = `
+      INSERT INTO users (email, name, role, password, github_id, google_id)
+      VALUES (?, ?, ?, ?, ?, ?)
+    `;
+    console.log('Executing query with:', [user.email, user.name, user.role, user.password, user.github_id || null, user.google_id || null]);
+    const [result] = await pool.execute(query, [user.email, user.name, user.role, user.password, user.github_id || null, user.google_id || null]);
+    console.log("New user created:", result);
+    return result;
+  } catch (error) {
+    console.error('Error creating new user:', error);
+    throw new Error('Error creating new user');
+  }
+};
+
 
 export default pool;
+
+ 
