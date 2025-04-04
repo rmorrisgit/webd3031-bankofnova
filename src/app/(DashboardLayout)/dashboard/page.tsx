@@ -8,6 +8,7 @@ import RecentTransactions from '../components/dashboard/RecentTransactions';
 import ProductPerformance from '../components/dashboard/ProductPerformance';
 import Blog from '../components/dashboard/Blog';
 import MonthlyEarnings from '../components/dashboard/MonthlyEarnings';
+import AllUsers from '../components/dashboard/AllUsers';
 
 const Dashboard = () => {
   return (
