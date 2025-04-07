@@ -1,5 +1,6 @@
 // src/lib/db.ts
 import mysql from 'mysql2/promise';
+import { RowDataPacket } from 'mysql2';
 
 const pool = mysql.createPool({
   host: 'localhost',
@@ -65,8 +66,31 @@ export const getUserByEmail = async (email: string): Promise<User | null> => {
   }
 };
 
+// Function to get employer details for sender_account_ids 18-23
+// src/lib/db.ts
+
+// src/lib/db.ts
+
+interface Employer {
+  id: number;
+  name: string;
+  account_number: string;
+  balance: number;
+  role: 'user' | 'admin' | 'employer'; // Ensure role is one of these values
+}
 
 
+// Function to get employer details from the database
+// Function to get employer details from the database
+// Function to get employer details from the database
+export const getEmployerDetails = async () => {
+  const query = 'SELECT id, name FROM users WHERE role = "employer"';
+  
+  // Destructure the result to get rows and assert the type to RowDataPacket[]
+  const [rows] = await pool.execute(query) as [RowDataPacket[], any];
+
+  return rows; // Return rows as an array
+};
 // Function to get a user by account number 
 export const getUserByAccountNumber = async (account_number: string): Promise<User | null> => {
   try {

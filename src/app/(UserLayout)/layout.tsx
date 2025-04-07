@@ -7,8 +7,10 @@ import Sidebar2 from "./layout/sidebar/NAVHOME"; // Only show Sidebar2 on specif
 import Footer from "./footer/Footer";
 import { usePathname } from "next/navigation";
 import Footersmall from "./footer2/smallFooter";
-import BankCardRow from "./components/blocks/BankCardRow";
+
+import { useMediaQuery, useTheme } from "@mui/material";
 import Subheader from "./subheader/subheader"; // Import your Subheader component
+import BankCardRow from "./components/blocks/BankCardRow";
 
 const MainWrapper = styled("div")(() => ({
   display: "flex",
@@ -34,9 +36,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const pathname = usePathname();
   const showFooter = ["/"].includes(pathname);
   const showHomeCard = "/".includes(pathname);
-  const showFootersmall = ["/accounts/chequing", "/overview", "/accounts/savings"].includes(pathname);
+  const showFootersmall = ["/accounts/chequing", "/overview", "/accounts/savings", "/transactions/transfer", "/transactions/deposit"].includes(pathname);
 
   const showHomeNav = ["/", "/login"].includes(pathname);
+  const theme = useTheme();
+  const lgUp = useMediaQuery(theme.breakpoints.up("lg"));
+  const xlUp = useMediaQuery(theme.breakpoints.up("xl"));
 
   // Define pages where subheader should appear
   const isLargerContainer = [
@@ -53,6 +58,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const onMobileSidebarToggle = () => {
     setMobileSidebarOpen(!isMobileSidebarOpen);
   };
+
+  const isMediumContainer = [
+    "/", 
+  ].includes(pathname);
 
 
 
@@ -90,26 +99,28 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* Conditionally render Subheader */}
         {/* {isSubheaderPage && <Subheader toggleMobileSidebar={onMobileSidebarToggle} />} */}
         {/* ------------------------------------------- */}
-        {/* PageContent */}
-        {/* ------------------------------------------- */}
+        {showHomeCard && <BankCardRow />}
 
-
-              {/* ------------------------------------------- */}
-      {/* TO:DO: MAKE MEDIA QUERYS TO CONTROL maxWidth BREAKPOINTS */}
-      {/* ------------------------------------------- */}
-      
-        <Container
+<Container
   sx={{
-    paddingTop: "20px",
-    maxWidth: isLargerContainer ? "1600px !important" : "1200px", // Default to 1200px, 2500px for specific pages
+    maxWidth: isLargerContainer
+      ? "1600px !important"
+      : isMediumContainer && lgUp
+      ? "1400px !important"
+      : "1200px",
+    ...(isMediumContainer && xlUp && {
+      padding: "0 !important",
+    }),
   }}
 >
   {/* Page Content */}
   <Box sx={{ minHeight: "calc(100vh - 170px)" }}>{children}</Box>
+
 </Container>
 
-        {showHomeCard && <BankCardRow />}
+
         {showFooter && <Footer />}
+
         {showFootersmall && <Footersmall />}
       </PageWrapper>
     </MainWrapper>

@@ -1,14 +1,14 @@
 "use client"; // Ensure this runs only on the client side
 
 import React from "react";
-import { Box, AppBar, Toolbar, styled, Stack, IconButton, Button, Typography } from "@mui/material";
+import { Box, Container, AppBar, Toolbar, styled, Stack, IconButton, Button, Typography } from "@mui/material";
 import PropTypes from "prop-types";
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react"; // Import auth functions
 import MenuIcon from "@mui/icons-material/Menu";
 import Profile from "./Profile";
 import { usePathname } from "next/navigation";
-import { useMediaQuery } from "@mui/material"; // Import useMediaQuery
+import { useMediaQuery, useTheme } from "@mui/material";
 import { Logo } from "react-mui-sidebar";
 
 interface ItemType {
@@ -18,6 +18,49 @@ interface ItemType {
 const Header = ({ toggleMobileSidebar }: ItemType) => {
   return <HeaderContent toggleMobileSidebar={toggleMobileSidebar} />;
 };
+const LogoWithHover = () => {
+  const theme = useTheme();
+  const isXL = useMediaQuery(theme.breakpoints.up("xl"));
+  const isLG = useMediaQuery(theme.breakpoints.up("lg"));
+  const isMD = useMediaQuery(theme.breakpoints.up("md"));
+  const pathname = usePathname();
+
+  // Responsive left position
+  let leftPosition = 16; // default
+
+  if (pathname === "/register" && isXL) {
+    leftPosition = 50; 
+  } else if (isXL) {
+    leftPosition = 0; 
+  } else if (isLG) {
+    leftPosition = 0;
+  } else if (isMD) {
+    leftPosition = 0;
+  } else {
+    leftPosition = 50;
+  }
+
+  // Logo change based on path
+  const logoSrc = pathname === "/register" ? "/images/logos/dark-logo4.svg" : "/images/logos/dark-logo3.svg";
+
+  return (
+    <Link href="/" passHref>
+      <Box
+        sx={{
+          position: "fixed",
+          top: 18,
+          left: leftPosition,
+          zIndex: 9999,
+          width: "auto",
+        }}
+      >
+        <img src={logoSrc} alt="Logo" style={{ height: "auto" }} />
+      </Box>
+    </Link>
+  );
+};
+
+
 
 const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
   const { data: session, status } = useSession();
@@ -25,6 +68,22 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
   const lgUp = useMediaQuery((theme: any) => theme.breakpoints.up("lg"));
   const mdUp = useMediaQuery((theme: any) => theme.breakpoints.up("md"));
   const smUp = useMediaQuery((theme: any) => theme.breakpoints.up("sm"));
+  const xlUp = useMediaQuery((theme: any) => theme.breakpoints.up("xl"));
+
+  // Define pages where subheader should appear
+  const isLargerContainer = [
+    "/overview",
+    "/transactions/transfer/confirm",
+    "/accounts/chequing",
+    "/accounts/savings",
+    "/transactions/transfer",
+    "/transactions/deposit",
+    "/transactions/movemoney",
+  ].includes(pathname);
+  const isMediumContainer = [
+    "/",
+  ].includes(pathname);
+
 
   const blueBackground = ["/register"].includes(pathname);
 
@@ -73,30 +132,55 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
   const isOnRegister = pathname === "/register";
 
 
-  return (
+    return isOnRegister ? (
+      <>
+    <LogoWithHover /> {/* Add this here for logo on register */}
+      <AppBarStyled position="sticky" color="default">
+        <ToolbarStyled>
+          {/* ...everything inside your ToolbarStyled */}
+        </ToolbarStyled>
+      </AppBarStyled>
+      </>
+    ) : (
+      <Container
+        sx={{
+          maxWidth: isLargerContainer
+            ? "1600px !important"
+            : isMediumContainer && lgUp
+            ? "1400px !important"
+            : "1200px",
+          ...(isMediumContainer && xlUp && {
+            padding: "0 !important",
+          }),
+        }}
+      >
+      
     <AppBarStyled position="sticky" color="default">
       <ToolbarStyled>
+
+      {(isOnHomePage || isOnAuthPages) && <LogoWithHover />}
+
         {/* LEFT SIDE */}
         {/* {(isOnRegister) && <LogoWithHover />} */}
         {isOnRegister && (
-  <Link href="/" passHref>
-    <Box
-      sx={{
-        "&:hover": {
-          opacity: 0.8, 
-        },
-        alignItems: "center",  // Vertically center logo
-        marginTop: '-6px',
-      }}
-    >
-      <img 
-        src={blueBackground ? "/images/logos/dark-logo4.svg" : "/images/logos/dark-logo3.svg"} 
-        alt="Logo"
-        style={{ width: 'auto', }} // Adjust size as needed
-      />
-    </Box>
-  </Link>
-)}
+      <Link href="/" passHref>
+        <Box
+          sx={{
+            "&:hover": {
+              opacity: 0.8, 
+            },
+            alignItems: "center",  // Vertically center logo
+            // marginTop: '16px',
+          }}
+        >
+          <img 
+            src={blueBackground ? "/images/logos/dark-logo4.svg" : "/images/logos/dark-logo3.svg"} 
+            alt="Logo"
+            style={{ width: 'auto', }} // Adjust size as needed
+          />
+        </Box>
+      </Link>
+    )}
 
         {/* Hamburger Menu */}
        <IconButton
@@ -114,7 +198,12 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
         </IconButton> 
 
         {/* RIGHT SIDE */}
-        <Stack spacing={1} direction="row" alignItems="center" sx={{ position: "absolute", right: session ? 80 : 80 }}>
+        <Stack spacing={1} direction="row" alignItems="center" 
+        sx={{ 
+          position: "absolute", 
+          right: session && !isOnHomePage ? 160 : 0
+          }}
+          >
         {!session && !isOnRegister ? ( // Hide Register and Login buttons on /register page
             <>
               {smUp && (
@@ -128,7 +217,7 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
                       size="large"
                       disableElevation
                       sx={{
-                        height: "44px",
+                        padding: "10px 20px",
                         border: "1px solid white",
                         borderColor: blueBackground ? "white" : "primary.main",
                         backgroundColor: blueBackground ? "primary.main" : "white",
@@ -138,7 +227,7 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
                         },
                       }}
                     >
-                      <Typography variant="h6">Register</Typography>
+                      <Typography variant="h5">Register</Typography>
                     </Button>
                     <Button
                       variant="contained"
@@ -148,13 +237,14 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
                       size="large"
                       disableElevation
                       sx={{
+                        padding: "10px 20px",
                         border: "1px solid white",
                         borderColor: blueBackground ? "white" : "white",
                         color: blueBackground ? "white" : "white",
                         backgroundColor: blueBackground ? "primary.main" : "theme.primary",
                       }}
                     >
-                      <Typography variant="h6">Login</Typography>
+                      <Typography variant="h5">Login</Typography>
                     </Button>
                   </Stack>
                 </Box>
@@ -214,6 +304,7 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
         </Stack>
       </ToolbarStyled>
     </AppBarStyled>
+    </Container>
   );
 };
 
