@@ -80,18 +80,7 @@ const InfoPage = () => {
               Unlock advanced features and dedicated support with our Enterprise Plan
             </Alert>
 
-            <Button
-              variant="contained"
-              size="large"
-              sx={{
-                px: 4,
-                py: 1.5,
-                backgroundColor: "#2e7d32",
-                "&:hover": { backgroundColor: "#1b5e20" }
-              }}
-            >
-              Upgrade to Enterprise
-            </Button>
+    
           </Grid>
 
           <Grid item xs={12} md={4}>

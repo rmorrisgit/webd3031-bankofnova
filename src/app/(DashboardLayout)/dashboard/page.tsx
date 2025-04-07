@@ -6,7 +6,6 @@ import SalesOverview from '../components/dashboard/UserRegistration';
 import YearlyBreakup from '../components/dashboard/AllUsers';
 import RecentTransactions from '../components/dashboard/RecentTransactions';
 import ProductPerformance from '../components/dashboard/ProductPerformance';
-import Blog from '../components/dashboard/Blog';
 import MonthlyEarnings from '../components/dashboard/MonthlyEarnings';
 import AllUsers from '../components/dashboard/AllUsers';
 
@@ -24,11 +23,11 @@ const Dashboard = () => {
                 <YearlyBreakup />
               </Grid>
               <Grid item xs={12}>
-                <MonthlyEarnings />
+                {/* <MonthlyEarnings /> */}
               </Grid>
             </Grid>
           </Grid>
-          <Grid item xs={12} lg={4}>
+          {/* <Grid item xs={12} lg={4}>
             <RecentTransactions />
           </Grid>
           <Grid item xs={12} lg={8}>
@@ -36,7 +35,7 @@ const Dashboard = () => {
           </Grid>
           <Grid item xs={12}>
             <Blog />
-          </Grid>
+          </Grid> */}
         </Grid>
       </Box>
     </PageContainer>
