@@ -1,5 +1,3 @@
-// src/app/api/user/AllUsers/route.ts
-
 import { NextResponse } from 'next/server';
 import pool from '../../../../lib/db'; // Your MySQL pool
 import { getServerSession } from 'next-auth';
@@ -10,7 +8,7 @@ interface User {
   name: string;
   email: string;
   created_at: string; // Include created_at field
-  role: string; // Add role field to check if the user is admin
+  role: string; // Include role field
 }
 
 export async function GET() {
