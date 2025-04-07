@@ -11,3 +11,12 @@ export interface CustomSession extends Omit<Session, "user"> {
   };
   expires: string;
 }
+// types.ts
+export interface Employer {
+  id: number;
+  name: string;
+  account_number: string;
+  balance: number;
+  role: 'user' | 'admin' | 'employer';
+  amount?: number;
+}
