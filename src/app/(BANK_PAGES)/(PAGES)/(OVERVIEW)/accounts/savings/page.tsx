@@ -1,11 +1,11 @@
 'use client';
 import { Typography, Grid, CardContent } from '@mui/material';
-import PageContainer from '../../../components/container/PageContainer';
+import PageContainer from '../../../../components/container/PageContainer';
 import { useEffect, useState } from "react";
-import { fetchUserBalance } from "../../../../api/user"; 
+import { fetchUserBalance } from "../../../../../api/user"; 
 import { useSession } from 'next-auth/react'; // Import useSession for session check
 import { useRouter } from 'next/navigation'; // Import useRouter for navigation
-import TransactionTable from "../../../components/TransactionTable";
+import TransactionTable from "../../../../components/TransactionTable";
 
 const SavingsPage = () => {
   const { data: session, status } = useSession();
