@@ -10,6 +10,7 @@ import Profile from "./Profile";
 import { usePathname } from "next/navigation";
 import { useMediaQuery, useTheme } from "@mui/material";
 import { Logo } from "react-mui-sidebar";
+import Image from 'next/image';
 
 interface ItemType {
   toggleMobileSidebar: (event: React.MouseEvent<HTMLElement>) => void;
@@ -18,6 +19,7 @@ interface ItemType {
 const Header = ({ toggleMobileSidebar }: ItemType) => {
   return <HeaderContent toggleMobileSidebar={toggleMobileSidebar} />;
 };
+
 const LogoWithHover = () => {
   const theme = useTheme();
   const isXL = useMediaQuery(theme.breakpoints.up("xl"));
@@ -29,9 +31,9 @@ const LogoWithHover = () => {
   let leftPosition = 16; // default
 
   if (pathname === "/register" && isXL) {
-    leftPosition = 50; 
+    leftPosition = 50;
   } else if (isXL) {
-    leftPosition = 0; 
+    leftPosition = 0;
   } else if (isLG) {
     leftPosition = 0;
   } else if (isMD) {
@@ -54,7 +56,12 @@ const LogoWithHover = () => {
           width: "auto",
         }}
       >
-        <img src={logoSrc} alt="Logo" style={{ height: "auto" }} />
+        <Image
+          src={logoSrc}
+          alt="Logo"
+          width={200} // Adjust width and height as per your design
+          height={50}
+        />
       </Box>
     </Link>
   );
@@ -173,10 +180,12 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
             // marginTop: '16px',
           }}
         >
-          <img 
-            src={blueBackground ? "/images/logos/dark-logo4.svg" : "/images/logos/dark-logo3.svg"} 
+
+            <Image
+         src={blueBackground ? "/images/logos/dark-logo4.svg" : "/images/logos/dark-logo3.svg"} 
             alt="Logo"
-            style={{ width: 'auto', }} // Adjust size as needed
+            width={200} // Adjust width and height as per your design
+            height={50}
           />
         </Box>
       </Link>

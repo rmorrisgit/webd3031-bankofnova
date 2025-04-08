@@ -1,10 +1,8 @@
 import { Box, Drawer, IconButton } from "@mui/material";
-
 import UnauthSidebarItems from "./UnauthSidebarItems";
 import { Sidebar } from 'react-mui-sidebar';
 import { usePathname } from 'next/navigation';
 import CloseIcon from '@mui/icons-material/Close';
-
 import MenuIcon from '@mui/icons-material/Menu'; // Import Menu Icon
 import { useState } from 'react';
 import Link from 'next/link';
@@ -12,7 +10,7 @@ import Profile from "../header/Profile";
 import { SidebarProfile } from "./SidebarProfile";
 import theme from "@/utils/theme";
 import { useMediaQuery, useTheme } from "@mui/material";
-
+import Image from "next/image"; // Import Image from next/image
 
 interface ItemType {
   isMobileSidebarOpen: boolean;
@@ -31,8 +29,8 @@ const Sidebar2 = ({
   const isSpecialPage = ['/', '/login', '/register'].includes(pathname);
   const theme = useTheme();
   const xlUp = useMediaQuery(theme.breakpoints.up("xl"));
-    const isLG = useMediaQuery(theme.breakpoints.up("lg"));
-    const isMD = useMediaQuery(theme.breakpoints.up("md"));
+  const isLG = useMediaQuery(theme.breakpoints.up("lg"));
+  const isMD = useMediaQuery(theme.breakpoints.up("md"));
 
   // For the top-right IconMenu Button
   const MenuButton = () => (
@@ -47,12 +45,10 @@ const Sidebar2 = ({
         zIndex: 9999, // Ensure the button appears on top
         backgroundColor: isMobileSidebarOpen ? 'white' : 'none !important', 
         borderRadius: isMobileSidebarOpen ? '4px' : 'none !important', // Conditionally set borderRadius based on sidebar state
-        // borderRadius: '4px', 
-    
       }}
     >
       {isMobileSidebarOpen ? <CloseIcon /> : <MenuIcon />}
-      </IconButton>
+    </IconButton>
   );
 
   // Logo component to ensure it stays on top permanently
@@ -67,7 +63,13 @@ const Sidebar2 = ({
           width: 'auto',
         }}
       >
-        <img src="/images/logos/dark-logo3.svg" alt="Logo" style={{ height: 'auto' }} />
+        <Image
+          src="/images/logos/dark-logo3.svg"
+          alt="Logo"
+          width={150}  // Set a width for the logo
+          height={50}  // Set a height for the logo
+          style={{ height: 'auto' }}  // Keep the aspect ratio
+        />
       </Box>
     </Link>
   );
@@ -97,7 +99,6 @@ const Sidebar2 = ({
         PaperProps={{
           sx: {
             borderTop: "none !important",
-            // backgroundColor: "#cdcdcd",
             zIndex: 100,
             boxShadow: "none",
           },
@@ -119,9 +120,6 @@ const Sidebar2 = ({
       </Drawer>
     </>
   );
-  
-
-  return null;
 };
 
 export default Sidebar2;

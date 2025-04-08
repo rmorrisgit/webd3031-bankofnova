@@ -1,13 +1,11 @@
 'use client'
 import { Grid, Box } from '@mui/material';
 import PageContainer from '../components/container/PageContainer';
-// components
-import SalesOverview from '../components/dashboard/UserRegistration';
-import YearlyBreakup from '../components/dashboard/AllUsers';
-import RecentTransactions from '../components/dashboard/RecentTransactions';
-import ProductPerformance from '../components/dashboard/ProductPerformance';
-import MonthlyEarnings from '../components/dashboard/MonthlyEarnings';
-import AllUsers from '../components/dashboard/AllUsers';
+import dynamic from 'next/dynamic';
+
+// Dynamically import components with SSR disabled
+const SalesOverview = dynamic(() => import('../components/dashboard/UserRegistration'), { ssr: false });
+const YearlyBreakup = dynamic(() => import('../components/dashboard/AllUsers'), { ssr: false });
 
 const Dashboard = () => {
   return (
@@ -22,20 +20,8 @@ const Dashboard = () => {
               <Grid item xs={12}>
                 <YearlyBreakup />
               </Grid>
-              <Grid item xs={12}>
-                {/* <MonthlyEarnings /> */}
-              </Grid>
             </Grid>
           </Grid>
-          {/* <Grid item xs={12} lg={4}>
-            <RecentTransactions />
-          </Grid>
-          <Grid item xs={12} lg={8}>
-            <ProductPerformance />
-          </Grid>
-          <Grid item xs={12}>
-            <Blog />
-          </Grid> */}
         </Grid>
       </Box>
     </PageContainer>

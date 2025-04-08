@@ -125,7 +125,7 @@ export default function TransferPage() {
       Transfer to someone else	
       </Typography>
       <Typography variant="body2" color="textSecondary" mb={2}>
-      Select the account to send from and enter the recipient's email 
+      Select the account to send from and enter the recipient&apos;s email
       </Typography>
 
       {isLoading ? (
