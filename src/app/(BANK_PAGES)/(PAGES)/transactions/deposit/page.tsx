@@ -26,7 +26,7 @@ import {
 } from "@mui/material";
 import PageContainer from "../../../components/container/PageContainer";
 import { Employer } from "../../../../../lib/types";
-import { fetchUserBalance } from "../../../../api/user";
+// import { fetchUserBalance } from "../../../../api/user";
 
 const Transaction = () => {
   const { data: session, status } = useSession();
@@ -50,7 +50,7 @@ const Transaction = () => {
   useEffect(() => {
     const fetchEmployers = async () => {
       try {
-        const response = await fetch("/api/user/employers");
+        const response = await fetch("/api/user/employerWithLimit");
         if (!response.ok) throw new Error("Failed to fetch employers");
         const data = await response.json();
   
@@ -218,7 +218,14 @@ const Transaction = () => {
                 )}
               </Grid>
             </Grid>
-
+            <Button
+  variant="outlined"
+  color="primary"
+  onClick={() => router.push("/EmployerSettings")}
+  sx={{ mb: 2 }}
+>
+  Go to Employer Settings
+</Button>
             {/* Employers Table */}
             {employers.length > 0 ? (
               <TableContainer component={Paper} sx={{ mb: 2 }}>

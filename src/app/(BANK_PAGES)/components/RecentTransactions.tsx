@@ -1,5 +1,5 @@
 
-import DashboardCard from '../shared/DashboardCard';
+import DashboardCard from './shared/DashboardCard';
 import {
   Timeline,
   TimelineItem,

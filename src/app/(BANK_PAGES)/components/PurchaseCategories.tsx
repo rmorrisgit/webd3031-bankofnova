@@ -21,7 +21,7 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import type { SxProps } from '@mui/material/styles';
 import type { ApexOptions } from 'apexcharts';
-import { Chart } from '../core/chart';
+import { Chart } from './core/chart';
 import { SelectChangeEvent } from '@mui/material';
 
 const iconMapping = {

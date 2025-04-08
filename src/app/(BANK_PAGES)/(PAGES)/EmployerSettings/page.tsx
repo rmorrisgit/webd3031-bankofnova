@@ -88,7 +88,7 @@ const EmployerSettings = () => {
   
 
   return (
-    <Card sx={{ padding: 2, maxWidth: 400, mx: "auto" }}>
+    <Card elevation={ 0 } sx={{ padding: 2, maxWidth: 400, mx: "auto" }}>
       <Typography variant="h5" sx={{ mb: 2 }}>Employer Settings</Typography>
       
       {error && <Typography color="error">{error}</Typography>}
@@ -109,7 +109,7 @@ const EmployerSettings = () => {
         </Select>
       </FormControl>
 
-      {selectedEmployer !== null && (
+ 
         <Box>
           <Typography variant="h6" sx={{ mb: 2 }}>Set Withdrawal Limit</Typography>
           <RadioGroup
@@ -121,7 +121,7 @@ const EmployerSettings = () => {
             <FormControlLabel value="50000" control={<Radio />} label="25,000 - 50,000" />
           </RadioGroup>
         </Box>
-      )}
+ 
 
       <Button
         variant="contained"

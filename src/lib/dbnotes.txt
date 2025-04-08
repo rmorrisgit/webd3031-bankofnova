@@ -25,6 +25,44 @@
 // Old Employer details function ... gets only employers you set withdrawl limits for. 
 
 
+/// ALL EMPLOYERS 
+
+
+export const getEmployerDetails = async (userId: number) => {
+  const query = `
+    SELECT 
+      users.id, 
+      users.name, 
+      bank_accounts.balance, 
+      COALESCE(user_employer.withdrawal_limit, 0) AS withdrawal_limit -- Default to 0 if NULL
+    FROM users
+    JOIN bank_accounts ON users.id = bank_accounts.user_id
+    LEFT JOIN user_employer ON users.id = user_employer.employer_id 
+      AND user_employer.user_id = ?  -- Ensure we filter by the specific user's ID in the user_employer table
+    WHERE users.role = "employer" 
+  `;
+
+  // Your logic to execute the query and return results here
+
+
+  // Your logic to execute the query and return results here
+
+  try {
+    const [rows] = await pool.execute(query, [userId]) as [RowDataPacket[], any];
+    return rows;
+  } catch (err) {
+    console.error("Error fetching employer details:", err);
+    throw new Error("Error fetching employer details");
+  }
+};
+
+
+
+
+///
+///
+
+
 
 
 

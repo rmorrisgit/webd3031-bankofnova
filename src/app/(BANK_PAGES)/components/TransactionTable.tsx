@@ -9,7 +9,7 @@ import {
   Card
 } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { fetchTransactions } from '../../../api/user'; // Replace with your actual fetch function
+import { fetchTransactions } from '../../api/user'; // Replace with your actual fetch function
 
 interface ProductPerformanceProps {
   accountType: 'chequing' | 'savings';

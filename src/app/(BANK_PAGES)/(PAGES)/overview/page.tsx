@@ -1,12 +1,12 @@
 "use client";
 
 import { Grid, Box, Typography, Tabs, Tab } from "@mui/material";
-import PageContainer from '../../../components/container/PageContainer';
+import PageContainer from '../../components/container/PageContainer';
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { fetchUserBalance } from "../../../../api/user";
-import MonthlyEarnings from "../../../components/overview/MonthlyEarnings";
+import { fetchUserBalance } from "../../../api/user";
+import MonthlyEarnings from "../../components/MonthlyEarnings";
 import {
   IconHome,
   IconCurrencyDollar,

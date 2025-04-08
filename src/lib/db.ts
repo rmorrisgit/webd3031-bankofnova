@@ -79,9 +79,6 @@ interface Employer {
   role: 'user' | 'admin' | 'employer'; // Ensure role is one of these values
 }
 
-
-// Function to get employer details from the database
-// Function to get employer details from the database
 // Function to get employer details from the database
 export const getEmployerDetails = async (userId: number) => {
   const query = `
@@ -110,6 +107,31 @@ export const getEmployerDetails = async (userId: number) => {
     throw new Error("Error fetching employer details");
   }
 };
+
+
+export const getEmpWithLimit = async (userId: number) => {
+  const query = `
+    SELECT 
+      users.id, 
+      users.name, 
+      bank_accounts.balance, 
+      user_employer.withdrawal_limit
+    FROM users
+    JOIN bank_accounts ON users.id = bank_accounts.user_id
+    LEFT JOIN user_employer ON users.id = user_employer.employer_id
+    WHERE users.role = "employer" 
+      AND user_employer.user_id = ?  -- Ensure we're filtering by user_id
+  `;
+
+  try {
+    const [rows] = await pool.execute(query, [userId]) as [RowDataPacket[], any];
+    return rows;
+  } catch (err) {
+    console.error("Error fetching employer details:", err);
+    throw new Error("Error fetching employer details");
+  }
+};
+
 
 
 

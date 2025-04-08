@@ -27,9 +27,8 @@ export const SidebarProfile = () => {
           </Box>
         ) : (
           <>
-            <Typography variant="h5" fontSize="16px" mb={1}>
-              Haven't an account?
-            </Typography>
+<Typography variant="h5" fontSize="16px" mb={1}>
+Not signed up?</Typography>
             <Button
               color="primary"
               target="_blank"

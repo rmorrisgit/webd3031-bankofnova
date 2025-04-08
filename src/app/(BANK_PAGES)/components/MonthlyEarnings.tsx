@@ -3,7 +3,7 @@ const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 import { useTheme } from '@mui/material/styles';
 import { Stack, Typography, Avatar, Fab } from '@mui/material';
 import { IconCurrencyDollar } from '@tabler/icons-react';
-import DashboardCard from '../shared/DashboardCard';
+import DashboardCard from './shared/DashboardCard';
 import Link from 'next/link'; // Import Link from Next.js
 
 interface MonthlyEarningsProps {
