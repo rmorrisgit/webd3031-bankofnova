@@ -21,7 +21,7 @@ export interface User {
   password: string; // Add the password field here for authentication
 }
 
-// Function to get user accounts by userId
+// GET user accounts by userId
 export async function getUserAccountsByUserId(userId: string): Promise<Array<{ id: string; account_number: string; account_type: string; balance: number }>> {
   try {
     const query = `
@@ -38,7 +38,7 @@ export async function getUserAccountsByUserId(userId: string): Promise<Array<{ i
   }
 }
 
-// Function to get user accounts by email
+// GET user accounts by emailS
 export const getUserByEmail = async (email: string): Promise<User | null> => {
   try {
     const [rows] = await pool.execute<mysql.RowDataPacket[]>(`
@@ -66,20 +66,7 @@ export const getUserByEmail = async (email: string): Promise<User | null> => {
   }
 };
 
-// Function to get employer details for sender_account_ids 18-23
-// src/lib/db.ts
-
-// src/lib/db.ts
-
-interface Employer {
-  id: number;
-  name: string;
-  account_number: string;
-  balance: number;
-  role: 'user' | 'admin' | 'employer'; // Ensure role is one of these values
-}
-
-// Function to get employer details from the database
+// GET ALL employer details from the database
 export const getEmployerDetails = async (userId: number) => {
   const query = `
     SELECT 
@@ -90,14 +77,9 @@ export const getEmployerDetails = async (userId: number) => {
     FROM users
     JOIN bank_accounts ON users.id = bank_accounts.user_id
     LEFT JOIN user_employer ON users.id = user_employer.employer_id 
-      AND user_employer.user_id = ?  -- Ensure we filter by the specific user's ID in the user_employer table
+      AND user_employer.user_id = ?  
     WHERE users.role = "employer" 
   `;
-
-  // Your logic to execute the query and return results here
-
-
-  // Your logic to execute the query and return results here
 
   try {
     const [rows] = await pool.execute(query, [userId]) as [RowDataPacket[], any];
@@ -108,7 +90,7 @@ export const getEmployerDetails = async (userId: number) => {
   }
 };
 
-
+// GET only employer details with withdrawl limits set by user from the database
 export const getEmpWithLimit = async (userId: number) => {
   const query = `
     SELECT 
@@ -131,9 +113,6 @@ export const getEmpWithLimit = async (userId: number) => {
     throw new Error("Error fetching employer details");
   }
 };
-
-
-
 
 // Function to get a user by account number 
 export const getUserByAccountNumber = async (account_number: string): Promise<User | null> => {

@@ -4,12 +4,12 @@ import React, { useState } from "react";
 import Header from "./components/layout/header/Header";
 import Sidebar from "./components/layout/sidebar/Sidebar";
 import Sidebar2 from "./components/layout/sidebar/NAVHOME"; // Only show Sidebar2 on specific pages
-import Footer from "./components/footer/Footer";
+import Footer from "./components/Footer";
 import { usePathname } from "next/navigation";
-import Footersmall from "./components/footer2/smallFooter";
+import Footersmall from "./components/smallFooter";
 
 import { useMediaQuery, useTheme } from "@mui/material";
-import Subheader from "./components/subheader/subheader"; // Import your Subheader component
+import Subheader from "./components/subheader"; // Import your Subheader component
 import BankCardRow from "./components/BankCardRow";
 
 const MainWrapper = styled("div")(() => ({
