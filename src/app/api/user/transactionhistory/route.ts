@@ -16,6 +16,8 @@ interface Transaction {
   amount: string;
   status: string;
   created_at: string;
+  sender_name?: string | null; // ← add this line
+
 }
 
 export async function GET(req: Request) {
@@ -51,20 +53,25 @@ export async function GET(req: Request) {
     // Get transactions ordered from OLDEST to NEWEST
     const [transactionsResult] = await pool.query(
       `SELECT 
-        t.id,
-        t.sender_id,
-        t.sender_account_id,
-        t.receiver_id,
-        t.receiver_account_id,
-        t.transaction_type,
-        t.amount,
-        t.status,
-        t.created_at
-      FROM transactions t
-      WHERE t.receiver_account_id = ? OR t.sender_account_id = ?
-      ORDER BY t.created_at ASC`, // Oldest first
+  t.id,
+  t.sender_id,
+  t.sender_account_id,
+  t.receiver_id,
+  t.receiver_account_id,
+  t.transaction_type,
+  t.amount,
+  t.status,
+  t.created_at,
+  u.name AS sender_name
+FROM transactions t
+LEFT JOIN users u ON t.sender_account_id = u.id
+WHERE t.receiver_account_id = ? OR t.sender_account_id = ?
+ORDER BY t.created_at ASC;
+`,
       [accountId, accountId]
     );
+    
+    
 
     const transactions = transactionsResult as Transaction[];
 
@@ -98,6 +105,8 @@ export async function GET(req: Request) {
         direction: transaction.sender_account_id === accountId ? 'sent' : 'received',
         amount: transactionAmount.toLocaleString('en-US', { minimumFractionDigits: 2 }),
         balance: runningBalance.toLocaleString('en-US', { minimumFractionDigits: 2 }), // Properly formatted with commas
+        sender_name: transaction.sender_name || null, // Add this line
+
       };
     });
     

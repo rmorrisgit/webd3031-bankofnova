@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authOptions } from '@/auth';
 import { getServerSession } from 'next-auth';
-import { getEmployerDetails } from '@/lib/db'; // Import the function
+import { getEmpWithLimit } from '@/lib/db'; // Import the function
 
 export async function GET(req: NextRequest) {
   // Fetch the session of the logged-in user
@@ -21,7 +21,7 @@ export async function GET(req: NextRequest) {
     }
 
     // Pass the logged-in user's ID to the getEmployerDetails function
-    const employerDetails = await getEmployerDetails(loggedInUserId);
+    const employerDetails = await getEmpWithLimit(loggedInUserId);
 
     if (!employerDetails || employerDetails.length === 0) {
       // If no employer details are found, return a 404 error
