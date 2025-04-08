@@ -13,12 +13,14 @@ const SidebarItems = ({ toggleMobileSidebar, isSidebarToggled }: any) => {
     // <Box sx={{ px: 3 }}>
 
     <Box
-    sx={{ padding: isSidebarToggled ? '7px' : "7px",
-      marginTop: isSidebarToggled ? '35px' : "60px",
+    sx={{ 
+      marginTop: isSidebarToggled ? '35px' : "90px",
+
+      padding: isSidebarToggled ? '7px' : "7px",
       overflowX: "hidden",
      }}
   >
-      <List sx={{ pt: 6 }} className="sidebarNav" component="div">
+      <List  className="sidebarNav" component="div">
         {Menuitems.map((item, index) => {
           // If item has subheader, use NavGroup // marginLeft: "10px",
 

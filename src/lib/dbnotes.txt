@@ -1,3 +1,35 @@
+// export const getEmployerDetails = async (userId: number) => {
+//   const query = `
+//     SELECT 
+//       users.id, 
+//       users.name, 
+//       bank_accounts.balance, 
+//       user_employer.withdrawal_limit
+//     FROM users
+//     JOIN bank_accounts ON users.id = bank_accounts.user_id
+//     LEFT JOIN user_employer ON users.id = user_employer.employer_id
+//     WHERE users.role = "employer" 
+//       AND user_employer.user_id = ?  -- Ensure we're filtering by user_id
+//   `;
+
+//   try {
+//     const [rows] = await pool.execute(query, [userId]) as [RowDataPacket[], any];
+//     return rows;
+//   } catch (err) {
+//     console.error("Error fetching employer details:", err);
+//     throw new Error("Error fetching employer details");
+//   }
+// };
+
+
+// Old Employer details function ... gets only employers you set withdrawl limits for. 
+
+
+
+
+
+
+//test
 "use client";
 
 import { useSession } from "next-auth/react";
@@ -54,23 +86,23 @@ const Transaction = () => {
         if (!response.ok) throw new Error("Failed to fetch employers");
         const data = await response.json();
   
-        console.log("API Response:", data);
+        console.log("API Response:", data); // Check the structure of the data
   
         // Map the data to include withdrawalLimit and fallback to balance if it's missing
         const employersWithLimits = data
-          .map((employer: { id: number; withdrawal_limit: string | null; balance: string }) => ({
-            ...employer,
-            withdrawalLimit: employer.withdrawal_limit ? parseFloat(employer.withdrawal_limit) : parseFloat(employer.balance),
-            sliderValue: employer.withdrawal_limit ? parseFloat(employer.withdrawal_limit) : parseFloat(employer.balance),
-          }))
-          .filter(
-            (value: { id: number }, index: number, self: { id: number }[]) =>
-              index === self.findIndex((t: { id: number }) => t.id === value.id)  // Remove duplicates based on `id`
-          );
-  
-        console.log("Fetched Employers:", employersWithLimits);
-  
-        setEmployers(employersWithLimits);
+        .map((employer: { id: number, withdrawal_limit: string | null, balance: string }) => ({
+          ...employer,
+          withdrawalLimit: employer.withdrawal_limit ? parseFloat(employer.withdrawal_limit) : parseFloat(employer.balance),
+          sliderValue: employer.withdrawal_limit ? parseFloat(employer.withdrawal_limit) : parseFloat(employer.balance),
+        }))
+        .filter((value: { id: number }, index: number, self: { id: number }[]) =>
+          index === self.findIndex((t: { id: number }) => t.id === value.id)  // Remove duplicates based on `id`
+        );
+      
+        console.log("Fetched Employers:", data);
+
+      setEmployers(employersWithLimits);
+      
       } catch (err) {
         setError("Failed to fetch employers");
       }
@@ -235,8 +267,8 @@ const Transaction = () => {
 
 <TableBody>
   {employers.map((employer) => {
-    // Use the slider value (if available) or fallback to withdrawal limit
-    const employerAmount = employer.sliderValue ?? employer.withdrawalLimit;
+    const employerAmount = employer.sliderValue ?? employer.withdrawalLimit;  // Use withdrawalLimit directly
+    const employerBalance = employer.balance ?? 0;
 
     return (
       <TableRow key={employer.id}>
@@ -256,8 +288,8 @@ const Transaction = () => {
           <Slider
             value={employerAmount}  // Use the employerAmount as slider value
             onChange={(e, newValue) => handleSliderChange(employer.id, newValue as number)}
-            min={50}  // Min value (can be adjusted based on requirements)
-            max={employer.withdrawalLimit}  // Set max value based on withdrawal limit
+            min={50}  // Set min value if needed
+            max={employerBalance}  // Set max value if needed
             step={1}
             valueLabelDisplay="auto"
             valueLabelFormat={(value) => `$${value.toFixed(2)}`}
@@ -270,7 +302,6 @@ const Transaction = () => {
     );
   })}
 </TableBody>
-
 
 
                 </Table>

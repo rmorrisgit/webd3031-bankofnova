@@ -10,6 +10,7 @@ import { usePathname } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import { useMediaQuery, useTheme } from "@mui/material";
+import { SidebarProfile } from "./SidebarProfile";
 
 const HEADER_HEIGHT = 64; // Adjust based on your design
 const SIDEBAR_WIDTH = 256; // Sidebar width when open
@@ -150,6 +151,7 @@ const MSidebar = ({ isSidebarOpen }: ItemType) => {
                 justifyContent: "center", // Ensures alignment
               }}
             >
+              {isSidebarToggled && <SidebarProfile />}
           <SidebarItems isSidebarToggled={isSidebarToggled} />
       </Sidebar>
     </Box>

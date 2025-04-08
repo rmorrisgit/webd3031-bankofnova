@@ -85,7 +85,7 @@ const TransactionTable = ({ accountType }: ProductPerformanceProps) => {
                   </TableCell>
                   <TableCell>
                     <Typography variant="subtitle2" fontWeight={600}>
-                      {transaction.transaction_type}
+                      {transaction.sender_name ? `Deposit from ${transaction.sender_name}` : transaction.transaction_type}
                     </Typography>
                   </TableCell>
                   <TableCell>

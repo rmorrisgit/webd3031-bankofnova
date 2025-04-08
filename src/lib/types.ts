@@ -19,4 +19,6 @@ export interface Employer {
   balance: number;
   role: 'user' | 'admin' | 'employer';
   amount?: number;
+  withdrawalLimit: number;  // Add withdrawalLimit to the Employer type
+  sliderValue?: number;      // Optional sliderValue if needed
 }
