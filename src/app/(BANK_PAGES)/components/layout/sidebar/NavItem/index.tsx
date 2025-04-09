@@ -48,6 +48,7 @@ const NavItem = ({ item, level, pathDirect, onClick, children}: ItemType) => {
       whiteSpace: "nowrap",
       marginBottom: "2px",
       padding: "8px 10px",
+      borderRadius: "4px",
       marginTop: "5px",
       // borderRadius: "4px",
       backgroundColor: level > 1 ? "transparent !important" : "inherit",
@@ -58,7 +59,7 @@ const NavItem = ({ item, level, pathDirect, onClick, children}: ItemType) => {
       },
       "&.Mui-selected": {
         color: "white",
-        backgroundColor: theme.palette.primary.main,
+        backgroundColor: theme.palette.success.main,
         "&:hover": {
           backgroundColor: theme.palette.primary.light,
           color: "white",

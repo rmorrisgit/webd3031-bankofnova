@@ -1,6 +1,6 @@
 import { Box, Typography, Button, Stack, Grid } from '@mui/material';
 import Link from 'next/link';
-import DashboardCard from '@/app/(DashboardLayout)/components/shared/DashboardCard';
+import DashboardCard from '@/app/(DASHBOARD_PAGES)/components/shared/DashboardCard';
 
 const CTA = () => {
   return (

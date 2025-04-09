@@ -14,7 +14,7 @@ const SidebarItems = ({ toggleMobileSidebar, isSidebarToggled }: any) => {
 
     <Box
     sx={{ 
-      marginTop: isSidebarToggled ? '35px' : "90px",
+      marginTop: isSidebarToggled ? '35px' : "60px",
 
       padding: isSidebarToggled ? '7px' : "7px",
       overflowX: "hidden",

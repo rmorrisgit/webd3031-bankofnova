@@ -99,6 +99,7 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
     background: blueBackground ? theme.palette.primary.main : "white", // Use blueBackground state
     justifyContent: "center",
     backdropFilter: "blur(4px)",
+    borderRadius: "none !important",
     position: "sticky", // This will make the header behave as a normal element
 
     [theme.breakpoints.up("lg")]: {
