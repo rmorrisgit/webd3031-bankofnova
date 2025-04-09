@@ -115,13 +115,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 >
   {/* Page Content */}
   <Box sx={{ minHeight: "calc(100vh - 170px)" }}>{children}</Box>
+  {showFootersmall && <Footersmall />}
 
 </Container>
 
 
         {showFooter && <Footer />}
 
-        {showFootersmall && <Footersmall />}
       </PageWrapper>
     </MainWrapper>
   );

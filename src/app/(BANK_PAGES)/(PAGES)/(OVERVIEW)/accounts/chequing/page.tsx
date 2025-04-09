@@ -6,7 +6,7 @@ import { fetchUserBalance } from "../../../../../api/user";
 import { useSession } from 'next-auth/react'; // Import useSession for session check
 import { useRouter } from 'next/navigation'; // Import useRouter for navigation
 import TransactionTable from "../../../../components/TransactionTable";
-import PurchaseCategories from "../../../../components/PurchaseCategories";
+// import PurchaseCategories from "../../../../components/PurchaseCategories";
 
 const ChequingPage = () => {
   const { data: session, status } = useSession();

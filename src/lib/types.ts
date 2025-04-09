@@ -1,4 +1,4 @@
-import { Session } from "next-auth";
+import { User as NextAuthUser , Session } from "next-auth";
 
 // Custom session type with optional email and account_number
 export interface CustomSession extends Omit<Session, "user"> {
@@ -21,4 +21,8 @@ export interface Employer {
   amount?: number;
   withdrawalLimit: number;  // Add withdrawalLimit to the Employer type
   sliderValue?: number;      // Optional sliderValue if needed
+}
+export interface ExtendedUser extends NextAuthUser {
+  google_id?: string | null;
+  github_id?: string | null;
 }

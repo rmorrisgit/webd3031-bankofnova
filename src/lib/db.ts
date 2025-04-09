@@ -134,31 +134,84 @@ export const getUserByAccountNumber = async (account_number: string): Promise<Us
   }
 };
 
+//
+//for Oauth
 // Function to create a new user
+// Function to create a new user
+
 export const createUser = async (user: { 
   email: string; 
   name: string; 
-  role: string; 
   password: string; 
+  role?: string; 
   github_id?: string | null;  // Allow null or string for github_id
   google_id?: string | null;  // Allow null or string for google_id
-}) => {
+}): Promise<number> => {
+  const role = user.role ?? 'user'; // Default role to 'user' if not provided
+
   try {
     const query = `
       INSERT INTO users (email, name, role, password, github_id, google_id)
       VALUES (?, ?, ?, ?, ?, ?)
     `;
-    console.log('Executing query with:', [user.email, user.name, user.role, user.password, user.github_id || null, user.google_id || null]);
-    const [result] = await pool.execute(query, [user.email, user.name, user.role, user.password, user.github_id || null, user.google_id || null]);
-    console.log("New user created:", result);
-    return result;
+
+    const [result] = await pool.execute(query, [
+      user.email,
+      user.name,
+      role,
+      user.password,
+      user.github_id || null,
+      user.google_id || null,
+    ]);
+
+    const insertResult = result as mysql.ResultSetHeader;
+    console.log("New user created:", insertResult);
+    return insertResult.insertId; // Return the new user's ID
   } catch (error) {
     console.error('Error creating new user:', error);
     throw new Error('Error creating new user');
   }
 };
 
+//
+//for Oauth
+// Generate a unique 8-digit account number
+export const generateAccountNumber = async (): Promise<string> => {
+  let accountNumber = "";
+  let exists = true;
 
+  while (exists) {
+    accountNumber = Math.floor(10000000 + Math.random() * 90000000).toString();
+    const [result]: any[] = await pool.query(
+      "SELECT COUNT(*) AS count FROM bank_accounts WHERE account_number = ?",
+      [accountNumber]
+    );
+    exists = result[0]?.count > 0;
+  }
+
+  return accountNumber;
+};
+//
+//for Oauth
+// Create default chequing account for a user
+export const createDefaultChequingAccount = async (userId: number) => {
+  const accountNumber = await generateAccountNumber();
+  await pool.query(
+    "INSERT INTO bank_accounts (user_id, account_number, account_type) VALUES (?, ?, ?)",
+    [userId, accountNumber, "chequing"]
+  );
+  return accountNumber;
+};
+//
+//for Oauth
+export const updateUser = async (userId: string, updatedFields: { google_id?: string | null, github_id?: string | null }) => {
+  // Example query to update the user in the database
+  await pool.query(
+    `UPDATE users SET google_id = ?, github_id = ? WHERE id = ?`,
+    [updatedFields.google_id, updatedFields.github_id, userId]
+  );
+}
+//for Oauth
 export default pool;
 
  
