@@ -4,9 +4,9 @@ import { useForm, Controller } from "react-hook-form";
 import { Box, Typography, Button, TextField, MenuItem } from "@mui/material";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { fetchUserAccounts } from "../../../../../api/accounts";
-import { fetchUserBalance } from "../../../../../api/user"; // Fetches balance
-import { useTransferContext } from "../../../../../context/TransferContext"; // Import the context
+import { fetchUserAccounts } from "../../../../../../api/accounts";
+import { fetchUserBalance } from "../../../../../../api/user"; // Fetches balance
+import { useTransferContext } from "../../../../../../context/TransferContext"; // Import the context
 
 interface Account {
   id: string;
@@ -46,8 +46,10 @@ export default function ConfirmTransactionPage() {
           // Map balances by account_type, matching with the user accounts
           const accountsWithBalance: Account[] = userAccounts.map((account: Account) => ({
             ...account,
-            balance: balances[account.account_type] ? parseFloat(balances[account.account_type].replace(/,/g, '')) : 0,  // Use account_type for matching
-          }));
+            balance: balances[account.account_type as 'chequing' | 'savings'] 
+            ? parseFloat(balances[account.account_type as 'chequing' | 'savings'].replace(/,/g, '')) 
+            : 0,
+                    }));
     
           console.log("Accounts with Balance:", accountsWithBalance); // Log the updated account data
     

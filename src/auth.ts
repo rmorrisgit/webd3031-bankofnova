@@ -103,11 +103,16 @@ export const authOptions = {
           githubId = githubProfile?.id?.toString() || null;
         }
 
+        const displayName =
+        profile?.name ||
+        profile?.email?.split('@')[0] || // fallback to first part of email
+        "Unknown";
+
         if (!existingUser) {
           // If no user exists, create new user
           const newUser = {
             email,
-            name: "", // Optional: start blank
+            name: displayName, 
             password: "",
             role: "user",
             google_id: googleId || null,
@@ -120,8 +125,9 @@ export const authOptions = {
           mutableUser.id = newUserId.toString();
           mutableUser.google_id = googleId;
           mutableUser.github_id = githubId;
-          mutableUser.name = ""; // ✅ Start with blank name
-        } else {
+          mutableUser.name = displayName;
+          
+           } else {
           // Update existing user IDs without overwriting existing data
           const { google_id: existingGoogleId, github_id: existingGithubId } = existingUser;
 
