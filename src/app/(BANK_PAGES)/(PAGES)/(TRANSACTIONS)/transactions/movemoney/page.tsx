@@ -1,6 +1,6 @@
 'use client';
 import { Typography, Grid } from '@mui/material';
-import PageContainer from '../../../components/container/PageContainer';
+import PageContainer from '../../../../components/container/PageContainer';
 
 const Transaction = () => {
   return (

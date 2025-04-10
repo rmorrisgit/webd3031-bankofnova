@@ -24,8 +24,8 @@ import {
   Checkbox,
   Slider,
 } from "@mui/material";
-import PageContainer from "../../../components/container/PageContainer";
-import { Employer } from "../../../../../lib/types";
+import PageContainer from "../../../../components/container/PageContainer";
+import { Employer } from "../../../../../../lib/types";
 // import { fetchUserBalance } from "../../../../api/user";
 
 const Transaction = () => {

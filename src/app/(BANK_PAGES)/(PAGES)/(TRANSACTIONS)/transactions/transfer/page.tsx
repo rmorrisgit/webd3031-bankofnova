@@ -4,8 +4,8 @@ import { useForm, Controller } from "react-hook-form";
 import { TextField, Button, Typography, Box, MenuItem } from "@mui/material";
 import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
-import { fetchUserBalance } from "../../../../api/user";
-import { useTransferContext } from "../../../../context/TransferContext";
+import { fetchUserBalance } from "../../../../../api/user";
+import { useTransferContext } from "../../../../../context/TransferContext";
 
 export default function TransferPage() {
   const { data: session, status } = useSession();
