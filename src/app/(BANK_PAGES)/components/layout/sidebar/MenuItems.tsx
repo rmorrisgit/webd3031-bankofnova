@@ -45,7 +45,7 @@ const Menuitems = [
   },
   {
     id: uniqueId(),
-    title: "E-Transfer",
+    title: "Transfer",
     icon: IconArrowRight,
     href: "/transactions/transfer",
   },

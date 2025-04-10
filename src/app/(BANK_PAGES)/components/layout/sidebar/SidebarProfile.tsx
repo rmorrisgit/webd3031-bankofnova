@@ -7,43 +7,55 @@ export const SidebarProfile = () => {
   const userName = session?.user?.name || "Guest"; // Default to "Guest" if not logged in
 
   return (
-    <Box display="flex" alignItems="center" gap={2} sx={{p: 2, marginBottom: -8, mt: 10 }}>
-      <Box>
-        {session ? (
-          <Box display="flex" alignItems="center" gap={1}>
-            <Typography variant="h5" fontSize="16px">
-              {userName}
-            </Typography>
-            <Tooltip title="Sign out" arrow>
-              <IconButton
-                color="primary"
-                aria-label="logout"
-                onClick={() => signOut()}
-                size="small"
-              >
-                <LogoutIcon />
-              </IconButton>
-            </Tooltip>
-          </Box>
-        ) : (
-          <>
-<Typography variant="h5" fontSize="16px" mb={1}>
-Not signed up?</Typography>
-            <Button
+        
+        <Box sx={{ paddingLeft: '15px',  paddingRight: '15px',  }} >
+    <Box
+      display="flex"
+      alignItems="center"
+      gap={2}
+      sx={{p: 3,
+
+        bgcolor: 'primary.light', 
+        borderRadius: '8px',
+         marginTop: '80px !important', }}
+    >
+      {session ? (
+        <Box display="flex" alignItems="center" gap={1}>
+          <Typography variant="h5" fontSize="16px">
+            {userName}
+          </Typography>
+          <Tooltip title="Sign out" arrow>
+            <IconButton
               color="primary"
-              target="_blank"
-              disableElevation
-              component={Link}
-              href="/register"
-              variant="contained"
-              aria-label="signup"
+              aria-label="logout"
+              onClick={() => signOut()}
               size="small"
             >
-              Sign Up
-            </Button>
-          </>
-        )}
-      </Box>
+              <LogoutIcon />
+            </IconButton>
+          </Tooltip>
+        </Box>
+      ) : (
+        <Box>
+          <Typography variant="h5" fontSize="16px" mb={1}>
+            Not signed up?
+          </Typography>
+          <Button
+            color="primary"
+            target="_blank"
+            disableElevation
+            component={Link}
+            href="/register"
+            variant="contained"
+            aria-label="signup"
+            size="small"
+          >
+            Sign Up
+          </Button>
+        </Box>
+      )}
     </Box>
+    </Box>
+
   );
 };

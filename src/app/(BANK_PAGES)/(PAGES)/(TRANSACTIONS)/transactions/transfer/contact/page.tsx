@@ -9,7 +9,8 @@ import DashboardCard from '../../../../../components/shared/DashboardCard';
 const AddContactPage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const prefillEmail = searchParams.get('email') || ''; // Optional: prefill if email param exists
+  const redirect = searchParams.get('redirect'); // ✅ get redirect param
+  const prefillEmail = searchParams.get('email') || '';
 
   const { handleSubmit, control, formState: { errors } } = useForm({
     defaultValues: {
@@ -34,7 +35,11 @@ const AddContactPage = () => {
       }
 
       alert('Contact added successfully!');
-      router.push('/transactions/transfer');
+      if (redirect) {
+        router.push(redirect);
+      } else {
+        router.push('/transactions/transfer');
+      }
     } catch (error) {
       console.error(error);
       alert('Error adding contact. Please try again.');
@@ -97,7 +102,13 @@ const AddContactPage = () => {
               fullWidth
               variant="outlined"
               color="secondary"
-              onClick={() => router.back()}
+              onClick={() => {
+                if (redirect) {
+                  router.push(redirect);
+                } else {
+                  router.back();
+                }
+              }}
             >
               Cancel
             </Button>

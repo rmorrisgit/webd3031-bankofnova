@@ -19,6 +19,7 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
     boxShadow: 'none',
     background: theme.palette.background.paper,
     justifyContent: 'center',
+    // border: '2px solid lawngreen',
     backdropFilter: 'blur(4px)',
     [theme.breakpoints.up('lg')]: {
       minHeight: '70px',
@@ -47,7 +48,7 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
           <IconMenu width="20" height="20" />
         </IconButton>
 
-        <IconButton
+        {/* <IconButton
           size="large"
           aria-label="show 11 new notifications"
           color="inherit"
@@ -57,11 +58,11 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
           <Badge variant="dot" color="primary">
             <IconBellRinging size="21" stroke="1.5" />
           </Badge>
-        </IconButton>
+        </IconButton> */}
         
         <Box flexGrow={1} />
         
-        <Stack spacing={1} direction="row" alignItems="center">
+        {/* <Stack spacing={1} direction="row" alignItems="center">
           {!session ? (
             <Button variant="contained" component={Link} href="/login" color="primary">
               Login
@@ -72,7 +73,7 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
             </Button>
           )}
           <Profile />
-        </Stack>
+        </Stack> */}
       </ToolbarStyled>
     </AppBarStyled>
   );

@@ -1,7 +1,7 @@
 "use client"; // Ensure this runs only on the client side
 
 import React from "react";
-import { Box, Container, AppBar, Toolbar, styled, Stack, IconButton, Button, Typography } from "@mui/material";
+import { Box, Container, AppBar, Toolbar, styled, Stack, IconButton, Button, Typography, Grid } from "@mui/material";
 import PropTypes from "prop-types";
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react"; // Import auth functions
@@ -31,7 +31,7 @@ const LogoWithHover = () => {
   let leftPosition = 16; // default
 
   if (pathname === "/register" && isXL) {
-    leftPosition = 50;
+    leftPosition = 53;
   } else if (isXL) {
     leftPosition = 0;
   } else if (isLG) {
@@ -39,8 +39,9 @@ const LogoWithHover = () => {
   } else if (isMD) {
     leftPosition = 0;
   } else {
-    leftPosition = 50;
+    leftPosition = 0;
   }
+
 
   // Logo change based on path
   const logoSrc = pathname === "/register" ? "/images/logos/dark-logo4.svg" : "/images/logos/dark-logo3.svg";
@@ -50,7 +51,7 @@ const LogoWithHover = () => {
       <Box
         sx={{
           position: "fixed",
-          top: 18,
+          top: 10,
           left: leftPosition,
           zIndex: 9999,
           width: "auto",
@@ -91,6 +92,11 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
     "/",
   ].includes(pathname);
 
+  const isOnAuthPages = pathname === "/login";
+  const isOnHomePage = pathname === "/";
+  const isOnRegister = pathname === "/register";
+
+  
 
   const blueBackground = ["/register"].includes(pathname);
 
@@ -135,9 +141,6 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
   //   );
   // }
 
-  const isOnAuthPages = pathname === "/login";
-  const isOnHomePage = pathname === "/";
-  const isOnRegister = pathname === "/register";
 
 
     return isOnRegister ? (
@@ -171,26 +174,25 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
         {/* LEFT SIDE */}
         {/* {(isOnRegister) && <LogoWithHover />} */}
         {isOnRegister && (
-      <Link href="/" passHref>
-        <Box
-          sx={{
-            "&:hover": {
-              opacity: 0.8, 
-            },
-            alignItems: "center",  // Vertically center logo
-            // marginTop: '16px',
-          }}
-        >
-
-            <Image
-         src={blueBackground ? "/images/logos/dark-logo4.svg" : "/images/logos/dark-logo3.svg"} 
-            alt="Logo"
-            width={200} // Adjust width and height as per your design
-            height={50}
-          />
-        </Box>
-      </Link>
-    )}
+          <Link href="/" passHref>
+            <Box
+              sx={{
+                "&:hover": {
+                  opacity: 0.8, 
+                },
+                alignItems: "center",  // Vertically center logo
+                // marginTop: '16px',
+              }}
+            >
+                <Image
+            src={blueBackground ? "/images/logos/dark-logo4.svg" : "/images/logos/dark-logo3.svg"} 
+                alt="Logo"
+                width={200} // Adjust width and height as per your design
+                height={50}
+              />
+            </Box>
+          </Link>
+        )}
 
         {/* Hamburger Menu */}
        <IconButton
@@ -209,10 +211,16 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
 
         {/* RIGHT SIDE */}
         <Stack spacing={1} direction="row" alignItems="center" 
-        sx={{ 
-          position: "absolute", 
-          right: session && !isOnHomePage ? 160 : 0
-          }}
+sx={(theme) => ({
+  position: "absolute",
+  right: session && !isOnHomePage ? 160 : 0,
+  [theme.breakpoints.down('md')]: {
+    right: session && !isOnHomePage ? 100 : 40, // adjust these values to taste
+  },
+  [theme.breakpoints.down('sm')]: {
+    right: session && !isOnHomePage ? 50 : 35,
+  },
+})}
           >
         {!session && !isOnRegister ? ( // Hide Register and Login buttons on /register page
             <>
@@ -272,6 +280,7 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
                     color="primary"
                     disableElevation
                     sx={{
+                      
                       height: "44px",
                       backgroundColor: blueBackground ? "white" : "theme.primary",
                       color: blueBackground ? "theme.primary" : "theme.primary",

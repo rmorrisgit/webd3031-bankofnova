@@ -94,9 +94,9 @@ const ContactsPage = () => {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ contactId: selectedContactId }),
         });
-  
+
         const data = await response.json();
-  
+
         if (data.success) {
           // Refresh contacts after successful delete
           setContacts(prev => prev.filter(contact => contact.id !== selectedContactId));
@@ -112,12 +112,23 @@ const ContactsPage = () => {
     }
     handleDialogClose();
   };
-  
 
   return (
     <PageContainer title="My Contacts" description="List of saved contacts">
       <DashboardCard title="My Contacts">
         <>
+          {/* Transfer to Contact button */}
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{ mb: 2 }}
+            onClick={() => {
+              window.location.href = '/transactions/transfer/contact';
+            }}
+          >
+            Add Contact
+          </Button>
+
           {loading ? (
             <Box display="flex" justifyContent="center" alignItems="center" minHeight="150px">
               <CircularProgress />

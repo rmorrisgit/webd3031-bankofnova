@@ -14,9 +14,10 @@ const SidebarItems = ({ toggleMobileSidebar, isSidebarToggled }: any) => {
 
     <Box
     sx={{ 
-      marginTop: isSidebarToggled ? '35px' : "60px",
+      marginTop: isSidebarToggled ? '0px' : "60px",
+      paddingRight: isSidebarToggled ? '15px' : "0px",
 
-      padding: isSidebarToggled ? '7px' : "7px",
+      paddingLeft: isSidebarToggled ? '15px' : "0px",
       overflowX: "hidden",
      }}
   >
@@ -69,9 +70,9 @@ const SidebarItems = ({ toggleMobileSidebar, isSidebarToggled }: any) => {
               onClick={toggleMobileSidebar}
             >
               <Typography
-                variant="body2"
                 sx={{
-                  marginLeft: "10px",
+                  marginLeft: isSidebarToggled ? '0px' : "10px",
+                  // marginLeft: "10px",
                   display: isSidebarToggled ? "block" : "none",
                 }}
               >

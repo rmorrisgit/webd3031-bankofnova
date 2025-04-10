@@ -41,7 +41,7 @@ const Sidebar2 = ({
       sx={{
         position: 'absolute',
         top: 11,
-        left: 16,
+        right: 16,
         zIndex: 9999, // Ensure the button appears on top
         backgroundColor: isMobileSidebarOpen ? 'white' : 'none !important', 
         borderRadius: isMobileSidebarOpen ? '4px' : 'none !important', // Conditionally set borderRadius based on sidebar state
@@ -51,26 +51,27 @@ const Sidebar2 = ({
     </IconButton>
   );
 
+  const logoSrc = pathname === "/register" ? "/images/logos/dark-logo4.svg" : "/images/logos/dark-logo3.svg";
+
   // Logo component to ensure it stays on top permanently
   const LogoWithHover = () => (
     <Link href="/" passHref>
-      <Box
-        sx={{
-          position: "fixed", // Fix the logo position to stay on top
-          top: 18,
-          left: 70,
-          zIndex: 9999, // Ensure the logo stays on top
-          width: 'auto',
-        }}
-      >
-        <Image
-          src="/images/logos/dark-logo3.svg"
-          alt="Logo"
-          width={150}  // Set a width for the logo
-          height={50}  // Set a height for the logo
-          style={{ height: 'auto' }}  // Keep the aspect ratio
-        />
-      </Box>
+       <Box
+         sx={{
+           position: "fixed",
+           top: 10,
+           right: 77,
+           zIndex: 9999,
+           width: "auto",
+         }}
+       >
+         <Image
+           src={logoSrc}
+           alt="Logo"
+           width={200} // Adjust width and height as per your design
+           height={50}
+         />
+       </Box>
     </Link>
   );
 
@@ -79,10 +80,10 @@ const Sidebar2 = ({
   return (
     <>
       <MenuButton />
-      {isMobileSidebarOpen && <LogoWithHover />}
+      {/* {isMobileSidebarOpen && <LogoWithHover />} */}
       <Drawer
-        anchor="left"
-        open={isMobileSidebarOpen}
+anchor="right"
+open={isMobileSidebarOpen}
         onClose={onSidebarClose}
         variant="temporary"
         ModalProps={{
@@ -91,7 +92,7 @@ const Sidebar2 = ({
         }}
         BackdropProps={{
           sx: {
-            backgroundColor: "transparent",
+            // backgroundColor: "transparent",
             cursor: "default",
             zIndex: 100,
           },
@@ -101,6 +102,8 @@ const Sidebar2 = ({
             borderTop: "none !important",
             zIndex: 100,
             boxShadow: "none",
+        // opacity: .3,
+
           },
         }}
       >
