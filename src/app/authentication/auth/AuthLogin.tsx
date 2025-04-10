@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Box, Typography, Button, Stack, Chip, Card, Divider } from "@mui/material";
 import { signIn, getSession } from "next-auth/react";
 import { useRouter } from "next/navigation"; // For navigation
-import CustomTextField from "../../(DashboardLayout)/components/forms/theme-elements/CustomTextField";
+import CustomTextField from "../../(DASHBOARD_PAGES)/components/forms/theme-elements/CustomTextField";
 import GoogleIcon from '@mui/icons-material/Google'; // Material UI Google Icon
 import GitHubIcon from '@mui/icons-material/GitHub'; // GitHub Icon
 import Link from "next/link";
