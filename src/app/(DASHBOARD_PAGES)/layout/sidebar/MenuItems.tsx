@@ -26,12 +26,12 @@ const Menuitems = [
     navlabel: true,
     subheader: "User Management",
   },
-  {
-    id: uniqueId(),
-    title: "premium-tracking",
-    icon: IconMoodHappy,
-    href: "/premium-tracking",
-  },
+  // {
+  //   id: uniqueId(),
+  //   title: "premium-tracking",
+  //   icon: IconMoodHappy,
+  //   href: "/premium-tracking",
+  // },
   {
     id: uniqueId(),
     title: "user-management",

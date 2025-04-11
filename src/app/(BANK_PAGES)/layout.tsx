@@ -1,9 +1,9 @@
 "use client";
 import { styled, Container, Box } from "@mui/material";
 import React, { useState } from "react";
-import Header from "./components/layout/header/Header";
-import Sidebar from "./components/layout/sidebar/Sidebar";
-import Sidebar2 from "./components/layout/sidebar/NAVHOME"; // Only show Sidebar2 on specific pages
+import Header from "./layout/header/Header";
+import Sidebar from "./layout/sidebar/Sidebar";
+import Sidebar2 from "./layout/sidebar/NAVHOME"; // Only show Sidebar2 on specific pages
 import Footer from "./components/Footer";
 import { usePathname } from "next/navigation";
 import Footersmall from "./components/smallFooter";
@@ -104,9 +104,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 <Container
   sx={{
     maxWidth: isLargerContainer
-      ? "1600px !important"
+      ? "1700px !important"
       : isMediumContainer && lgUp
-      ? "1400px !important"
+      ? "1340px !important"
       : "1200px",
     ...(isMediumContainer && xlUp && {
       padding: "0 !important",

@@ -48,21 +48,22 @@ const NavItem = ({ item, level, pathDirect, onClick, children}: ItemType) => {
       whiteSpace: "nowrap",
       marginBottom: "2px",
       padding: "8px 10px",
-      borderRadius: "4px",
-      marginTop: "5px",
+      // marginTop: "5px",
       // borderRadius: "4px",
       backgroundColor: level > 1 ? "transparent !important" : "inherit",
       color: theme.palette.text.secondary,
       "&:hover": {
         backgroundColor: theme.palette.primary.light,
-        color: theme.palette.primary.main,
+        color: 'default',
       },
       "&.Mui-selected": {
-        color: "white",
-        backgroundColor: theme.palette.primary.main,
+        // color: "white",
+        backgroundColor: theme.palette.primary.light,
         "&:hover": {
-          backgroundColor: theme.palette.primary.light,
-          color: "white",
+          color: theme.palette.primary.main,
+
+          // backgroundColor: theme.palette.primary.light,
+          // color: "white",
         },
       },
     },
@@ -84,11 +85,9 @@ const NavItem = ({ item, level, pathDirect, onClick, children}: ItemType) => {
           {itemIcon && (
      <ListItemIcon
      sx={{
-      minWidth: "36px",
       p: "3px 0",
-
       color: "inherit",
-       marginLeft: "9px", //move icon here
+       marginLeft: "12px", //move icon here
      }}
    >
      <Box sx={{ display: "flex",

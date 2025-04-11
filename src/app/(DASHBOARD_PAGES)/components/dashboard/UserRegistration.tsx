@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import ReactApexChart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
-import { MenuItem, Select, Typography, Box } from "@mui/material";
-import { useTheme } from '@mui/material/styles';
-import DashboardCard from '../shared/DashboardCard';
+import { MenuItem, Select, Typography, Box, CircularProgress, Stack, Grid } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import DashboardCard from "../shared/DashboardCard";
 
 interface RegistrationData {
   period: string;
@@ -18,12 +18,14 @@ const UserRegistrationsChart = () => {
     categories: [],
     series: [],
   });
+  const [loading, setLoading] = useState<boolean>(false);
 
   const theme = useTheme();
   const userColor = theme.palette.primary.main;
   const adminColor = "#FF4560";
 
   useEffect(() => {
+    setLoading(true); // ✅ Start loading
     fetch(`/api/user/registration-stats?filter=${filter}`)
       .then((res) => res.json())
       .then((data: RegistrationData[]) => {
@@ -45,19 +47,17 @@ const UserRegistrationsChart = () => {
           setChartData({ categories: [], series: [] });
         }
       })
-      .catch((err) => console.error("Error fetching chart data:", err));
+      .catch((err) => console.error("Error fetching chart data:", err))
+      .finally(() => setTimeout(() => setLoading(false), 150)); // ✅ Slight delay for smoothness
   }, [filter, roleFilter]);
 
   const formatPeriod = (period: string, filter: "day" | "month" | "year"): string => {
-    console.log("Raw period:", period);  // Log the raw period value here
-  
     const date = new Date(period);
-  
     if (isNaN(date.getTime())) {
       console.warn(`Invalid date format: ${period}`);
       return period;
     }
-  
+
     switch (filter) {
       case "day":
         return `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, "0")}-${String(date.getUTCDate()).padStart(2, "0")}`;
@@ -69,7 +69,6 @@ const UserRegistrationsChart = () => {
         return period;
     }
   };
-  
 
   const chartOptions: ApexOptions = {
     chart: {
@@ -99,39 +98,58 @@ const UserRegistrationsChart = () => {
   return (
     <DashboardCard title="User Registrations">
       <>
-        <Select
-          value={filter}
-          onChange={(e) => setFilter(e.target.value as "day" | "month" | "year")}
-          style={{ marginBottom: "10px", marginRight: "10px" }}
-        >
-          <MenuItem value="day">Day</MenuItem>
-          <MenuItem value="month">Month</MenuItem>
-          <MenuItem value="year">Year</MenuItem>
-        </Select>
+        {/* Filters moved to top-right */}
+        <Grid container justifyContent="space-between" alignItems="center" mb={2}>
+          <Grid item>
+            <Typography variant="h6">Filters</Typography>
+          </Grid>
+          <Grid item>
+            <Stack direction="row" spacing={2}>
+              <Select
+                value={filter}
+                onChange={(e) => setFilter(e.target.value as "day" | "month" | "year")}
+                size="small"
+                sx={{ minWidth: 120 }}
+              >
+                <MenuItem value="day">Day</MenuItem>
+                <MenuItem value="month">Month</MenuItem>
+                <MenuItem value="year">Year</MenuItem>
+              </Select>
 
-        <Select
-          value={roleFilter}
-          onChange={(e) => setRoleFilter(e.target.value as "all" | "users" | "admin")}
-          style={{ marginBottom: "10px" }}
-        >
-          <MenuItem value="all">All</MenuItem>
-          <MenuItem value="users">Users</MenuItem>
-          <MenuItem value="admin">Admin</MenuItem>
-        </Select>
+              <Select
+                value={roleFilter}
+                onChange={(e) => setRoleFilter(e.target.value as "all" | "users" | "admin")}
+                size="small"
+                sx={{ minWidth: 120 }}
+              >
+                <MenuItem value="all">All</MenuItem>
+                <MenuItem value="users">Users</MenuItem>
+                <MenuItem value="admin">Admin</MenuItem>
+              </Select>
+            </Stack>
+          </Grid>
+        </Grid>
 
-        {chartData.series.length > 0 ? (
+        {/* Chart content with loading state */}
+        {loading ? (
+          <Box display="flex" justifyContent="center" alignItems="center" height={400}>
+            <CircularProgress />
+          </Box>
+        ) : chartData.series.length > 0 ? (
           <ReactApexChart
             options={chartOptions}
             series={[
-              { name: "Users", data: chartData.series[0] },  // User data (Blue)
-              { name: "Admins", data: chartData.series[1] }, // Admin data (Red)
+              { name: "Users", data: chartData.series[0] },
+              { name: "Admins", data: chartData.series[1] },
             ]}
             type="bar"
-            width={600}
+            width="100%" // ✅ Full width of container
             height={400}
           />
         ) : (
-          <Typography>No data available</Typography>
+          <Typography variant="body2" color="textSecondary">
+            No data available
+          </Typography>
         )}
       </>
     </DashboardCard>

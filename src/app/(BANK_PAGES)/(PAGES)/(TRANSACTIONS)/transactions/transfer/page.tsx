@@ -1,7 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { useForm, Controller } from "react-hook-form";
-import { TextField, Button, Typography, Box, MenuItem } from "@mui/material";
+import { TextField, Button, Typography, Box, MenuItem, Grid } from "@mui/material";
 import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
 import { fetchUserBalance } from "../../../../../api/user";
@@ -120,97 +120,118 @@ export default function TransferPage() {
   };
 
   return (
-    <Box sx={{ maxWidth: 500, mx: "auto", mt: 4, p: 3, borderRadius: 2 }}>
-      <Typography variant="h5" fontWeight="bold" gutterBottom>
-      Transfer to someone else	
-      </Typography>
-      <Typography variant="body2" color="textSecondary" mb={2}>
-      Select the account to send from and enter the recipient&apos;s email
-      </Typography>
-
-      {isLoading ? (
-        <div>Loading balances...</div>
-      ) : (
-        <form onSubmit={handleSubmit(onSubmit)}>
-          {/* FROM Account */}
-          <Controller
-            name="fromAccount"
-            control={control}
-            rules={{ required: "Please select an account" }}
-            render={({ field, fieldState }) => (
-              <TextField
-                {...field}
-                fullWidth
-                select
-                label="From Account"
-                error={!!fieldState.error}
-                helperText={fieldState.error?.message}
-                margin="normal"
-              >
-                {accounts.map((account) => (
-                  <MenuItem key={account.id} value={account.id}>
-                    <Box sx={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
-                      <Typography>{account.name}</Typography>
-                      <Typography variant="body2" color="textSecondary">
-                        ${account.balance && !isNaN(account.balance)
-                          ? account.balance.toFixed(2)
-                          : "0.00"}
-                      </Typography>
-                    </Box>
-                  </MenuItem>
-                ))}
-              </TextField>
-            )}
-          />
-
-          {/* TO Contact (Email input) */}
-          <Controller
-            name="toContact"
-            control={control}
-            rules={{
-              required: "Please enter a recipient email",
-              pattern: {
-                value: /\S+@\S+\.\S+/,
-                message: "Please enter a valid email address",
-              },
-            }}
-            render={({ field, fieldState }) => (
-              <TextField
-                {...field}
-                fullWidth
-                label="Recipient Email"
-                error={!!fieldState.error}
-                helperText={fieldState.error?.message}
-                margin="normal"
-                onBlur={handleRecipientBlur} // Trigger recipient fetch only on blur
-              />
-            )}
-          />
-
-          {/* Display recipient error if applicable */}
-          {contactError && (
-            <Typography variant="body2" color="error" mt={2}>
-              {contactError}
+    <Box sx={{ flexGrow: 1, mt: 4, p: 3 }}>
+      <Grid container spacing={2}>
+        {/* Left Column: Form */}
+        <Grid item xs={12} md={6}>
+          <Box sx={{ maxWidth: 500, p: 3, borderRadius: 2 }}>
+            <Typography variant="h5" fontWeight="bold" gutterBottom>
+              Transfer to someone else
             </Typography>
-          )}
+            <Typography variant="body2" color="textSecondary" mb={2}>
+              Select the account to send from and enter the recipient&apos;s email
+            </Typography>
+            <Box mt={1}>
+  <Button
+    variant="outlined"
+    color="primary"
+    fullWidth
+    onClick={() => router.push("/transactions/transfer/contact")}
+  >
+    Add New Contact
+  </Button>
+</Box>
 
-          {/* Buttons */}
-          <Box mt={2} display="flex" gap={2}>
-            <Button fullWidth variant="outlined" color="secondary" onClick={() => router.push(`/overview`)}>
-              Cancel
-            </Button>
-            <Button
-  fullWidth
-  type="submit"
-  variant="contained"
-  color="primary"
-  disabled={isRecipientLoading || !recipient}
->
-  Next
-</Button>
+            {isLoading ? (
+              <div>Loading balances...</div>
+            ) : (
+              <form onSubmit={handleSubmit(onSubmit)}>
+                {/* FROM Account */}
+                <Controller
+                  name="fromAccount"
+                  control={control}
+                  rules={{ required: "Please select an account" }}
+                  render={({ field, fieldState }) => (
+                    <TextField
+                      {...field}
+                      fullWidth
+                      select
+                      label="From Account"
+                      error={!!fieldState.error}
+                      helperText={fieldState.error?.message}
+                      margin="normal"
+                    >
+                      {accounts.map((account) => (
+                        <MenuItem key={account.id} value={account.id}>
+                          <Box sx={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
+                            <Typography>{account.name}</Typography>
+                            <Typography variant="body2" color="textSecondary">
+                              ${account.balance && !isNaN(account.balance)
+                                ? account.balance.toFixed(2)
+                                : "0.00"}
+                            </Typography>
+                          </Box>
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  )}
+                />
+  
+                {/* TO Contact (Email input) */}
+                <Controller
+                  name="toContact"
+                  control={control}
+                  rules={{
+                    required: "Please enter a recipient email",
+                    pattern: {
+                      value: /\S+@\S+\.\S+/,
+                      message: "Please enter a valid email address",
+                    },
+                  }}
+                  render={({ field, fieldState }) => (
+                    <TextField
+                      {...field}
+                      fullWidth
+                      label="Recipient Email"
+                      error={!!fieldState.error}
+                      helperText={fieldState.error?.message}
+                      margin="normal"
+                      onBlur={handleRecipientBlur}
+                    />
+                  )}
+                />
+  
+                {/* Display recipient error if applicable */}
+                {contactError && (
+                  <Typography variant="body2" color="error" mt={2}>
+                    {contactError}
+                  </Typography>
+                )}
+  
+                {/* Buttons */}
+                <Box mt={2} display="flex" gap={2}>
+                  <Button fullWidth variant="outlined" color="secondary" onClick={() => router.push(`/overview`)}>
+                    Cancel
+                  </Button>
+                  <Button
+                    fullWidth
+                    type="submit"
+                    variant="contained"
+                    color="primary"
+                    disabled={isRecipientLoading || !recipient}
+                  >
+                    Next
+                  </Button>
+                </Box>
+              </form>
+            )}
           </Box>
-        </form>
-      )}
+        </Grid>
+  
+        {/* Right Column: Empty */}
+        <Grid item xs={12} md={6}></Grid>
+      </Grid>
     </Box>
   );
+  
 }
