@@ -13,8 +13,8 @@ const baselightTheme = createTheme({
   palette: {
     primary: {
       main: "#5D87FF",
-      // light: "#ECF2FF",
-      light:"RGB(230, 244, 255)",
+      light: "#ECF2FF",
+      // light:"#E6F4FF",
 
       dark: "#4570EA",
     },

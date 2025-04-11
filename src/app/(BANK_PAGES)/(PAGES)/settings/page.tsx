@@ -115,7 +115,7 @@ const ContactsPage = () => {
 
   return (
     <PageContainer title="My Contacts" description="List of saved contacts">
-      <DashboardCard title="My Contacts">
+      <DashboardCard elevation={0} title="My Contacts">
         <>
           {/* Transfer to Contact button */}
           <Button
@@ -123,8 +123,9 @@ const ContactsPage = () => {
             color="primary"
             sx={{ mb: 2 }}
             onClick={() => {
-              window.location.href = '/transactions/transfer/contact';
+              window.location.href = '/transactions/transfer/contact?redirect=/settings';
             }}
+            
           >
             Add Contact
           </Button>

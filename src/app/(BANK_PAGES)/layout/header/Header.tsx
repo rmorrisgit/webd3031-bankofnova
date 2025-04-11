@@ -33,7 +33,7 @@ const LogoWithHover = () => {
   if (pathname === "/register" && isXL) {
     leftPosition = 53;
   } else if (isXL) {
-    leftPosition = 0;
+    leftPosition = 72;
   } else if (isLG) {
     leftPosition = 0;
   } else if (isMD) {
@@ -213,7 +213,13 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
         <Stack spacing={1} direction="row" alignItems="center" 
 sx={(theme) => ({
   position: "absolute",
-  right: session && !isOnHomePage ? 160 : 0,
+  right: session && !isOnHomePage ? 160 : 72,
+  [theme.breakpoints.down('xl')]: {
+    right: session && !isOnHomePage ? 160 : 0,
+  },
+  [theme.breakpoints.down('lg')]: {
+    right: session && !isOnHomePage ? 160 : 0,
+  },
   [theme.breakpoints.down('md')]: {
     right: session && !isOnHomePage ? 100 : 40, // adjust these values to taste
   },
@@ -310,14 +316,7 @@ sx={(theme) => ({
               ) : (
                 <></>
               )}
-                  {(isOnAuthPages || !isOnHomePage) && session ? (  // Check if on auth or home page
-      <>
-        {/* <Profile />  */}
-        
-        </>
-    ) : (
-      <></>
-    )}
+
   </>
           )}
         </Stack>

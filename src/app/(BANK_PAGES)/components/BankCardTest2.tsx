@@ -15,7 +15,7 @@ const BankCardTest2 = () => {
         borderRadius: '16px',
         // backgroundColor: 'lawngreen',
         marginBottom: '16px',
-        marginTop: '20px',
+        marginTop: '60px',
         overflow: 'hidden', // optional: to keep border radius consistent
       }}
     >
@@ -23,7 +23,7 @@ const BankCardTest2 = () => {
       <Grid
         item
         // marginRight={"24px"}
-        marginLeft={xlUp ? '0px' : '0px'}
+        // marginLeft={xlUp ? '72px' : '0px'}
         xs={12}
         md={6}
         sx={{
@@ -33,9 +33,28 @@ const BankCardTest2 = () => {
           // borderRadius: '16px 0 0 16px', 
           display: 'flex',
           alignItems: 'center',
+          marginLeft: {
+            xs: '0px',
+            sm: '0px',
+            md: '22px',
+            lg: '0px',
+            xl: '72px',
+          }
         }}
       >
-        <Stack sx={{ width: '100%' }}>
+        <Stack sx={{ width: '100%' , 
+          
+          
+          
+          p: {
+            xs: '0px',
+            sm: '0px',
+            md: '0px',
+            lg: '0px',
+            xl: '0px',
+          }
+          
+          }}>
           <Box
             sx={{
               textAlign: { xs: 'center', md: 'left' },
@@ -45,7 +64,7 @@ const BankCardTest2 = () => {
               Open a Bank of Nova Chequing Account
             </Typography>
             <Typography variant="h5" color="text.secondary"  fontSize="24px" paragraph>
-              Scale your business with our professional-grade tools and services
+            Choose the way you manage your money.
             </Typography>
             <Link href="/register" passHref>
             <Button
