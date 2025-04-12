@@ -40,12 +40,26 @@ const MyCard3 = () => {
     maxWidth: xlUp ? '94% !important' : '100% !important',
     marginLeft: 'auto',
     marginRight: 'auto', // Center the grid
-    backgroundColor: '#cdcdcd', // Set background color to white
+    backgroundColor: theme.palette.primary.light, // Set background color to white
+    textAlign: 'center'
   }}
 >   
+<List>
+                        <Typography variant="h1" fontWeight="600" fontSize="28px" color="text.primary">
+            
 
-          {/* <List>
-            {["Lorem ipsum dolor sit amet consectetur adipisicing elit.",
+          Open a Savings Account with Bank of Nova
+                      </Typography>
+          
+                      <Typography variant="h5" color="text.secondary"  fontSize="18px" paragraph>
+          
+          Sign up to bank with us and open a Savings Account online or in our app in a few clicks.
+                       </Typography>
+                       </List>
+       {/*   <List>
+
+           
+             {["Lorem ipsum dolor sit amet consectetur adipisicing elit.",
               "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
               "Lorem ipsum dolor sit amet consectetur adipisicing elit.",]
             .map((feature) => (
@@ -55,7 +69,7 @@ const MyCard3 = () => {
                 </ListItemIcon>
                 <ListItemText primary={feature} />
               </ListItem>
-            ))}
+            ))} 
           </List> */}
 
     </Grid>

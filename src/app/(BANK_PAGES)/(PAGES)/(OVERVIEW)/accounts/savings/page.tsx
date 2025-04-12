@@ -2,71 +2,84 @@
 import { Typography, Grid, CardContent } from '@mui/material';
 import PageContainer from '../../../../components/container/PageContainer';
 import { useEffect, useState } from "react";
-import { fetchUserBalance } from "../../../../../api/user"; 
-import { useSession } from 'next-auth/react'; // Import useSession for session check
-import { useRouter } from 'next/navigation'; // Import useRouter for navigation
+import { fetchUserBalance } from "../../../../../api/user";
+import { fetchUserAccounts } from "../../../../../api/accounts";
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import TransactionTable from "../../../../components/TransactionTable";
 
 const SavingsPage = () => {
   const { data: session, status } = useSession();
   const [savingsBalance, setSavingsBalance] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const router = useRouter(); // Hook for navigation
+  const [accountNumber, setAccountNumber] = useState<string | null>(null);
+  const router = useRouter();
 
+  // ✅ Redirect to login if unauthenticated
   useEffect(() => {
-    // Redirect to login page if not authenticated
     if (status === 'unauthenticated') {
       router.push('/login');
     }
   }, [status, router]);
 
-
+  // ✅ Fetch balance and account number in one effect
   useEffect(() => {
     if (session) {
-      // Fetch the Chequing balance from API or state only if the user is authenticated
-      const getBalance = async () => {
+      const getAccountDetails = async () => {
         try {
-          const response = await fetchUserBalance(); // Call without passing the userId
-          setSavingsBalance(response.savings); // Set the balance to state
+          const response = await fetchUserBalance();
+          setSavingsBalance(response.savings);
+
+          const accounts = await fetchUserAccounts(session.user.id);
+          const savingsAccount = accounts.find((acc: any) => acc.account_type === 'savings');
+
+          if (savingsAccount) {
+            setAccountNumber(savingsAccount.account_number);
+          }
+
         } catch (error) {
-          setError("Failed to fetch balance.");
+          setError("Failed to fetch account details.");
         }
       };
-      
-      getBalance();
-    }
-  }, [session]); // Runs when the session changes
-  
 
+      getAccountDetails();
+    }
+  }, [session]);
 
   return (
     <PageContainer title="Savings" description="This is your Savings account overview">
-      {/* Make sure the Grid container has correct props  bgcolor={"black"}*/}
       <Grid container direction="column" spacing={2}>
-     
+        {/* Header */}
         <Grid item xs={12}>
-          <CardContent>
-            <Typography variant="h2">Savings</Typography>
+            <Typography 
+             mt={3} mb={2} variant="h2"
+             fontWeight={700} 
+             >Savings</Typography>
             <Typography variant="body1" color="textSecondary">
               Savings Account
             </Typography>
+            {accountNumber && (
+      <Typography variant="body2" 
+      fontSize={13}
+      color="textSecondary" mt={2}>
+        Account Number: {accountNumber}
+      </Typography>
+    )}
+    </Grid>
+        {/* Balance + Account Number */}
+        <Grid item sm={12}>
+          <CardContent>
+            <Typography variant="h1" fontWeight="700">${savingsBalance ?? 'Loading...'}</Typography>
+            {error && <Typography variant="body2" color="error">{error}</Typography>}
+            <Typography variant="body1" color="textSecondary">Current Balance</Typography>
           </CardContent>
         </Grid>
-            {/* Savings Balance Display */}
-        {/* Balance Display */}
-        <Grid item sm={12}>
-                <CardContent>
-                <Typography variant="h1" fontWeight="700">${savingsBalance ?? 'Loading...'}</Typography>
-                {error && <Typography variant="body2" color="error">{error}</Typography>}
-                  <Typography variant="body1" color="textSecondary">Current Balance</Typography>
-                </CardContent>
-            </Grid>
       </Grid>
 
+      {/* Transaction Table */}
       <Grid>
-    <TransactionTable accountType="savings" /> {/* Pass account type as prop */}
-    </Grid>
-
+        <TransactionTable accountType="savings" />
+      </Grid>
     </PageContainer>
   );
 };

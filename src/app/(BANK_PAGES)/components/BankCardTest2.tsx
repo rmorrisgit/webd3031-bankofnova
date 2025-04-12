@@ -38,7 +38,7 @@ const BankCardTest2 = () => {
             sm: '0px',
             md: '22px',
             lg: '0px',
-            xl: '72px',
+            xl: '42px',
           }
         }}
       >

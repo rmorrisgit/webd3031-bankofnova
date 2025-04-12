@@ -13,16 +13,18 @@ import {
   TextField,
   Snackbar,
   Alert,
+  CircularProgress, // ✅ Import CircularProgress
 } from '@mui/material';
 import { useState, useEffect } from 'react';
 
 export default function ProfilePage() {
   const [tab, setTab] = useState(0);
   const [user, setUser] = useState({ name: '', email: '' });
+  const [loading, setLoading] = useState(true); // ✅ Add loading state
   const [openDialog, setOpenDialog] = useState(false);
   const [formData, setFormData] = useState({ name: '', email: '', password: '' });
   const [snackbar, setSnackbar] = useState({ open: false, message: '' });
-  const [showAlert, setShowAlert] = useState(false);  // State to control alert visibility
+  const [showAlert, setShowAlert] = useState(false); // State to control alert visibility
 
   useEffect(() => {
     fetch('/api/user/profile')
@@ -36,17 +38,18 @@ export default function ProfilePage() {
             email: data.user.email,
           }));
         }
-      });
+      })
+      .finally(() => setLoading(false)); // ✅ Ensure loading is set to false
   }, []);
 
   const handleEdit = () => {
-    setOpenDialog(true);  // Open the dialog
-    setShowAlert(true);  // Show the alert when editing begins
+    setOpenDialog(true);
+    setShowAlert(true);
   };
 
   const handleClose = () => {
     setOpenDialog(false);
-    setShowAlert(false);  // Hide the alert when closing the dialog
+    setShowAlert(false);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -67,7 +70,7 @@ export default function ProfilePage() {
       setUser({ name: formData.name, email: formData.email });
       setSnackbar({ open: true, message: 'Profile updated successfully!' });
       setOpenDialog(false);
-      setShowAlert(false);  // Hide the alert after saving
+      setShowAlert(false);
     } else {
       setSnackbar({ open: true, message: 'Error: ' + data.message });
     }
@@ -79,75 +82,77 @@ export default function ProfilePage() {
         Profile
       </Typography>
 
-      <Tabs value={tab} onChange={(e, newValue) => setTab(newValue)} sx={{ mb: 2 }}>
-        <Tab label="Details" />
-        <Tab label="Edit Profile" />
-      </Tabs>
-
-      {tab === 0 && (
-        <Box>
-          <Typography variant="h6">Name</Typography>
-          <Typography sx={{ mb: 2 }}>{user.name}</Typography>
-          <Typography variant="h6">Email</Typography>
-          <Typography sx={{ mb: 2 }}>{user.email}</Typography>
+      {loading ? ( // ✅ Conditionally render loading indicator
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 200 }}>
+          <CircularProgress />
         </Box>
-      )}
+      ) : (
+        <>
+          <Tabs value={tab} onChange={(e, newValue) => setTab(newValue)} sx={{ mb: 2 }}>
+            <Tab label="Details" />
+            <Tab label="Edit Profile" />
+          </Tabs>
 
-      {tab === 1 && (
-        <Box>
-          <Button variant="contained" onClick={handleEdit}>
-            Edit Info
-          </Button>
-          
-          {/* Dialog for editing profile */}
-          <Dialog open={openDialog} onClose={handleClose}>
-            <DialogTitle>Edit Profile</DialogTitle>
-            <DialogContent>
-              {/* Alert inside the dialog */}
-              {showAlert && (
-                <Alert
-                  severity="info"
-                  variant="outlined"
-                  sx={{ mb: 2 }}  // margin bottom to create space from the form fields
-                >
-                  You are about to change your login information. This includes your name, email, and password.
-                </Alert>
-              )}
-              
-              <TextField
-                margin="dense"
-                label="Name"
-                fullWidth
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-              />
-              <TextField
-                margin="dense"
-                label="Email"
-                fullWidth
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-              />
-              <TextField
-                margin="dense"
-                label="New Password"
-                fullWidth
-                name="password"
-                type="password"
-                value={formData.password}
-                onChange={handleChange}
-              />
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleClose}>Cancel</Button>
-              <Button onClick={handleSave} variant="contained">
-                Save
+          {tab === 0 && (
+            <Box>
+              <Typography variant="h6">Name</Typography>
+              <Typography sx={{ mb: 2 }}>{user.name}</Typography>
+              <Typography variant="h6">Email</Typography>
+              <Typography sx={{ mb: 2 }}>{user.email}</Typography>
+            </Box>
+          )}
+
+          {tab === 1 && (
+            <Box>
+              <Button variant="contained" onClick={handleEdit}>
+                Edit Info
               </Button>
-            </DialogActions>
-          </Dialog>
-        </Box>
+
+              <Dialog open={openDialog} onClose={handleClose}>
+                <DialogTitle>Edit Profile</DialogTitle>
+                <DialogContent>
+                  {showAlert && (
+                    <Alert severity="info" variant="outlined" sx={{ mb: 2 }}>
+                      You are about to change your login information. This includes your name, email, and password.
+                    </Alert>
+                  )}
+
+                  <TextField
+                    margin="dense"
+                    label="Name"
+                    fullWidth
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                  />
+                  <TextField
+                    margin="dense"
+                    label="Email"
+                    fullWidth
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                  />
+                  <TextField
+                    margin="dense"
+                    label="New Password"
+                    fullWidth
+                    name="password"
+                    type="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                  />
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={handleClose}>Cancel</Button>
+                  <Button onClick={handleSave} variant="contained">
+                    Save
+                  </Button>
+                </DialogActions>
+              </Dialog>
+            </Box>
+          )}
+        </>
       )}
 
       <Snackbar

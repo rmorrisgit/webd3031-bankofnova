@@ -3,7 +3,12 @@
 import { Button, Box, Typography } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-
+interface Account {
+  id: number; // number in the DB
+  name: string;
+  account_type: string;
+  balance: number;
+}
 const OpenSavingsAccountPage = () => {
   const { data: session, status } = useSession();
   const router = useRouter();

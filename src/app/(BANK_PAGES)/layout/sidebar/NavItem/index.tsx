@@ -44,34 +44,117 @@ const NavItem = ({ item, level, pathDirect, onClick, children}: ItemType) => {
 
   const ListItemStyled = styled(ListItem)(() => ({
     padding: 0,
-    ".MuiButtonBase-root": {
-      whiteSpace: "nowrap",
-      marginBottom: "2px",
-      padding: "8px 10px",
-      // marginTop: "5px",
-      // borderRadius: "4px",
-      backgroundColor: level > 1 ? "transparent !important" : "inherit",
-      color: theme.palette.text.secondary,
-      "&:hover": {
-        backgroundColor: theme.palette.primary.light,
-        color: 'default',
-      },
-      "&.Mui-selected": {
-        // color: "white",
-        backgroundColor: theme.palette.primary.light,
-        "&:hover": {
-          color: theme.palette.primary.main,
+".MuiButtonBase-root": {
+  whiteSpace: "nowrap",
+  padding: "12px 0px",
 
-          // backgroundColor: theme.palette.primary.light,
-          // color: "white",
-        },
+  borderLeft: '4px solid transparent',
+
+  // ❌ Do not set 'color' globally here (optional, unless you want it by default)
+
+  // ✅ Text color explicitly
+  "& .MuiTab-wrapper": {
+    color: theme.palette.primary.main,
+  },
+
+  // ✅ Ripple color explicitly
+  "& .MuiTouchRipple-root .MuiTouchRipple-rippleVisible": {
+    color: theme.palette.primary.main,
+  },
+
+  "&:hover": {
+    backgroundColor: 'transparent',
+    borderLeft: '4px solid grey',
+
+    // ✅ Hover text color
+    "& .MuiTab-wrapper": {
+      color: theme.palette.primary.main,
+    },
+
+    // ✅ Hover ripple color
+    "& .MuiTouchRipple-root .MuiTouchRipple-rippleVisible": {
+      color: theme.palette.primary.main,
+    },
+  },
+
+  "&.Mui-selected": {
+    borderLeft: '4px solid #5D87FF',
+    backgroundColor: 'transparent',
+
+    "& .MuiTab-wrapper": {
+      color: theme.palette.primary.main,
+    },
+
+    "& .MuiTouchRipple-root .MuiTouchRipple-rippleVisible": {
+      color: theme.palette.primary.main,
+    },
+
+    "&:hover": {
+      backgroundColor: 'transparent',
+
+      "& .MuiTab-wrapper": {
+        color: theme.palette.primary.main,
+      },
+
+      "& .MuiTouchRipple-root .MuiTouchRipple-rippleVisible": {
+        color: theme.palette.primary.main,
       },
     },
-  }));
+  },
+},
+
+  }
+)
+);
+
+
+  //   ".MuiButtonBase-root": {
+  //     whiteSpace: "nowrap",
+  //     // marginBottom: "2px",
+  //     padding: "12px 0px",
+  //     // marginTop: "5px",
+  //     borderLeft: '4px solid transparent',
+
+  //     // borderRadius: "8px",
+  //     // borderRadius: "4px",
+  //     // backgroundColor: level > 1 ? "transparent !important" : "inherit",
+  //     color: theme.palette.text.primary,
+  //     "&:hover": {
+  //       // backgroundColor: theme.palette.primary.light,
+  //       color: theme.palette.primary.main,
+  //       // color: 'default',
+  //       borderLeft: '4px solid grey',
+  //       // backgroundColor: theme.palette.primary.light,
+  //       backgroundColor: theme.palette.success.light,
+        
+
+  //     },
+  //     "&.Mui-selected": {
+  // // backgroundColor: theme.palette.primary.main,
+  // borderLeft: '4px solid 13DEB9',
+  // // backgroundColor: theme.palette.primary.main,
+  // backgroundColor: 'transparent',
+
+  // // borderLeft:  theme.palette.primary.main,
+  //         // backgroundColor: theme.palette.primary.light,
+  //       "&:hover": {        
+  //           // backgroundColor: theme.palette.primary.light,
+  //           // backgroundColor: theme.palette.success.light,
+  //           backgroundColor: theme.palette.success.light,
+          
+  //       color: theme.palette.primary.main,
+  //         // borderLeft: '2px solid grey',
+  //         // color: "white",
+  //       },
+  //     },
+  //   },
+  // }
+
 
   return (
-    <List component="div" disablePadding key={item.id}>
-      <ListItemStyled>
+    <List component="div" disablePadding key={item.id} >
+      <ListItemStyled
+      >
         <ListItemButton
           component={Link}
           href={item.href}
@@ -85,9 +168,11 @@ const NavItem = ({ item, level, pathDirect, onClick, children}: ItemType) => {
           {itemIcon && (
      <ListItemIcon
      sx={{
-      p: "3px 0",
       color: "inherit",
-       marginLeft: "12px", //move icon here
+      //move icon here
+       marginLeft: "17px", 
+       
+       
      }}
    >
      <Box sx={{ display: "flex",

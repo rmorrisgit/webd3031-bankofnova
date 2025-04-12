@@ -1,58 +1,90 @@
 'use client';
-import React from 'react';
-import { Container, Box, Grid, Typography, Stack, Button } from '@mui/material';
-import Link from 'next/link';
+
+import { List, ListItem, ListItemIcon, ListItemText, Grid, Box, Typography } from "@mui/material";
+import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import { useMediaQuery, useTheme } from "@mui/material";
 
-const BankCardTest5 = () => {
-    const theme = useTheme();
-    const lgUp = useMediaQuery(theme.breakpoints.up("lg"));
-    const xlUp = useMediaQuery(theme.breakpoints.up("xl"));
+const MyCard3 = () => {
+  const theme = useTheme();
+  const xlUp = useMediaQuery(theme.breakpoints.up("xl"));
+
   return (
     <Grid
       container
       sx={{
         borderRadius: '16px',
-        // backgroundColor: 'lawngreen',
-        marginBottom: '16px',
-        marginTop: '100px',
-        overflow: 'hidden', // optional: to keep border radius consistent
+        marginTop: "20px",
+        maxWidth: xlUp ? '94% !important' : '100% !important',
+        marginLeft: 'auto',
+        marginRight: 'auto',
+        backgroundColor: theme.palette.primary.light,
+        height: '100%',
+        padding: 0, // remove container padding
       }}
     >
-      {/* First column */}
+
+      {/* Left column */}
       <Grid
         item
-        // marginRight={"24px"}
-        marginLeft={xlUp ? '42px' : '0px'}
         xs={12}
         md={6}
         sx={{
-        backgroundColor: 'white',
-          border: '2px solid rgb(0, 255, 76)',
-          height: '250px',
-          maxWidth: xlUp ? '624px !important' : 'auto' ,
-          // backgroundColor: 'info.dark',
-          borderRadius: '16px', 
           display: 'flex',
+          justifyContent: 'center',
           alignItems: 'center',
+          height: '100%', // ensure full height
         }}
       >
-        <Stack sx={{ width: '100%' }}>
-          <Box
-            sx={{
-              textAlign: { xs: 'center', md: 'left' },
-            }}
-          >
-   
-
-          </Box>
-        </Stack>
+        <Box
+          sx={{
+            width: '100%', // use full width of Grid item
+            maxWidth: '400px', // control max width to keep it clean
+            height: '250px',
+            backgroundColor: 'white',
+            border: '2px solid rgb(33, 39, 205)',
+            borderRadius: '16px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginBottom: '15px'
+          }}
+        >
+          <Typography>Left Column (Empty or Content)</Typography>
+        </Box>
       </Grid>
 
-      {/* Second column */}
-     
+      {/* Right column */}
+      <Grid
+        item
+        xs={12}
+        md={6}
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100%', // ensure full height
+        }}
+      >
+        <Box
+          sx={{
+            width: '100%', // use full width of Grid item
+            maxWidth: '400px',
+            height: '250px',
+            backgroundColor: 'white',
+            border: '2px solid rgb(0, 255, 76)',
+            borderRadius: '16px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <Typography>Right Column (Empty or Content)</Typography>
+
+        </Box>
+      </Grid>
+
     </Grid>
   );
 };
 
-export default BankCardTest5;
+export default MyCard3;

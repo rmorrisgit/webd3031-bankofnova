@@ -20,6 +20,7 @@ import {
   DialogContentText,
   DialogActions,
   Button,
+  TextField,
 } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import PageContainer from '../../components/container/PageContainer';
@@ -37,6 +38,10 @@ const ContactsPage = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [selectedContactId, setSelectedContactId] = useState<number | null>(null);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
+
+  // ✅ Edit Dialog States
+  const [openEditDialog, setOpenEditDialog] = useState<boolean>(false);
+  const [editNickname, setEditNickname] = useState<string>('');
 
   useEffect(() => {
     const fetchContacts = async () => {
@@ -70,8 +75,9 @@ const ContactsPage = () => {
 
   const handleEdit = () => {
     if (selectedContactId !== null) {
-      console.log('Edit contact with ID:', selectedContactId);
-      // TODO: Redirect or open modal for editing
+      const selectedContact = contacts.find(c => c.id === selectedContactId);
+      setEditNickname(selectedContact?.nickname || '');
+      setOpenEditDialog(true);
     }
     handleMenuClose();
   };
@@ -86,6 +92,12 @@ const ContactsPage = () => {
     setSelectedContactId(null);
   };
 
+  const handleEditDialogClose = () => {
+    setOpenEditDialog(false);
+    setSelectedContactId(null);
+    setEditNickname('');
+  };
+
   const confirmDelete = async () => {
     if (selectedContactId !== null) {
       try {
@@ -98,7 +110,6 @@ const ContactsPage = () => {
         const data = await response.json();
 
         if (data.success) {
-          // Refresh contacts after successful delete
           setContacts(prev => prev.filter(contact => contact.id !== selectedContactId));
           console.log('Contact removed successfully');
         } else {
@@ -113,23 +124,40 @@ const ContactsPage = () => {
     handleDialogClose();
   };
 
+  const confirmEdit = async () => {
+    if (selectedContactId !== null && editNickname.trim() !== '') {
+      try {
+        const response = await fetch('/api/user/editContact', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ contactId: selectedContactId, nickname: editNickname }),
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          setContacts(prev =>
+            prev.map(contact =>
+              contact.id === selectedContactId ? { ...contact, nickname: editNickname } : contact
+            )
+          );
+          console.log('Contact nickname updated successfully');
+        } else {
+          console.error(data.message);
+          alert(data.message);
+        }
+      } catch (error) {
+        console.error('Error updating contact:', error);
+        alert('Error updating contact.');
+      }
+    }
+    handleEditDialogClose();
+  };
+
   return (
     <PageContainer title="My Contacts" description="List of saved contacts">
       <DashboardCard elevation={0} title="My Contacts">
         <>
-          {/* Transfer to Contact button */}
-          <Button
-            variant="contained"
-            color="primary"
-            sx={{ mb: 2 }}
-            onClick={() => {
-              window.location.href = '/transactions/transfer/contact?redirect=/settings';
-            }}
-            
-          >
-            Add Contact
-          </Button>
-
           {loading ? (
             <Box display="flex" justifyContent="center" alignItems="center" minHeight="150px">
               <CircularProgress />
@@ -140,15 +168,25 @@ const ContactsPage = () => {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>Contact name</TableCell>
-                  <TableCell>Email</TableCell>
+                  <TableCell>
+                    <Typography variant="subtitle2" fontWeight="600" color="text.primary">
+                      Contact name
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography variant="subtitle2" fontWeight="600" color="text.primary">
+                      Email
+                    </Typography>
+                  </TableCell>
                   <TableCell align="right"></TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {contacts.map((contact) => (
-                  <TableRow key={contact.id}>
-                    {/* Contact Name with Avatar */}
+                  <TableRow
+                    key={contact.id}
+                    sx={{ borderBottom: (theme) => `2px solid ${theme.palette.divider}` }}
+                  >
                     <TableCell>
                       <Box display="flex" alignItems="center">
                         <Avatar sx={{ width: 32, height: 32, fontSize: 14, mr: 2 }}>
@@ -159,15 +197,11 @@ const ContactsPage = () => {
                         </Typography>
                       </Box>
                     </TableCell>
-
-                    {/* Email */}
                     <TableCell>
                       <Typography variant="body2" color="textSecondary">
                         {contact.email}
                       </Typography>
                     </TableCell>
-
-                    {/* More Options */}
                     <TableCell align="right">
                       <IconButton onClick={(event) => handleMenuOpen(event, contact.id)}>
                         <MoreVertIcon fontSize="small" />
@@ -179,19 +213,34 @@ const ContactsPage = () => {
             </Table>
           )}
 
+          <Box display="flex" gap={2} mt={3}>
+            <Button
+              variant="outlined"
+              color="inherit"
+              disableElevation
+              sx={{  px: 4, fontWeight: 'bold' }}
+              onClick={() => window.history.back()}
+            >
+              Back
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              disableElevation
+              sx={{  px: 4, fontWeight: 'bold' }}
+              onClick={() => window.location.href = '/transactions/transfer/contact?redirect=/settings'}
+            >
+              Add Contact
+            </Button>
+          </Box>
+
           {/* Action Menu */}
           <Menu
             anchorEl={anchorEl}
             open={Boolean(anchorEl)}
             onClose={handleMenuClose}
-            anchorOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
-            }}
-            transformOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
-            }}
+            anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+            transformOrigin={{ vertical: 'top', horizontal: 'right' }}
           >
             <MenuItem onClick={handleEdit}>Edit</MenuItem>
             <MenuItem onClick={handleRemove}>Remove</MenuItem>
@@ -211,6 +260,29 @@ const ContactsPage = () => {
               </Button>
               <Button onClick={confirmDelete} color="error" variant="contained">
                 Remove
+              </Button>
+            </DialogActions>
+          </Dialog>
+
+          {/* ✅ Edit Dialog */}
+          <Dialog open={openEditDialog} onClose={handleEditDialogClose}>
+            <DialogTitle>Edit Nickname</DialogTitle>
+            <DialogContent>
+              <TextField
+                autoFocus
+                margin="dense"
+                label="Nickname"
+                fullWidth
+                value={editNickname}
+                onChange={(e) => setEditNickname(e.target.value)}
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleEditDialogClose} color="primary">
+                Cancel
+              </Button>
+              <Button onClick={confirmEdit} variant="contained" color="primary">
+                Save
               </Button>
             </DialogActions>
           </Dialog>

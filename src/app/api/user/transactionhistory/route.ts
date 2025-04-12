@@ -53,23 +53,28 @@ export async function GET(req: Request) {
     // Get transactions ordered from OLDEST to NEWEST
     const [transactionsResult] = await pool.query(
       `SELECT 
-  t.id,
-  t.sender_id,
-  t.sender_account_id,
-  t.receiver_id,
-  t.receiver_account_id,
-  t.transaction_type,
-  t.amount,
-  t.status,
-  t.created_at,
-  u.name AS sender_name
-FROM transactions t
-LEFT JOIN users u ON t.sender_account_id = u.id
-WHERE t.receiver_account_id = ? OR t.sender_account_id = ?
-ORDER BY t.created_at ASC;
-`,
-      [accountId, accountId]
+        t.id,
+        t.sender_id,
+        t.sender_account_id,
+        t.receiver_id,
+        t.receiver_account_id,
+        t.transaction_type,
+        t.amount,
+        t.status,
+        t.created_at,
+        senderUser.name AS sender_name,
+        receiverUser.name AS receiver_name,
+        c.nickname AS receiver_nickname
+      FROM transactions t
+      LEFT JOIN users senderUser ON t.sender_account_id = senderUser.id
+      LEFT JOIN users receiverUser ON t.receiver_id = receiverUser.id
+      LEFT JOIN user_contacts c ON c.contact_user_id = t.receiver_id AND c.user_id = ?
+      WHERE t.receiver_account_id = ? OR t.sender_account_id = ?
+      ORDER BY t.created_at ASC;
+      `,
+      [userId, accountId, accountId] 
     );
+
     
     
 
