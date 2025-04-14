@@ -5,7 +5,7 @@ import { useSession } from 'next-auth/react';
 import {
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
   Paper, Button, Typography, CircularProgress, TablePagination, Dialog,
-  DialogActions, DialogContent, DialogTitle
+  DialogActions, DialogContent, DialogTitle, TableSortLabel
 } from '@mui/material';
 
 interface User {
@@ -16,22 +16,25 @@ interface User {
   role: string;
 }
 
+type Order = 'asc' | 'desc';
+
 const UsersPage = () => {
   const { data: session, status } = useSession();
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Pagination state
+  const [order, setOrder] = useState<Order>('asc');
+  const [orderBy, setOrderBy] = useState<keyof User>('created_at');
+
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  // Modal state
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch('/api/user/AllUsers') // Updated API route
+    fetch('/api/user/AllUsers')
       .then(res => res.json())
       .then(data => {
         if (data.success) {
@@ -69,36 +72,57 @@ const UsersPage = () => {
       setError('Failed to delete user');
     }
 
-    // Close dialog after deletion
     setOpenDialog(false);
   };
 
   const handleDeleteClick = (id: string) => {
     setSelectedUserId(id);
-    setOpenDialog(true); // Open confirmation dialog
+    setOpenDialog(true);
   };
 
   const handleCancel = () => {
-    setOpenDialog(false); // Close the dialog without deleting
+    setOpenDialog(false);
   };
 
-  // Handle page change
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
   };
 
-  // Handle rows per page change
   const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0); // Reset to the first page when rows per page is changed
+    setPage(0);
   };
 
-  // Paginate users
-  const paginatedUsers = users.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+  const handleRequestSort = (property: keyof User) => {
+    const isAsc = orderBy === property && order === 'asc';
+    setOrder(isAsc ? 'desc' : 'asc');
+    setOrderBy(property);
+  };
+
+  const stableSort = <T,>(array: T[], comparator: (a: T, b: T) => number): T[] => {
+    const stabilized = array.map((el, index) => [el, index] as [T, number]);
+    stabilized.sort((a, b) => {
+      const orderResult = comparator(a[0], b[0]);
+      return orderResult !== 0 ? orderResult : a[1] - b[1];
+    });
+    return stabilized.map(el => el[0]);
+  };
+
+  const getComparator = <Key extends keyof User>(
+    order: Order,
+    orderBy: Key
+  ): ((a: User, b: User) => number) => {
+    return order === 'desc'
+      ? (a, b) => (b[orderBy] < a[orderBy] ? -1 : b[orderBy] > a[orderBy] ? 1 : 0)
+      : (a, b) => (a[orderBy] < b[orderBy] ? -1 : a[orderBy] > b[orderBy] ? 1 : 0);
+  };
+
+  const sortedUsers = stableSort(users, getComparator(order, orderBy));
+  const paginatedUsers = sortedUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
   return (
     <PageContainer title="Users" description="Manage user accounts">
-      <Typography variant="h5" gutterBottom sx={{ color: '#333' }}> {/* Adjust text color */}
+      <Typography variant="h5" gutterBottom sx={{ color: '#333' }}>
         Manage Users
       </Typography>
 
@@ -112,37 +136,46 @@ const UsersPage = () => {
             maxWidth: '100%', margin: 'auto', boxShadow: 3, overflowX: 'auto', backgroundColor: '#fafafa'
           }}>
             <Table sx={{ minWidth: 800 }}>
-              <TableHead sx={{ backgroundColor: '#2C3E50' }}> {/* Primary color for header */}
+              <TableHead sx={{ backgroundColor: '#2C3E50' }}>
                 <TableRow>
-                  <TableCell sx={{ color: '#ECF0F1' }}><b>ID</b></TableCell> {/* Header text color */}
-                  <TableCell sx={{ color: '#ECF0F1' }}><b>Name</b></TableCell>
-                  <TableCell sx={{ color: '#ECF0F1' }}><b>Email</b></TableCell>
-                  <TableCell sx={{ color: '#ECF0F1' }}><b>Registered At</b></TableCell>
-                  <TableCell sx={{ color: '#ECF0F1' }}><b>Role</b></TableCell>
+                  {['id', 'name', 'email', 'created_at', 'role'].map((column) => (
+                    <TableCell key={column} sx={{ color: '#ECF0F1' }}>
+                      {(column === 'id' || column === 'created_at' || column === 'role') ? (
+                        <TableSortLabel
+                          active={orderBy === column}
+                          direction={orderBy === column ? order : 'asc'}
+                          onClick={() => handleRequestSort(column as keyof User)}
+                          sx={{ color: '#ECF0F1', '&.Mui-active': { color: '#F1C40F' } }}
+                        >
+                          <b>{column.replace('_', ' ').toUpperCase()}</b>
+                        </TableSortLabel>
+                      ) : (
+                        <b>{column.replace('_', ' ').toUpperCase()}</b>
+                      )}
+                    </TableCell>
+                  ))}
                   <TableCell sx={{ color: '#ECF0F1' }}><b>Actions</b></TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {paginatedUsers.map(user => (
-                  <TableRow key={user.id} sx={{ '&:hover': { backgroundColor: '#BDC3C7' } }}> {/* Hover effect */}
+                  <TableRow key={user.id} sx={{ '&:hover': { backgroundColor: '#BDC3C7' } }}>
                     <TableCell>{user.id}</TableCell>
                     <TableCell>{user.name}</TableCell>
                     <TableCell>{user.email}</TableCell>
                     <TableCell>{new Date(user.created_at).toLocaleString()}</TableCell>
-                    <TableCell
-                      sx={{
-                        color: user.role === 'admin' ? '#E74C3C' : '#3498DB', // Red for Admin, Blue for User
-                        fontWeight: 'bold'
-                      }}
-                    >
+                    <TableCell sx={{
+                      color: user.role === 'admin' ? '#E74C3C' : '#3498DB',
+                      fontWeight: 'bold'
+                    }}>
                       {user.role}
                     </TableCell>
                     <TableCell>
                       <Button
                         variant="contained"
                         color="error"
-                        onClick={() => handleDeleteClick(user.id)} // Open confirmation dialog
-                        sx={{ backgroundColor: '#E74C3C', '&:hover': { backgroundColor: '#C0392B' } }} // Red button with hover effect
+                        onClick={() => handleDeleteClick(user.id)}
+                        sx={{ backgroundColor: '#E74C3C', '&:hover': { backgroundColor: '#C0392B' } }}
                       >
                         Delete
                       </Button>
@@ -153,7 +186,6 @@ const UsersPage = () => {
             </Table>
           </TableContainer>
 
-          {/* Table Pagination */}
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
@@ -163,26 +195,21 @@ const UsersPage = () => {
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
             sx={{
-              '.MuiTablePagination-select': { backgroundColor: '#ECF0F1', color: '#2C3E50' }, // Background for select dropdown
-              '.MuiTablePagination-actions': { color: '#2C3E50' } // Color for pagination actions
+              '.MuiTablePagination-select': { backgroundColor: '#ECF0F1', color: '#2C3E50' },
+              '.MuiTablePagination-actions': { color: '#2C3E50' }
             }}
           />
         </>
       )}
 
-      {/* Confirmation Dialog */}
       <Dialog open={openDialog} onClose={handleCancel}>
         <DialogTitle>Confirm Deletion</DialogTitle>
         <DialogContent>
           <Typography>Are you sure you want to delete this user?</Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCancel} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleDelete} color="error">
-            Confirm
-          </Button>
+          <Button onClick={handleCancel} color="primary">Cancel</Button>
+          <Button onClick={handleDelete} color="error">Confirm</Button>
         </DialogActions>
       </Dialog>
     </PageContainer>

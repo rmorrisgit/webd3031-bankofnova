@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { useMediaQuery, Box, Drawer } from "@mui/material";
 import SidebarItems from "./SidebarItems";
 import { SidebarProfile } from "./admin_SidebarProfile";
@@ -18,18 +19,15 @@ const MSidebar = ({
 
   const sidebarWidth = "270px";
 
-  // Custom CSS for short scrollbar
   const scrollbarStyles = {
     '&::-webkit-scrollbar': {
       width: '7px',
-
     },
     '&::-webkit-scrollbar-thumb': {
       backgroundColor: '#eff2f7',
       borderRadius: '15px',
     },
   };
-
 
   if (lgUp) {
     return (
@@ -39,9 +37,6 @@ const MSidebar = ({
           flexShrink: 0,
         }}
       >
-        {/* ------------------------------------------- */}
-        {/* Sidebar for desktop */}
-        {/* ------------------------------------------- */}
         <Drawer
           anchor="left"
           open={isSidebarOpen}
@@ -53,9 +48,6 @@ const MSidebar = ({
             },
           }}
         >
-          {/* ------------------------------------------- */}
-          {/* Sidebar Box */}
-          {/* ------------------------------------------- */}
           <Box
             sx={{
               height: "100%",
@@ -69,20 +61,16 @@ const MSidebar = ({
               themeSecondaryColor="#49beff"
               showProfile={false}
             >
-              {/* ------------------------------------------- */}
-              {/* Logo */}
-              {/* ------------------------------------------- */}
-              <Logo img="/images/logos/dark-logo3.svg" />
+              {/* Logo with Link */}
+              <Link href="/" passHref>
+                <Logo img="/images/logos/dark-logo3.svg" />
+              </Link>
+
               <Box>
-                {/* ------------------------------------------- */}
-                {/* Sidebar Items */}
-                {/* ------------------------------------------- */}
                 <SidebarProfile />
                 <SidebarItems />
-
-                {/* <Upgrade /> */}
               </Box>
-            </Sidebar >
+            </Sidebar>
           </Box>
         </Drawer>
       </Box>
@@ -102,9 +90,6 @@ const MSidebar = ({
         },
       }}
     >
-      {/* ------------------------------------------- */}
-      {/* Sidebar Box */}
-      {/* ------------------------------------------- */}
       <Box px={2}>
         <Sidebar
           width={'270px'}
@@ -116,29 +101,17 @@ const MSidebar = ({
           themeSecondaryColor="#49beff"
           showProfile={false}
         >
-          {/* ------------------------------------------- */}
-          {/* Logo */}
-          {/* ------------------------------------------- */}
-          <Logo img="/images/logos/dark-logo3.svg" />
-          {/* ------------------------------------------- */}
-          {/* Sidebar Items */}
-          {/* ------------------------------------------- */}
+          {/* Logo with Link */}
+          <Link href="/" passHref>
+            <Logo img="/images/logos/dark-logo3.svg" />
+          </Link>
+
           <SidebarProfile />
           <SidebarItems />
-
         </Sidebar>
       </Box>
-      {/* ------------------------------------------- */}
-      {/* Sidebar For Mobile */}
-      {/* ------------------------------------------- */}
-
     </Drawer>
   );
 };
 
 export default MSidebar;
-
-
-
-
-
