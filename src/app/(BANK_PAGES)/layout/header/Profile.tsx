@@ -15,17 +15,18 @@ import {
   useTheme,
   useMediaQuery,
   ClickAwayListener,
-  Stack,
   Typography,
   Divider,
-  Switch,
-  Chip,
   Card,
   CardContent,
-  Grid,
 } from "@mui/material";
 import { signOut, useSession } from "next-auth/react";
-import { IconUser, IconSettings, IconLogout } from "@tabler/icons-react";
+import {
+  IconUser,
+  IconSettings,
+  IconLogout,
+  IconListCheck,
+} from "@tabler/icons-react";
 import ManageAccountsOutlinedIcon from "@mui/icons-material/ManageAccountsOutlined";
 
 const Profile = () => {
@@ -65,15 +66,15 @@ const Profile = () => {
           color="inherit"
           onClick={handleClick}
           sx={{
-              color: "primary.main",
-            }}
-          >
+            color: "primary.main",
+          }}
+        >
           {session?.user?.name ? (
             <Avatar
               {...stringAvatar(session.user.name)}
               sx={{
-                bgcolor: theme.palette.grey[100], // ✅ Transparent background
-                color: 'black',         // ✅ Icon color
+                bgcolor: theme.palette.grey[100],
+                color: "black",
               }}
             />
           ) : (
@@ -82,7 +83,7 @@ const Profile = () => {
                 width: 35,
                 height: 35,
                 backgroundColor: "transparent",
-                color: theme.palette.primary.main, 
+                color: theme.palette.primary.main,
                 borderRadius: "50%",
               }}
             >
@@ -112,26 +113,21 @@ const Profile = () => {
           <Box>
             {/* Welcome Text */}
             <Box mb={2}>
-  {/* <Typography variant="h6" fontWeight={600}>
-    Good Morning,
-  </Typography> */}
-  <Typography component="span" variant="h6" sx={{ fontWeight: 400 }}>
-    {session?.user?.name || "Guest"}
-  </Typography>
-  <Typography
-    variant="subtitle2"
-    color="text.secondary"
-    sx={{ opacity: 0.7 }}
-  >
-    {session
-      ? session.user.role === "admin"
-        ? "Administrator"
-        : ""
-      : "Please login"}
-  </Typography>
-</Box>
-
-
+              <Typography component="span" variant="h6" sx={{ fontWeight: 400 }}>
+                {session?.user?.name || "Guest"}
+              </Typography>
+              <Typography
+                variant="subtitle2"
+                color="text.secondary"
+                sx={{ opacity: 0.7 }}
+              >
+                {session
+                  ? session.user.role === "admin"
+                    ? "Administrator"
+                    : ""
+                  : "Please login"}
+              </Typography>
+            </Box>
 
             {/* Upgrade Plan Card */}
             <Card
@@ -160,53 +156,12 @@ const Profile = () => {
                   size="small"
                   sx={{ boxShadow: "none" }}
                   fullWidth
+                  href="/payment" // 👈 Added link to payment page
                 >
                   Go Premium
                 </Button>
               </CardContent>
             </Card>
-
-            {/* <Card
-              sx={{
-                bgcolor: theme.palette.primary.light,
-                mb: 2,
-              }}
-            >
-              <CardContent>
-                <Grid container spacing={2} direction="column">
-                  <Grid
-                    item
-                    container
-                    justifyContent="space-between"
-                    alignItems="center"
-                  >
-                    <Typography variant="subtitle1">Start DND Mode</Typography>
-                    <Switch
-                      color="primary"
-                      checked={dndMode}
-                      onChange={(e) => setDndMode(e.target.checked)}
-                      size="small"
-                    />
-                  </Grid>
-                  <Grid
-                    item
-                    container
-                    justifyContent="space-between"
-                    alignItems="center"
-                  >
-                    <Typography variant="subtitle1">
-                      Allow Notifications
-                    </Typography>
-                    <Switch
-                      color="primary"
-                      checked={notifications}
-                      onChange={(e) => setNotifications(e.target.checked)}
-                      size="small"
-                    />
-                  </Grid>
-                </Grid>
-              </CardContent>
-            </Card> */}
 
             {/* Divider */}
             <Divider sx={{ mb: 1 }} />
@@ -217,6 +172,14 @@ const Profile = () => {
                 <IconSettings width={20} />
               </ListItemIcon>
               <ListItemText>Account Settings</ListItemText>
+            </MenuItem>
+
+            {/* ✅ Upgrade to Premium Option */}
+            <MenuItem component={Link} href="/payment" onClick={handleClose}>
+              <ListItemIcon>
+                <IconListCheck width={20} />
+              </ListItemIcon>
+              <ListItemText>Upgrade to Premium</ListItemText>
             </MenuItem>
 
             <MenuItem onClick={handleLogout}>
