@@ -64,25 +64,31 @@ const Profile = () => {
           aria-label="profile menu"
           color="inherit"
           onClick={handleClick}
+          disableRipple={!!session}
           sx={{
+            ...(anchorEl && {
               color: "primary.main",
-            }}
-          >
+              padding: "0px",
+            }),
+          }}
+        >
           {session?.user?.name ? (
             <Avatar
+              variant="square"
               {...stringAvatar(session.user.name)}
               sx={{
-                bgcolor: theme.palette.grey[100], // ✅ Transparent background
-                color: 'black',         // ✅ Icon color
+                borderRadius: "4px",
+                backgroundColor: "primary.main",
+                color: "white",
+                marginRight: "15px",
               }}
             />
           ) : (
             <Avatar
+              variant="rounded"
               sx={{
-                width: 35,
-                height: 35,
-                backgroundColor: "transparent",
-                color: theme.palette.primary.main, 
+                backgroundColor: "white",
+                color: "#000000",
                 borderRadius: "50%",
               }}
             >
@@ -112,9 +118,7 @@ const Profile = () => {
           <Box>
             {/* Welcome Text */}
             <Box mb={2}>
-  {/* <Typography variant="h6" fontWeight={600}>
-    Good Morning,
-  </Typography> */}
+
   <Typography component="span" variant="h6" sx={{ fontWeight: 400 }}>
     {session?.user?.name || "Guest"}
   </Typography>
@@ -132,40 +136,7 @@ const Profile = () => {
 </Box>
 
 
-
-            {/* Upgrade Plan Card */}
-            <Card
-              sx={{
-                background: theme.palette.warning.light,
-                mb: 2,
-                position: "relative",
-                overflow: "hidden",
-              }}
-            >
-              <CardContent>
-                <Typography variant="h6" gutterBottom>
-                  Upgrade your plan
-                </Typography>
-                <Typography
-                  variant="body2"
-                  color="grey.900"
-                  sx={{ opacity: 0.7 }}
-                  gutterBottom
-                >
-                  70% discount for 1 years subscriptions.
-                </Typography>
-                <Button
-                  variant="contained"
-                  color="warning"
-                  size="small"
-                  sx={{ boxShadow: "none" }}
-                  fullWidth
-                >
-                  Go Premium
-                </Button>
-              </CardContent>
-            </Card>
-
+            {/*  */}
             {/* <Card
               sx={{
                 bgcolor: theme.palette.primary.light,
@@ -180,7 +151,7 @@ const Profile = () => {
                     justifyContent="space-between"
                     alignItems="center"
                   >
-                    <Typography variant="subtitle1">Start DND Mode</Typography>
+                    <Typography variant="subtitle1">Start</Typography>
                     <Switch
                       color="primary"
                       checked={dndMode}

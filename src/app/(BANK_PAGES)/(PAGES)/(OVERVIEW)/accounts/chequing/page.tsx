@@ -7,12 +7,14 @@ import { useSession } from 'next-auth/react'; // Import useSession for session c
 import { useRouter } from 'next/navigation'; // Import useRouter for navigation
 import TransactionTable from "../../../../components/TransactionTable";
 // import PurchaseCategories from "../../../../components/PurchaseCategories";
+import { fetchUserAccounts } from "../../../../../api/accounts";
 
 const ChequingPage = () => {
   const { data: session, status } = useSession();
   const [chequingBalance, setChequingBalance] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter(); // Hook for navigation
+  const [accountNumber, setAccountNumber] = useState<string | null>(null);
 
   useEffect(() => {
     // Redirect to login page if not authenticated
@@ -21,25 +23,30 @@ const ChequingPage = () => {
     }
   }, [status, router]);
 
-
   useEffect(() => {
     if (session) {
-      // Fetch the Chequing balance from API or state only if the user is authenticated
-      const getBalance = async () => {
+      const getAccountDetails = async () => {
         try {
-          const response = await fetchUserBalance(); // Call without passing the userId
-          setChequingBalance(response.chequing); // Set the balance to state
+          const response = await fetchUserBalance();
+          setChequingBalance(response.chequing);
+  
+          const accounts = await fetchUserAccounts(session.user.id);
+          const chequingAccount = accounts.find((acc: any) => acc.account_type === 'chequing');
+  
+          if (chequingAccount) {
+            setAccountNumber(chequingAccount.account_number);
+          }
+  
         } catch (error) {
-          setError("Failed to fetch balance.");
+          setError("Failed to fetch account details.");
         }
       };
-      
-      getBalance();
+  
+      getAccountDetails();
     }
-  }, [session]); // Runs when the session changes
-  
+  }, [session]);
 
-  
+
 
   return (
 <PageContainer title="Chequing" description="This is your Chequing account overview">
@@ -49,22 +56,37 @@ const ChequingPage = () => {
   <Grid container direction="column" spacing={2}>
 
     <Grid item xs={12}>
-      <CardContent>
-        <Typography variant="h2">Chequing</Typography>
+        <Typography variant="h2" 
+        fontWeight={700}
+        mt={3} mb={2}
+        >Chequing</Typography>
         <Typography variant="body1" color="textSecondary">
           Chequing Account
         </Typography>
-      </CardContent>
+        {accountNumber && (
+      <Typography variant="body2" 
+      fontSize={13}
+      color="textSecondary" mt={2}>
+        Account Number: {accountNumber}
+      </Typography>
+    )}
     </Grid>
 
     {/* Chequing Balance Display */}
-    <Grid item sm={12}>
-                <CardContent>
-                <Typography variant="h1" fontWeight="700">${chequingBalance ?? 'Loading...'}</Typography>
-                {error && <Typography variant="body2" color="error">{error}</Typography>}
-                  <Typography variant="body1" color="textSecondary">Current Balance</Typography>
-                </CardContent>
-            </Grid>
+
+
+
+
+            <Grid item sm={12}>
+  <CardContent>
+    <Typography variant="h1" fontWeight="700">${chequingBalance ?? 'Loading...'}</Typography>
+    {error && <Typography variant="body2" color="error">{error}</Typography>}
+    <Typography variant="body1" color="textSecondary">Current Balance</Typography>
+
+
+  </CardContent>
+</Grid>
+
 
     {/* <Grid item xs={12}>
       <CardContent>

@@ -5,8 +5,8 @@ import { Grid } from '@mui/material';
 // import BankCard from "../components/blocks/BankCard";
 // import CTA from "../components/blocks/CTA";
 import React from "react";
-// import MuiQuickstart from "../components/overview/MyCard";
-// import InfoPage from "../components/overview/MyCard2";
+import MuiQuickstart from "../components/MyCard";
+import InfoPage from "../components/MyCard2";
 // Dynamically load the Footer component as a Client Component
 // import BankCardRow from "../components/blocks/BankCardRow";
 import BankCardTest2 from "../components/BankCardTest2";
@@ -26,6 +26,7 @@ const HomePage = () => {
   {/* BankCardTest2 is new CTA */}
 
   <BankCardTest5 />
+  <MuiQuickstart /> 
   
   <MyCard3 />
 
@@ -33,15 +34,13 @@ const HomePage = () => {
 
   {/* <CardComparison /> */}
 
-  <MyCard3 />
 
   {/* <BankCard /> */}
 
   
-            {/* <Grid item xs={12} lg={8}>
+           {/* <Grid item xs={12} lg={8}>
             <InfoPage />
-            </Grid>   
-            <MuiQuickstart /> */}
+            </Grid>    */}
 
     </>
   );

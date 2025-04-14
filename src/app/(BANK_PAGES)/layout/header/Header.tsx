@@ -7,6 +7,8 @@ import Link from "next/link";
 import { useSession, signOut } from "next-auth/react"; // Import auth functions
 import MenuIcon from "@mui/icons-material/Menu";
 import Profile from "./Profile";
+import UnauthProfile from "./UnauthProfile";
+
 import { usePathname } from "next/navigation";
 import { useMediaQuery, useTheme } from "@mui/material";
 import { Logo } from "react-mui-sidebar";
@@ -228,97 +230,92 @@ sx={(theme) => ({
   },
 })}
           >
-        {!session && !isOnRegister ? ( // Hide Register and Login buttons on /register page
-            <>
-              {smUp && (
-                <Box mt={2}>
-                  <Stack direction="row" spacing={2}>
-                    <Button
-                      variant="contained"
-                      component={Link}
-                      href="/register"
-                      color="primary"
-                      size="large"
-                      disableElevation
-                      sx={{
-                        padding: "10px 20px",
-                        border: "1px solid white",
-                        borderColor: blueBackground ? "white" : "primary.main",
-                        backgroundColor: blueBackground ? "primary.main" : "white",
-                        color: blueBackground ? "white" : "primary.main",
-                        "&:hover": {
-                          backgroundColor: blueBackground ? "" : "white",
-                        },
-                      }}
-                    >
-                      <Typography variant="h5">Register</Typography>
-                    </Button>
-                    <Button
-                      variant="contained"
-                      component={Link}
-                      href="/login"
-                      color="primary"
-                      size="large"
-                      disableElevation
-                      sx={{
-                        padding: "10px 20px",
-                        border: "1px solid white",
-                        borderColor: blueBackground ? "white" : "white",
-                        color: blueBackground ? "white" : "white",
-                        backgroundColor: blueBackground ? "primary.main" : "theme.primary",
-                      }}
-                    >
-                      <Typography variant="h5">Login</Typography>
-                    </Button>
-                  </Stack>
-                </Box>
-              )}
-             {!smUp && <Profile />}
-
-            </>
-          ) : (
-            <>
-              {(isOnAuthPages || isOnHomePage) && session  ? (
-                <>
-                  <Button
-                    variant="outlined"
-                    onClick={handleLogout}
-                    color="primary"
-                    disableElevation
-                    sx={{
-                      
-                      height: "44px",
-                      backgroundColor: blueBackground ? "white" : "theme.primary",
-                      color: blueBackground ? "theme.primary" : "theme.primary",
-                      "&:hover": {
-                        backgroundColor: blueBackground ? "white" : "",
-                        border: blueBackground ? "1px solid #cdcdcd" : "",
-                      },
-                    }}
-                  >
-                    Logout
-                  </Button>
-                  <Button
-                    variant="contained"
-                    onClick={handleMyAccountsClick}
-                    color="primary"
-                    disableElevation
-                    sx={{
-                      height: "44px",
-                      border: "1px solid white",
-                      backgroundColor: "theme.primary",
-                      color: "theme.primary !important",
-                    }}
-                  >
-                    My Accounts
-                  </Button>
-                </>
-              ) : (
-                <></>
-              )}
-
-  </>
-          )}
+{status === "unauthenticated" && !isOnRegister && (
+  <>
+    {smUp ? (
+      <Box mt={2}>
+        <Stack direction="row" spacing={2}>
+          <Button
+            variant="contained"
+            component={Link}
+            href="/register"
+            color="primary"
+            size="large"
+            disableElevation
+            sx={{
+              padding: "10px 20px",
+              border: "1px solid white",
+              borderColor: blueBackground ? "white" : "primary.main",
+              backgroundColor: blueBackground ? "primary.main" : "white",
+              color: blueBackground ? "white" : "primary.main",
+              "&:hover": {
+                backgroundColor: blueBackground ? "" : "white",
+              },
+            }}
+          >
+            <Typography variant="h5">Register</Typography>
+          </Button>
+          <Button
+            variant="contained"
+            component={Link}
+            href="/login"
+            color="primary"
+            size="large"
+            disableElevation
+            sx={{
+              padding: "10px 20px",
+              border: "1px solid white",
+              borderColor: blueBackground ? "white" : "white",
+              color: blueBackground ? "white" : "white",
+              backgroundColor: blueBackground ? "primary.main" : "theme.primary",
+            }}
+          >
+            <Typography variant="h5">Login</Typography>
+          </Button>
+        </Stack>
+      </Box>
+        
+      ) : (
+        <UnauthProfile />
+      )}
+    </>
+  )}
+  
+  {status === "authenticated" && (isOnAuthPages || isOnHomePage) && (
+    <>
+      <Button
+        variant="outlined"
+        onClick={handleLogout}
+        color="primary"
+        disableElevation
+        sx={{
+          height: "44px",
+          backgroundColor: blueBackground ? "white" : "theme.primary",
+          color: blueBackground ? "theme.primary" : "theme.primary",
+          "&:hover": {
+            backgroundColor: blueBackground ? "white" : "",
+            border: blueBackground ? "1px solid #cdcdcd" : "",
+          },
+        }}
+      >
+        Logout
+      </Button>
+      <Button
+        variant="contained"
+        onClick={handleMyAccountsClick}
+        color="primary"
+        disableElevation
+        sx={{
+          height: "44px",
+          border: "1px solid white",
+          backgroundColor: "theme.primary",
+          color: "theme.primary !important",
+        }}
+      >
+        My Accounts
+      </Button>
+    </>
+  )}
         </Stack>
       </ToolbarStyled>
     </AppBarStyled>

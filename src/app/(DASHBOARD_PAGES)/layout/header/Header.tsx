@@ -5,7 +5,7 @@ import { Box, AppBar, Toolbar, styled, Stack, IconButton, Badge, Button } from '
 import PropTypes from 'prop-types';
 import Link from 'next/link';
 import { useSession, signOut } from "next-auth/react"; // Import auth functions
-import Profile from './Profile';
+import Profile from './admin_Profile';
 import { IconBellRinging, IconMenu } from '@tabler/icons-react';
 
 interface ItemType {
@@ -62,7 +62,7 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
         
         <Box flexGrow={1} />
         
-        {/* <Stack spacing={1} direction="row" alignItems="center">
+         <Stack spacing={1} direction="row" alignItems="center">
           {!session ? (
             <Button variant="contained" component={Link} href="/login" color="primary">
               Login
@@ -73,7 +73,7 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
             </Button>
           )}
           <Profile />
-        </Stack> */}
+        </Stack> 
       </ToolbarStyled>
     </AppBarStyled>
   );

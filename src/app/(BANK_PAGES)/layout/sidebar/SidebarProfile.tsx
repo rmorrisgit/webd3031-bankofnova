@@ -1,39 +1,53 @@
-import { Box, Button, Link, Typography, IconButton, Tooltip } from "@mui/material";
+import { Box, Button, Link, Typography } from "@mui/material";
 import { useSession, signOut } from "next-auth/react";
-import LogoutIcon from '@mui/icons-material/Logout'; // Material UI Logout Icon
 
 export const SidebarProfile = () => {
-  const { data: session } = useSession(); // Get the session data
-  const userName = session?.user?.name || "Guest"; // Default to "Guest" if not logged in
+  const { data: session } = useSession();
+  const userName = session?.user?.name || "Guest";
 
   return (
-        
-        <Box sx={{ paddingLeft: '15px',  paddingRight: '15px',  }} >
     <Box
       display="flex"
       alignItems="center"
       gap={2}
-      sx={{p: 3,
-
-        bgcolor: 'primary.light', 
-        borderRadius: '8px',
-         marginTop: '80px !important', }}
+      sx={{
+        p: 3,
+        height: '120px',
+        // bgcolor: 'success.light',
+        // borderBottom: '2px solid green',
+        marginTop: '65px',
+      }}
     >
       {session ? (
-        <Box display="flex" alignItems="center" gap={1}>
-          <Typography variant="h5" fontSize="16px">
-            {userName}
+        <Box>
+          <Typography variant="h5" fontSize="16px" mb={1}>
+            {userName}.
           </Typography>
-          <Tooltip title="Sign out" arrow>
-            <IconButton
-              color="primary"
-              aria-label="logout"
-              onClick={() => signOut()}
-              size="small"
-            >
-              <LogoutIcon />
-            </IconButton>
-          </Tooltip>
+          <Button
+            color="primary"
+            variant="outlined"
+            onClick={() => signOut()}
+            aria-label="logout"
+            size="small"
+            sx={{
+              // borderRadius: 'none !important'
+              marginTop: '5px',
+              boxShadow: 'none',
+            }}
+          >
+                         <Typography
+              variant="h6"
+              fontSize={14}
+              fontWeight="400"
+                sx={{
+                  // color: 'white'
+                  // marginLeft: "10px",
+                }}
+              >
+            Log Out
+            </Typography>
+
+          </Button>
         </Box>
       ) : (
         <Box>
@@ -55,7 +69,5 @@ export const SidebarProfile = () => {
         </Box>
       )}
     </Box>
-    </Box>
-
   );
 };

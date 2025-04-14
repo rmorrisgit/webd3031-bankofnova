@@ -2,7 +2,7 @@ import React from "react";
 import { Card, CardContent, Typography, Stack, Box } from "@mui/material";
 
 type Props = {
-  title?: string;
+  title: React.ReactNode; // ✅ this is the fix!
   subtitle?: string;
   action?: JSX.Element | any;
   footer?: JSX.Element;
@@ -13,6 +13,8 @@ type Props = {
   middlecontent?: string | JSX.Element;
   elevation?: number; // Add this to control elevation
   borderRadius?: number | string; // Add this to control border radius
+  backgroundColor?: string; // ✅ add this prop
+
 };
 
 const DashboardCard = ({
@@ -27,10 +29,14 @@ const DashboardCard = ({
   middlecontent,
   elevation = 9, // Default to 9 if not provided
   borderRadius = 4, // Default to 8px if not provided
+  backgroundColor = 'transparent'
 }: Props) => {
   return (
     <Card
-      sx={{ padding: 0, borderRadius: borderRadius }}
+      sx={{ padding: 0, borderRadius: borderRadius,
+        backgroundColor: backgroundColor, // ✅ apply here
+
+       }}
       elevation={elevation}
       variant={undefined}
     >

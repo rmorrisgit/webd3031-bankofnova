@@ -43,15 +43,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const lgUp = useMediaQuery(theme.breakpoints.up("lg"));
   const xlUp = useMediaQuery(theme.breakpoints.up("xl"));
 
-  // Define pages where subheader should appear
   const isLargerContainer = [
-    "/overview",
-    "/transactions/transfer/confirm",
-    "/accounts/chequing",
-    "/accounts/savings",
-    "/transactions/transfer",
-    "/transactions/deposit",
-    "/transactions/movemoney",
+    // "/overview",
+    
+    // "/accounts/chequing",
+    // "/accounts/savings",
+    // "/transactions/transfer",
+
+    "/trust/accounts",
+    // "/settings",
+    "/profile"
   ].includes(pathname);
 
   // Function to toggle the mobile sidebar
@@ -60,7 +61,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   };
 
   const isMediumContainer = [
-    "/", 
+    "/",   "/overview",
+      "/accounts/savings", "/accounts/chequing", 
+       "/transactions/transfer",   
+       "/transactions/transfer/confirm",
+
+    "transactions/transfer/contact",
+
+    "/transactions/movemoney",
+    "/transactions/deposit",
+
   ].includes(pathname);
 
 
@@ -99,7 +109,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* Conditionally render Subheader */}
         {/* {isSubheaderPage && <Subheader toggleMobileSidebar={onMobileSidebarToggle} />} */}
         {/* ------------------------------------------- */}
-        {showHomeCard && <BankCardRow />}
+        {/* {showHomeCard && <BankCardRow />} */}
 
 <Container
   sx={{
@@ -114,7 +124,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   }}
 >
   {/* Page Content */}
-  <Box sx={{ minHeight: "calc(100vh - 170px)" }}>{children}</Box>
+  <Box sx={{ minHeight: "calc(100vh - 170px)", marginBottom: '40px' }}>{children}</Box>
   {showFootersmall && <Footersmall />}
 
 </Container>

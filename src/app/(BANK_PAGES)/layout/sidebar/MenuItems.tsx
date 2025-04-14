@@ -12,10 +12,7 @@ import { uniqueId } from "lodash";
 
 // Menu Items with Settings and Divider
 const Menuitems = [
-  {
-    navlabel: true,
-    subheader: "Home",
-  },
+
 
   {
     id: uniqueId(),
@@ -23,10 +20,10 @@ const Menuitems = [
     icon: IconHome,
     href: "/overview",
   },
-  {
-    navlabel: true,
-    subheader: "Accounts",
-  },
+  // {
+  //   navlabel: true,
+  //   subheader: "Accounts",
+  // },
   {
     id: uniqueId(),
     title: "Chequing",
@@ -39,10 +36,10 @@ const Menuitems = [
     icon: IconWallet,
     href: "/accounts/savings",
   },
-  {
-    navlabel: true,
-    subheader: "Transactions",
-  },
+  // {
+  //   navlabel: true,
+  //   subheader: "Transactions",
+  // },
   {
     id: uniqueId(),
     title: "Transfer",
@@ -61,13 +58,18 @@ const Menuitems = [
     icon: IconArrowsLeftRight,
     href: "/transactions/movemoney",
   },
-
   {
     id: uniqueId(),
     title: "Settings",
     icon: IconSettings,
     href: "/settings",
   },
+  // {
+  //   id: uniqueId(),
+  //   title: "Contacts",
+  //   icon: IconSettings,
+  //   href: "/contacts",
+  // },
 ];
 
 export default Menuitems;

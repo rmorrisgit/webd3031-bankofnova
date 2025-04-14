@@ -1,77 +1,61 @@
-import React from "react";
-import { Container, Typography, Box, List, ListItem, ListItemIcon, ListItemText, Button, Grid } from "@mui/material";
+'use client';
+
+import { Container, Typography, Box, List, ListItem, ListItemIcon, ListItemText, Grid } from "@mui/material";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
+import { useMediaQuery, useTheme } from "@mui/material";
 
-const MuiQuickstart = () => {
+const MyCard3 = () => {
+  const theme = useTheme();
+  const xlUp = useMediaQuery(theme.breakpoints.up("xl"));
+
   return (
-    <Container maxWidth="lg">
-      <Grid container spacing={4}>
-        {/* Sidebar Navigation */}
-        <Grid item xs={12} md={3}>
-          <Box sx={{ position: "sticky", top: 20 }}>
-            <Typography variant="h6" gutterBottom>
-              Navigation
-            </Typography>
-            <List>
-              {["Introduction", "Getting Started", "Demos", "Documentation"].map((text) => (
-                <ListItem button key={text}>
-                  <ListItemText primary={text} />
-                </ListItem>
-              ))}
-            </List>
-          </Box>
-        </Grid>
-
-        {/* Main Content */}
-        <Grid item xs={12} md={9}>
-          {/* Introduction */}
-          <Typography variant="h4" gutterBottom>
-            Introduction
-          </Typography>
-          <Typography variant="body1" paragraph>
-            Lorem ipsum dolor sit amet consectetur adipint 
-          </Typography>
-          <Typography variant="body1" paragraph>
-          Lorem ipsum dolor sit amet consectetur adipint 
-          </Typography>
-          <Typography variant="body1" paragraph>
-          Lorem ipsum dolor sit amet consectetur adipint 
-          </Typography>
-
-          {/* Key Features */}
-          <Typography variant="h5" gutterBottom>
-            Key Features
-          </Typography>
-          <List>
-            {["Lorem ipsum dolor sit amet consectetur adipisicing elit.",
-              "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
-              "Lorem ipsum dolor sit amet consectetur adipisicing elit.",]
-            .map((feature) => (
-              <ListItem key={feature}>
-                <ListItemIcon>
-                  <CheckBoxIcon color="primary" />
-                </ListItemIcon>
-                <ListItemText primary={feature} />
-              </ListItem>
-            ))}
-          </List>
-
-          {/* Getting Started */}
-          <Typography variant="h5" gutterBottom>
-            Getting Started
-          </Typography>
-          <Box sx={{ display: "flex", gap: 2, mt: 2 }}>
-            <Button variant="contained" color="primary">Option 1:  Lorem ipsum dolor sit amet c</Button>
-            <Button variant="contained" color="secondary">Option 2: Lorem ipsum dolor sit a</Button>
-          </Box>
-
-          <Typography variant="body2" color="textSecondary" sx={{ mt: 2 }}>
-            Lorem ipsum dolor sit amet consectetur adipint cum itaque..
-          </Typography>
-        </Grid>
+    <Grid
+      container
+      p={0}
+      m={0}
+      sx={{
+        borderRadius: '16px',
+        marginTop: "20px",
+        height: '240px',
+        maxWidth: xlUp ? '94% !important' : '100% !important',
+        marginLeft: 'auto',
+        marginRight: 'auto',
+        backgroundColor: theme.palette.primary.light,
+      }}
+    >
+      {/* Left column (empty or could hold text/image/etc) */}
+      <Grid item xs={12} md={6} sx={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: theme.palette.success.main,
+        // Optional: Add content or leave empty
+      }}>
+        {/* You can put other content here if needed */}
       </Grid>
-    </Container>
+
+      {/* Right column with checkbox list */}
+      <Grid item xs={12} md={6} sx={{
+        display: 'flex',
+        alignItems: 'center',
+      }}>
+        <List>
+          {[
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
+          ].map((feature, index) => (
+            <ListItem key={index}>
+              <ListItemIcon>
+                <CheckBoxIcon color="primary" />
+              </ListItemIcon>
+              <ListItemText primary={feature} />
+            </ListItem>
+          ))}
+        </List>
+      </Grid>
+    </Grid>
   );
 };
 
-export default MuiQuickstart;
+export default MyCard3;
