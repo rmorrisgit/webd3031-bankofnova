@@ -15,7 +15,9 @@ import {
   Alert,
   CircularProgress,
   Stack,
+  Chip,
 } from "@mui/material";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -28,6 +30,8 @@ export default function ProfilePage() {
   const [openDialog, setOpenDialog] = useState(false);
   const [snackbar, setSnackbar] = useState({ open: false, message: "" });
   const [showAlert, setShowAlert] = useState(false);
+  const [integrations, setIntegrations] = useState<null | { googleLinked: boolean; githubLinked: boolean }>(null);
+  const [loadingIntegrations, setLoadingIntegrations] = useState(true);
 
   const {
     register,
@@ -39,6 +43,7 @@ export default function ProfilePage() {
   });
 
   useEffect(() => {
+    // Fetch user profile
     fetch("/api/user/profile")
       .then((res) => res.json())
       .then((data) => {
@@ -52,18 +57,30 @@ export default function ProfilePage() {
         }
       })
       .finally(() => setLoading(false));
+
+    // Fetch account integrations
+    fetch("/api/user/account-integration")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          setIntegrations(data.data); // ✅ Corrected here
+        }
+      })
+      .catch((err) => {
+        console.error("Failed to fetch integrations:", err);
+      })
+      .finally(() => setLoadingIntegrations(false));
   }, [reset]);
 
   const handleEdit = () => {
     reset({
       name: user.name,
       email: user.email,
-      password: "", // always blank on open
+      password: "",
     });
     setOpenDialog(true);
     setShowAlert(true);
   };
-  
 
   const handleClose = () => {
     setOpenDialog(false);
@@ -104,6 +121,7 @@ export default function ProfilePage() {
           <Tabs value={tab} onChange={(e, newValue) => setTab(newValue)} sx={{ mb: 2 }}>
             <Tab label="Details" />
             <Tab label="Edit Profile" />
+            <Tab label="Linked Accounts" />
           </Tabs>
 
           {tab === 0 && (
@@ -122,22 +140,14 @@ export default function ProfilePage() {
               </Button>
 
               <Dialog
-  open={openDialog}
-  onClose={(event, reason) => {
-    if (reason === "backdropClick" || reason === "escapeKeyDown") return;
-    handleClose();
-  }}
-  maxWidth="sm" // sets consistent width
-  fullWidth // enables it to use full width of sm (not 100% screen)
-  PaperProps={{
-    sx: {
-      transition: 'none', // optional: remove the scale transition entirely
-      // minWidth: '400px', // optional: can help prevent flickering
-    },
-  }}
->
-
-
+                open={openDialog}
+                onClose={(event, reason) => {
+                  if (reason === "backdropClick" || reason === "escapeKeyDown") return;
+                  handleClose();
+                }}
+                maxWidth="sm"
+                fullWidth
+              >
                 <DialogTitle>Edit Profile</DialogTitle>
                 <Box component="form" onSubmit={handleSubmit(onSubmit)}>
                   <DialogContent>
@@ -161,8 +171,7 @@ export default function ProfilePage() {
                         margin="dense"
                         label="Email"
                         fullWidth
-                        disabled // 🔒 This disables the field
-
+                        disabled
                         {...register("email")}
                         error={!!errors.email}
                         helperText={errors.email?.message}
@@ -190,23 +199,67 @@ export default function ProfilePage() {
               </Dialog>
             </Box>
           )}
+
+          {tab === 2 && (
+            <Box>
+              <Typography variant="h6" gutterBottom>
+                Linked Accounts
+              </Typography>
+
+              {loadingIntegrations ? (
+                <Box sx={{ display: "flex", justifyContent: "center", my: 3 }}>
+                  <CircularProgress />
+                </Box>
+              ) : (
+                <Stack spacing={3} mt={2}>
+                  <Box>
+                    <Typography>Google</Typography>
+                    <Stack direction="row" spacing={2} alignItems="center" mt={1}>
+                      <Chip
+                        label={integrations?.googleLinked ? "Google Linked" : "Google Not Linked"}
+                        icon={integrations?.googleLinked ? <CheckCircleOutlineIcon color="success" /> : undefined}
+                        style={{
+                          backgroundColor: integrations?.googleLinked ? "#388E3C" : "#D32F2F",
+                          color: "white",
+                        }}
+                      />
+                    </Stack>
+                  </Box>
+
+                  <Box>
+                    <Typography>GitHub</Typography>
+                    <Stack direction="row" spacing={2} alignItems="center" mt={1}>
+                      <Chip
+                        label={integrations?.githubLinked ? "GitHub Linked" : "GitHub Not Linked"}
+                        icon={integrations?.githubLinked ? <CheckCircleOutlineIcon color="success" /> : undefined}
+                        style={{
+                          backgroundColor: integrations?.githubLinked ? "#388E3C" : "#D32F2F",
+                          color: "white",
+                        }}
+                      />
+                    </Stack>
+                  </Box>
+                </Stack>
+              )}
+            </Box>
+          )}
         </>
       )}
 
-<Snackbar
-  open={snackbar.open}
-  autoHideDuration={4000}
-  onClose={() => setSnackbar({ open: false, message: '' })}
-  message={snackbar.message}
-  anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }} // Centered on screen
-  sx={{
-    '& .MuiSnackbarContent-root': {
-      maxWidth: '90vw', // Keeps it from overflowing on small screens
-      width: 'auto',     // Shrink-to-fit behavior
-      textAlign: 'center',
-    },
-  }}
-/>
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={4000}
+        onClose={() => setSnackbar({ open: false, message: "" })}
+        message={snackbar.message}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        sx={{
+          "& .MuiSnackbarContent-root": {
+            maxWidth: "90vw",
+            width: "auto",
+            textAlign: "center",
+          },
+        }}
+      />
     </Box>
   );
 }
