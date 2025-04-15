@@ -16,6 +16,8 @@ interface Transaction {
   amount: string;
   status: string;
   created_at: string;
+  sender_name?: string | null; // ← add this line
+
 }
 
 export async function GET(req: Request) {
@@ -59,12 +61,22 @@ export async function GET(req: Request) {
         t.transaction_type,
         t.amount,
         t.status,
-        t.created_at
+        t.created_at,
+        senderUser.name AS sender_name,
+        receiverUser.name AS receiver_name,
+        c.nickname AS receiver_nickname
       FROM transactions t
+      LEFT JOIN users senderUser ON t.sender_account_id = senderUser.id
+      LEFT JOIN users receiverUser ON t.receiver_id = receiverUser.id
+      LEFT JOIN user_contacts c ON c.contact_user_id = t.receiver_id AND c.user_id = ?
       WHERE t.receiver_account_id = ? OR t.sender_account_id = ?
-      ORDER BY t.created_at ASC`, // Oldest first
-      [accountId, accountId]
+      ORDER BY t.created_at ASC;
+      `,
+      [userId, accountId, accountId] 
     );
+
+    
+    
 
     const transactions = transactionsResult as Transaction[];
 
@@ -98,6 +110,8 @@ export async function GET(req: Request) {
         direction: transaction.sender_account_id === accountId ? 'sent' : 'received',
         amount: transactionAmount.toLocaleString('en-US', { minimumFractionDigits: 2 }),
         balance: runningBalance.toLocaleString('en-US', { minimumFractionDigits: 2 }), // Properly formatted with commas
+        sender_name: transaction.sender_name || null, // Add this line
+
       };
     });
     
