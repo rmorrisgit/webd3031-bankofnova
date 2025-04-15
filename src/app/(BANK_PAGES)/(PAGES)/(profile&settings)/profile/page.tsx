@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
   Box,
@@ -13,77 +13,90 @@ import {
   TextField,
   Snackbar,
   Alert,
-  CircularProgress, // ✅ Import CircularProgress
-} from '@mui/material';
-import { useState, useEffect } from 'react';
+  CircularProgress,
+  Stack,
+} from "@mui/material";
+import { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { editProfileSchema, EditProfileFormData } from "@/lib/schemas/editProfileSchema";
 
 export default function ProfilePage() {
   const [tab, setTab] = useState(0);
-  const [user, setUser] = useState({ name: '', email: '' });
-  const [loading, setLoading] = useState(true); // ✅ Add loading state
+  const [user, setUser] = useState({ name: "", email: "" });
+  const [loading, setLoading] = useState(true);
   const [openDialog, setOpenDialog] = useState(false);
-  const [formData, setFormData] = useState({ name: '', email: '', password: '' });
-  const [snackbar, setSnackbar] = useState({ open: false, message: '' });
-  const [showAlert, setShowAlert] = useState(false); // State to control alert visibility
+  const [snackbar, setSnackbar] = useState({ open: false, message: "" });
+  const [showAlert, setShowAlert] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<EditProfileFormData>({
+    resolver: zodResolver(editProfileSchema),
+  });
 
   useEffect(() => {
-    fetch('/api/user/profile')
+    fetch("/api/user/profile")
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
           setUser(data.user);
-          setFormData((prev) => ({
-            ...prev,
+          reset({
             name: data.user.name,
             email: data.user.email,
-          }));
+            password: "",
+          });
         }
       })
-      .finally(() => setLoading(false)); // ✅ Ensure loading is set to false
-  }, []);
+      .finally(() => setLoading(false));
+  }, [reset]);
 
   const handleEdit = () => {
+    reset({
+      name: user.name,
+      email: user.email,
+      password: "", // always blank on open
+    });
     setOpenDialog(true);
     setShowAlert(true);
   };
+  
 
   const handleClose = () => {
     setOpenDialog(false);
     setShowAlert(false);
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSave = async () => {
-    const res = await fetch('/api/user/profile', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(formData),
+  const onSubmit = async (data: EditProfileFormData) => {
+    const res = await fetch("/api/user/profile", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
     });
 
-    const data = await res.json();
+    const result = await res.json();
 
-    if (data.success) {
-      setUser({ name: formData.name, email: formData.email });
-      setSnackbar({ open: true, message: 'Profile updated successfully!' });
+    if (result.success) {
+      setUser({ name: data.name, email: data.email });
+      setSnackbar({ open: true, message: "Profile updated successfully!" });
       setOpenDialog(false);
       setShowAlert(false);
     } else {
-      setSnackbar({ open: true, message: 'Error: ' + data.message });
+      setSnackbar({ open: true, message: "Error: " + result.message });
     }
   };
 
   return (
-    <Box sx={{ maxWidth: 800, mx: 'auto', mt: 5 }}>
+    <Box sx={{ maxWidth: 800, mx: "auto", mt: 5 }}>
       <Typography variant="h4" gutterBottom>
         Profile
       </Typography>
 
-      {loading ? ( // ✅ Conditionally render loading indicator
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 200 }}>
+      {loading ? (
+        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: 200 }}>
           <CircularProgress />
         </Box>
       ) : (
@@ -108,47 +121,72 @@ export default function ProfilePage() {
                 Edit Info
               </Button>
 
-              <Dialog open={openDialog} onClose={handleClose}>
-                <DialogTitle>Edit Profile</DialogTitle>
-                <DialogContent>
-                  {showAlert && (
-                    <Alert severity="info" variant="outlined" sx={{ mb: 2 }}>
-                      You are about to change your login information. This includes your name, email, and password.
-                    </Alert>
-                  )}
+              <Dialog
+  open={openDialog}
+  onClose={(event, reason) => {
+    if (reason === "backdropClick" || reason === "escapeKeyDown") return;
+    handleClose();
+  }}
+  maxWidth="sm" // sets consistent width
+  fullWidth // enables it to use full width of sm (not 100% screen)
+  PaperProps={{
+    sx: {
+      transition: 'none', // optional: remove the scale transition entirely
+      // minWidth: '400px', // optional: can help prevent flickering
+    },
+  }}
+>
 
-                  <TextField
-                    margin="dense"
-                    label="Name"
-                    fullWidth
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                  />
-                  <TextField
-                    margin="dense"
-                    label="Email"
-                    fullWidth
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                  />
-                  <TextField
-                    margin="dense"
-                    label="New Password"
-                    fullWidth
-                    name="password"
-                    type="password"
-                    value={formData.password}
-                    onChange={handleChange}
-                  />
-                </DialogContent>
-                <DialogActions>
-                  <Button onClick={handleClose}>Cancel</Button>
-                  <Button onClick={handleSave} variant="contained">
-                    Save
-                  </Button>
-                </DialogActions>
+
+                <DialogTitle>Edit Profile</DialogTitle>
+                <Box component="form" onSubmit={handleSubmit(onSubmit)}>
+                  <DialogContent>
+                    {showAlert && (
+                      <Alert severity="info" variant="outlined" sx={{ mb: 2 }}>
+                        You are about to change your login information. This includes your name, email, and password.
+                      </Alert>
+                    )}
+
+                    <Stack spacing={2} mt={1}>
+                      <TextField
+                        margin="dense"
+                        label="Name"
+                        fullWidth
+                        {...register("name")}
+                        error={!!errors.name}
+                        helperText={errors.name?.message}
+                      />
+
+                      <TextField
+                        margin="dense"
+                        label="Email"
+                        fullWidth
+                        disabled // 🔒 This disables the field
+
+                        {...register("email")}
+                        error={!!errors.email}
+                        helperText={errors.email?.message}
+                      />
+
+                      <TextField
+                        margin="dense"
+                        label="New Password"
+                        type="password"
+                        fullWidth
+                        {...register("password")}
+                        error={!!errors.password}
+                        helperText={errors.password?.message}
+                      />
+                    </Stack>
+                  </DialogContent>
+
+                  <DialogActions>
+                    <Button onClick={handleClose}>Cancel</Button>
+                    <Button type="submit" variant="contained">
+                      Save
+                    </Button>
+                  </DialogActions>
+                </Box>
               </Dialog>
             </Box>
           )}

@@ -1,5 +1,11 @@
 'use client';
-import { Typography, Grid, CardContent } from '@mui/material';
+import {
+  Typography,
+  Grid,
+  CardContent,
+  Box,
+  Button,
+} from '@mui/material';
 import PageContainer from '../../../../components/container/PageContainer';
 import { useEffect, useState } from "react";
 import { fetchUserBalance } from "../../../../../api/user";
@@ -15,20 +21,18 @@ const SavingsPage = () => {
   const [accountNumber, setAccountNumber] = useState<string | null>(null);
   const router = useRouter();
 
-  // ✅ Redirect to login if unauthenticated
   useEffect(() => {
     if (status === 'unauthenticated') {
       router.push('/login');
     }
   }, [status, router]);
 
-  // ✅ Fetch balance and account number in one effect
   useEffect(() => {
     if (session) {
       const getAccountDetails = async () => {
         try {
           const response = await fetchUserBalance();
-          setSavingsBalance(response.savings);
+          setSavingsBalance(response.savings ?? null); // explicitly allow null
 
           const accounts = await fetchUserAccounts(session.user.id);
           const savingsAccount = accounts.find((acc: any) => acc.account_type === 'savings');
@@ -51,35 +55,60 @@ const SavingsPage = () => {
       <Grid container direction="column" spacing={2}>
         {/* Header */}
         <Grid item xs={12}>
-            <Typography 
-             mt={3} mb={2} variant="h2"
-             fontWeight={700} 
-             >Savings</Typography>
-            <Typography variant="body1" color="textSecondary">
-              Savings Account
+          <Typography mt={3} mb={2} variant="h2" fontWeight={700}>
+            Savings
+          </Typography>
+          <Typography variant="body1" color="textSecondary">
+            Savings Account
+          </Typography>
+          {accountNumber && (
+            <Typography variant="body2" fontSize={13} color="textSecondary" mt={2}>
+              Account Number: {accountNumber}
             </Typography>
-            {accountNumber && (
-      <Typography variant="body2" 
-      fontSize={13}
-      color="textSecondary" mt={2}>
-        Account Number: {accountNumber}
-      </Typography>
-    )}
-    </Grid>
-        {/* Balance + Account Number */}
+          )}
+        </Grid>
+
+        {/* Balance or Open Account Option */}
         <Grid item sm={12}>
-          <CardContent>
-            <Typography variant="h1" fontWeight="700">${savingsBalance ?? 'Loading...'}</Typography>
-            {error && <Typography variant="body2" color="error">{error}</Typography>}
-            <Typography variant="body1" color="textSecondary">Current Balance</Typography>
-          </CardContent>
+          {savingsBalance === null ? (
+            <Box
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              height={120}
+              border="1px dashed #ccc"
+              borderRadius={2}
+            >
+              <Button
+                variant="contained"
+                onClick={() => router.push('/OpenSavings')}
+              >
+                Open a Savings Account
+              </Button>
+            </Box>
+          ) : (
+            <CardContent>
+              <Typography variant="h1" fontWeight="700">
+                ${savingsBalance}
+              </Typography>
+              {error && <Typography variant="body2" color="error">{error}</Typography>}
+              <Typography variant="body1" color="textSecondary">Current Balance</Typography>
+            </CardContent>
+          )}
         </Grid>
       </Grid>
 
-      {/* Transaction Table */}
-      <Grid>
-        <TransactionTable accountType="savings" />
-      </Grid>
+      {/* Transactions */}
+{/* Transactions */}
+{savingsBalance !== null ? (
+  <Grid>
+    <TransactionTable accountType="savings" />
+  </Grid>
+) : (
+  <Typography mt={2} color="textSecondary">
+  
+  </Typography>
+)}
     </PageContainer>
   );
 };
