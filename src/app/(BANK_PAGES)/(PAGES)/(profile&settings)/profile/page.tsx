@@ -155,12 +155,20 @@ export default function ProfilePage() {
         </>
       )}
 
-      <Snackbar
-        open={snackbar.open}
-        autoHideDuration={4000}
-        onClose={() => setSnackbar({ open: false, message: '' })}
-        message={snackbar.message}
-      />
+<Snackbar
+  open={snackbar.open}
+  autoHideDuration={4000}
+  onClose={() => setSnackbar({ open: false, message: '' })}
+  message={snackbar.message}
+  anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }} // Centered on screen
+  sx={{
+    '& .MuiSnackbarContent-root': {
+      maxWidth: '90vw', // Keeps it from overflowing on small screens
+      width: 'auto',     // Shrink-to-fit behavior
+      textAlign: 'center',
+    },
+  }}
+/>
     </Box>
   );
 }

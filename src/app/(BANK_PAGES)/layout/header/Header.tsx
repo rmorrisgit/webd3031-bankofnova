@@ -314,6 +314,28 @@ sx={(theme) => ({
       >
         My Accounts
       </Button>
+
+
+      {session?.user?.role === "admin" && (
+  <Button
+    variant="contained"
+    component={Link}
+    href="/dashboard"
+    color="secondary"
+    disableElevation
+    sx={{
+      height: "44px",
+      backgroundColor: "secondary.main",
+      color: "white",
+      "&:hover": {
+        backgroundColor: "secondary.dark",
+      },
+    }}
+  >
+    Admin Dashboard
+  </Button>
+)}
+
     </>
   )}
         </Stack>
