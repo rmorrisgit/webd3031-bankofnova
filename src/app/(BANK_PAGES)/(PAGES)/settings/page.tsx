@@ -21,6 +21,7 @@ import {
   DialogActions,
   Button,
   TextField,
+  Grid
 } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import PageContainer from '../../components/container/PageContainer';
@@ -156,8 +157,14 @@ const ContactsPage = () => {
 
   return (
     <PageContainer title="My Contacts" description="List of saved contacts">
-      <DashboardCard elevation={0} title="My Contacts">
+         <Grid item xs={12}>
+                  <Typography mt={3} mb={2} variant="h2" fontWeight={700}>
+                    Contacts
+                  </Typography>
+                  </Grid>
         <>
+             
+                  
           {loading ? (
             <Box display="flex" justifyContent="center" alignItems="center" minHeight="150px">
               <CircularProgress />
@@ -213,7 +220,7 @@ const ContactsPage = () => {
             </Table>
           )}
 
-          <Box display="flex" gap={2} mt={3}>
+          <Box display="flex" gap={2} mt={5}>
             <Button
               variant="outlined"
               color="inherit"
@@ -227,7 +234,7 @@ const ContactsPage = () => {
               variant="contained"
               color="primary"
               disableElevation
-              sx={{  px: 4, fontWeight: 'bold' }}
+              sx={{  px: 4, fontWeight: 'bold', ml:3 }}
               onClick={() => window.location.href = '/transactions/transfer/contact?redirect=/settings'}
             >
               Add Contact
@@ -287,7 +294,6 @@ const ContactsPage = () => {
             </DialogActions>
           </Dialog>
         </>
-      </DashboardCard>
     </PageContainer>
   );
 };

@@ -49,10 +49,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     // "/accounts/chequing",
     // "/accounts/savings",
     // "/transactions/transfer",
-
     "/trust/accounts",
     // "/settings",
     "/profile"
+    
   ].includes(pathname);
 
   // Function to toggle the mobile sidebar
@@ -61,13 +61,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   };
 
   const isMediumContainer = [
-    "/",   "/overview",
-      "/accounts/savings", "/accounts/chequing", 
-       "/transactions/transfer",   
-       "/transactions/transfer/confirm",
-
-    "transactions/transfer/contact",
-
+    "/transactions/transfer/contact",
+    "/transactions/transfer",   
+    "/transactions/transfer/confirm",
+    "/",  
+    "/overview",
+    "/accounts/savings",
+    "/accounts/chequing", 
+    // "transactions/transfer/contact",
     "/transactions/movemoney",
     "/transactions/deposit",
 
