@@ -68,11 +68,11 @@ const Transaction = () => {
               index === self.findIndex((t: { id: number }) => t.id === value.id)  // Remove duplicates based on `id`
           );
   
-        console.log("Fetched Employers:", employersWithLimits);
+        // console.log("Fetched Employers:", employersWithLimits);
   
         setEmployers(employersWithLimits);
       } catch (err) {
-        setError("Failed to fetch employers");
+        // setError("Failed to fetch employers");
       }
     };
   
@@ -224,7 +224,7 @@ const Transaction = () => {
   onClick={() => router.push("/EmployerSettings")}
   sx={{ mb: 2 }}
 >
-  Go to Employer Settings
+  Your Trust Accounts
 </Button>
             {/* Employers Table */}
             {employers.length > 0 ? (
@@ -283,17 +283,18 @@ const Transaction = () => {
                 </Table>
               </TableContainer>
             ) : (
-              <Typography>No employers available for deposit.</Typography>
+              <Typography>No trust accounts available for deposit.</Typography>
             )}
 
             {/* Bulk Deposit Button */}
             <Button
               variant="contained"
-              color="success"
+              color="primary"
               onClick={handleBulkDeposit}
-              sx={{ mb: 2 }}
+              sx={{ mb: 2, mt:5 }}
+              disableElevation
             >
-              Deposit from Selected Employers
+              Deposit from Selected accounts
             </Button>
 
             {message && <Typography color="success.main">{message}</Typography>}

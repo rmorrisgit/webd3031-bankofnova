@@ -22,11 +22,15 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { editProfileSchema, EditProfileFormData } from "@/lib/schemas/editProfileSchema";
+import BankCard from "../../../components/BankCard"; // adjust path as needed
 
 export default function ProfilePage() {
   const [tab, setTab] = useState(0);
-  const [user, setUser] = useState({ name: "", email: "" });
-  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<{ name: string; email: string; has_paid?: string }>({
+    name: "",
+    email: "",
+    has_paid: "no", // optional default
+  });  const [loading, setLoading] = useState(true);
   const [openDialog, setOpenDialog] = useState(false);
   const [snackbar, setSnackbar] = useState({ open: false, message: "" });
   const [showAlert, setShowAlert] = useState(false);
@@ -43,7 +47,6 @@ export default function ProfilePage() {
   });
 
   useEffect(() => {
-    // Fetch user profile
     fetch("/api/user/profile")
       .then((res) => res.json())
       .then((data) => {
@@ -58,12 +61,11 @@ export default function ProfilePage() {
       })
       .finally(() => setLoading(false));
 
-    // Fetch account integrations
     fetch("/api/user/account-integration")
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
-          setIntegrations(data.data); // ✅ Corrected here
+          setIntegrations(data.data);
         }
       })
       .catch((err) => {
@@ -122,6 +124,7 @@ export default function ProfilePage() {
             <Tab label="Details" />
             <Tab label="Edit Profile" />
             <Tab label="Linked Accounts" />
+            <Tab label="Bonuses" /> {/* ✅ New Tab */}
           </Tabs>
 
           {tab === 0 && (
@@ -243,6 +246,54 @@ export default function ProfilePage() {
               )}
             </Box>
           )}
+
+{tab === 3 && (
+  <Box>
+    <Typography variant="h6" gutterBottom>
+      Bonuses & Achievements
+    </Typography>
+
+    <Stack spacing={2} mt={2}>
+      <Alert
+        icon={<CheckCircleOutlineIcon fontSize="inherit" />}
+        severity="success"
+        variant="outlined"
+        sx={{ pl: 2 }}
+      >
+        <Typography variant="subtitle1" fontWeight="bold">
+          Early Supporter Badge
+        </Typography>
+        <Typography variant="body2" color="textSecondary">
+          You&#39;ve been recognized as a Day 1 tester. Thanks for helping shape the future of Bank of Nova.
+        </Typography>
+      </Alert>
+
+      {user.has_paid === "yes" && (
+        <>
+          <Alert
+            icon={<CheckCircleOutlineIcon fontSize="inherit" />}
+            severity="info"
+            variant="outlined"
+            sx={{ pl: 2 }}
+          >
+            <Typography variant="subtitle1" fontWeight="bold">
+              Premium Customer Badge
+            </Typography>
+            <Typography variant="body2" color="textSecondary">
+              Thanks for supporting Bank of Nova with a premium upgrade. You now have exclusive access to enhanced features and early releases.
+            </Typography>
+          </Alert>
+
+          <Box display="flex" justifyContent="center" mt={2}>
+            <BankCard name={user.name || "Your Name"} />
+          </Box>
+
+        </>
+      )}
+
+    </Stack>
+  </Box>
+)}
         </>
       )}
 

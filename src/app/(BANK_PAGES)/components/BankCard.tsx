@@ -1,7 +1,12 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
+import Image from 'next/image'; // Add this at the top
 
-const BankCard = () => {
+interface BankCardProps {
+  name: string;
+}
+
+const BankCard = ({ name }: BankCardProps) => {
   return (
     <Box
       sx={{
@@ -52,9 +57,10 @@ const BankCard = () => {
           alignItems: 'center',
         }}
       >
-        <Typography variant="subtitle1" sx={{ fontSize: '16px' }}>
-          JOHN DOE
-        </Typography>
+    <Typography variant="subtitle1" sx={{ fontSize: '16px' }}>
+  {(name || "Your Name").toUpperCase()}
+</Typography>
+
         <Box
           sx={{
             width: '40px',
@@ -73,7 +79,28 @@ const BankCard = () => {
               color: '#0077b6',
             }}
           >
-            {/* TEXT */}
+                  {/* Logo Image */}
+        <Box
+          sx={{
+            width: '40px',
+            height: '40px',
+            borderRadius: '50%',
+            background: '#fff',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            overflow: 'hidden',
+          }}
+        >
+
+<Image
+  src="/images/logos/goodbanklogo.png"
+  alt="Logo"
+  width={55}
+  height={55}
+  style={{ objectFit: 'contain' }}
+/>
+        </Box>
           </Typography>
         </Box>
       </Box>

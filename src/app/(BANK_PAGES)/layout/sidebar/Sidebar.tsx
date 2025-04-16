@@ -13,7 +13,7 @@ import { useMediaQuery, useTheme } from "@mui/material";
 import { SidebarProfile } from "./SidebarProfile";
 
 const HEADER_HEIGHT = 64; // Adjust based on your design
-const SIDEBAR_WIDTH = 200; // Sidebar width when open
+const SIDEBAR_WIDTH = 220; // Sidebar width when open
 const SIDEBAR_COLLAPSED_WIDTH = 65; // Sidebar width when collapsed (skinny)
 const SIDEBAR_HEIGHT = 200;
 const SIDEBAR_WIDTH_XS = 270; // New width for isXs

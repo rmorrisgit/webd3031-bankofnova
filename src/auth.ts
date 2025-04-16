@@ -2,7 +2,7 @@ import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { JWT } from "next-auth/jwt";
 import { CustomSession } from "./lib/types";
-import { getUserByEmail, createUser, createDefaultChequingAccount, updateUser } from "./lib/db";
+import { getUserByEmail, createUser, createDefaultChequingAccount, updateUser, getUserByAccountNumber  } from "./lib/db";
 import bcrypt from "bcryptjs";
 import GoogleProvider from "next-auth/providers/google";
 import GitHubProvider from "next-auth/providers/github";
@@ -34,6 +34,8 @@ export const authOptions = {
             email: user.email || "",
             role: user.role,
             name: user.name || "Unknown",
+            has_paid: user.has_paid, 
+
           };
         }
 
@@ -57,7 +59,8 @@ export const authOptions = {
         token.email = user.email || "";
         token.role = user.role || "user";
         token.name = user.name || "Unknown";
-      }
+        token.has_paid = (user.has_paid === "yes" ? "yes" : "no") as "yes" | "no";
+  }
       return token;
     },
 
@@ -67,6 +70,7 @@ export const authOptions = {
         session.user.email = token.email as string;
         session.user.role = token.role as string;
         session.user.name = token.name as string | null;
+        session.user.has_paid = (token.has_paid === "yes" ? "yes" : "no") as "yes" | "no";
       }
 
       const expiration = token.exp && !isNaN(Number(token.exp))
@@ -85,12 +89,8 @@ export const authOptions = {
         const email = mutableUser.email || profile?.email || "";
 
         // Check if user exists in DB
-        const existingUser = await getUserByEmail(email) as {
-          id: number;
-          name?: string;
-          google_id?: string | null;
-          github_id?: string | null;
-        } | null;
+        const existingUser = await getUserByEmail(email); // full User object
+
 
         let googleId: string | null = null;
         let githubId: string | null = null;
@@ -141,7 +141,8 @@ export const authOptions = {
           mutableUser.id = existingUser.id.toString();
           mutableUser.google_id = updatedUser.google_id;
           mutableUser.github_id = updatedUser.github_id;
-          mutableUser.name = existingUser.name || "Unknown"; // ✅ Force correct name from DB
+          mutableUser.name = existingUser.name || "Unknown";
+          mutableUser.has_paid = existingUser.has_paid === "yes" ? "yes" : "no"; // ✅ add this
         }
       }
 

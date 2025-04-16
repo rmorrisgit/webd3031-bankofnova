@@ -12,7 +12,7 @@ import PageContainer from "../../../../../components/container/PageContainer";
 
 interface Account {
   id: string;
-  account_number: string; // ✅ Add this
+  account_number: string; 
 
   name: string;
   account_type: string;
@@ -137,7 +137,7 @@ export default function ConfirmTransactionPage() {
       const selectedAccount = accounts.find(acc => acc.id === data.fromAccount);
 
 
-      // ✅ Set transfer details in context
+      // Set transfer details in context
       setTransferData({
         ...transferData,
         amount: transferRequestData.amount,
@@ -152,7 +152,7 @@ export default function ConfirmTransactionPage() {
       });
       
       
-      // ✅ Then navigate to success page
+      // Then navigate to success page
       router.push("/success");
 
     } catch (error) {
@@ -256,13 +256,13 @@ export default function ConfirmTransactionPage() {
           {/* Recipient Email (Read-only) */}
 {/* Recipient Details */}
 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-  <TextField
+  {/* <TextField
     fullWidth
     label="Recipient Name"
     value={transferData.recipientName || 'Loading...'}
     InputProps={{ readOnly: true }}
     margin="normal"
-  />
+  /> */}
   <TextField
     fullWidth
     label="Recipient Email"

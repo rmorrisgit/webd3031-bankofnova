@@ -10,7 +10,6 @@ import Footersmall from "./components/smallFooter";
 
 import { useMediaQuery, useTheme } from "@mui/material";
 import Subheader from "./components/subheader"; // Import your Subheader component
-import BankCardRow from "./components/BankCardRow";
 
 const MainWrapper = styled("div")(() => ({
   display: "flex",
@@ -36,7 +35,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const pathname = usePathname();
   const showFooter = ["/"].includes(pathname);
   const showHomeCard = "/".includes(pathname);
-  const showFootersmall = ["/accounts/chequing", "/overview", "/accounts/savings", "/transactions/transfer", "/transactions/deposit"].includes(pathname);
+  const showFootersmall = ["/accounts/chequing", "/overview", "/accounts/savings", "/transactions/transfer",
+     "/transactions/deposit", "/payment"].includes(pathname);
 
   const showHomeNav = ["/", "/login"].includes(pathname);
   const theme = useTheme();

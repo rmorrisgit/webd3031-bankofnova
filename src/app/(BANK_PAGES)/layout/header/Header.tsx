@@ -37,7 +37,7 @@ const LogoWithHover = () => {
   } else if (isXL) {
     leftPosition = 72;
   } else if (isLG) {
-    leftPosition = 0;
+    leftPosition = 10;
   } else if (isMD) {
     leftPosition = 0;
   } else {
@@ -105,6 +105,8 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
   const AppBarStyled = styled(AppBar)(({ theme }) => ({
     boxShadow: "none",
     background: blueBackground ? theme.palette.primary.main : "white", // Use blueBackground state
+    
+    opacity: blueBackground ? .9 : "none",
     justifyContent: "center",
     backdropFilter: "blur(4px)",
     borderRadius: "none !important",

@@ -14,7 +14,7 @@ export async function GET() {
     }
 
     const [rows] = await pool.query(
-      `SELECT name, email FROM users WHERE email = ? LIMIT 1`,
+      `SELECT name, email, has_paid FROM users WHERE email = ? LIMIT 1`,
       [session.user.email]
     );
 
@@ -28,7 +28,8 @@ export async function GET() {
       success: true,
       user: {
         name: user.name,
-        email: user.email
+        email: user.email,
+        has_paid: user.has_paid, 
       },
     });
   } catch (error) {

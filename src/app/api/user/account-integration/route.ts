@@ -1,3 +1,6 @@
+export const dynamic = 'force-dynamic';
+
+
 import { NextResponse } from "next/server";
 import pool from "@/lib/db"; // Assuming you have the DB pool for querying
 import { getServerSession } from "next-auth"; // Session management from NextAuth

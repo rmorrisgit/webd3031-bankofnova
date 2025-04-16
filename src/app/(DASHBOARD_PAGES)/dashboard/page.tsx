@@ -2,8 +2,8 @@
 import { Grid, Box } from '@mui/material';
 import PageContainer from '../components/container/PageContainer';
 import dynamic from 'next/dynamic';
-import RecentTransactions from '../components/dashboard/RecentTransactions';
-import ProductPerformance from '../components/dashboard/ProductPerformance';
+// import RecentTransactions from '../components/dashboard/RecentTransactions';
+// import ProductPerformance from '../components/dashboard/ProductPerformance';
 import MonthlyEarnings from '../components/dashboard/MonthlyEarnings';
 
 // Dynamically import components with SSR disabled
@@ -28,15 +28,15 @@ const Dashboard = () => {
               </Grid>
             </Grid>
           </Grid>
-          <Grid item xs={12} lg={4}>
+          {/* <Grid item xs={12} lg={4}>
           <RecentTransactions />
            </Grid>
            <Grid item xs={12} lg={8}>
              <ProductPerformance />
            </Grid>
            <Grid item xs={12}>
-             {/* <Blog /> */}
-           </Grid>
+              <Blog /> 
+           </Grid> */}
         </Grid>
       </Box>
     </PageContainer>

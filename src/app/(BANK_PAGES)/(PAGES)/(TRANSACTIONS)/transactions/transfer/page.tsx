@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useForm, Controller } from "react-hook-form";
-import { TextField, Button, Typography, Box, MenuItem, Grid, Card } from "@mui/material";
+import { TextField, Button, Typography, Box, MenuItem, Grid, Card, Autocomplete  } from "@mui/material";
 import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
 import { fetchUserBalance } from "../../../../../api/user";
@@ -10,6 +10,11 @@ import { fetchUserAccounts } from "../../../../../api/accounts";
 import { useTransferContext } from "../../../../../context/TransferContext";
 import PageContainer from "../../../../components/container/PageContainer";
 
+interface Contact {
+  id: number;
+  nickname: string;
+  email: string;
+}
 
 interface Account {
   id: string;
@@ -33,6 +38,8 @@ export default function TransferPage() {
   const [error, setError] = useState<string | null>(null);
   const [recipient, setRecipient] = useState<any | null>(null);
   const [contactError, setContactError] = useState<string | null>(null);
+  const [contacts, setContacts] = useState<Contact[]>([]);
+  const [insufficientFundsWarning, setInsufficientFundsWarning] = useState<string | null>(null);
 
   // ✅ New state for accounts (fetched from DB)
   const [accounts, setAccounts] = useState<any[]>([]);
@@ -41,32 +48,45 @@ export default function TransferPage() {
     if (status === "unauthenticated") {
       router.push("/login");
     }
-
+  }, [status, router]);
+  
+  useEffect(() => {
     if (session?.user?.id) {
+      const fetchContacts = async () => {
+        try {
+          const response = await fetch('/api/user/listContacts');
+          const data = await response.json();
+          if (data.success) {
+            setContacts(data.contacts);
+          }
+        } catch (err) {
+          console.error("Failed to fetch contacts:", err);
+        }
+      };
+  
+      fetchContacts();
+  
       const loadAccounts = async () => {
         setIsLoading(true);
         try {
           const userAccounts = await fetchUserAccounts(session.user.id);
           const balances = await fetchUserBalance();
-
+  
           const accountsWithBalance = userAccounts.map((account: any) => ({
             ...account,
             balance: balances[account.account_type as 'chequing' | 'savings']
               ? parseFloat(balances[account.account_type as 'chequing' | 'savings'].replace(/,/g, ''))
               : 0,
           }));
-
-          console.log("Fetched accounts with balance:", accountsWithBalance);
-
+  
           const sortedAccounts = accountsWithBalance.sort((a: Account, b: Account) => {
             if (a.account_type === 'chequing' && b.account_type !== 'chequing') return -1;
             if (a.account_type !== 'chequing' && b.account_type === 'chequing') return 1;
             return 0;
           });
-          
+  
           setAccounts(sortedAccounts);
-
-          // Optional: Autofill first account
+  
           if (accountsWithBalance.length > 0) {
             setValue("fromAccount", accountsWithBalance[0].id);
           }
@@ -77,10 +97,11 @@ export default function TransferPage() {
           setIsLoading(false);
         }
       };
-
+  
       loadAccounts();
     }
-  }, [session, status, router, setValue]);
+  }, [session, setValue]);
+  
 
   const fetchRecipient = async (email: string) => {
     if (email.length < 3) return;
@@ -134,9 +155,18 @@ export default function TransferPage() {
       console.error("Recipient not found. Please check the email.");
       return;
     }
-  
     const selectedAccount = accounts.find(account => account.id === data.fromAccount);
-  
+
+    if (!selectedAccount) {
+      console.error("Sender's account not found.");
+      return;
+    }
+    
+    if (selectedAccount.balance === 0) {
+      setInsufficientFundsWarning("You cannot transfer from an account with $0 balance.");
+      return;
+    }
+
     if (selectedAccount) {
       const recipientAccount = recipient.bankAccounts.find((account: any) => account.account_type === 'chequing');
   
@@ -238,22 +268,22 @@ export default function TransferPage() {
                       helperText={fieldState.error?.message}
                       margin="normal"
                     >
-   {accounts.map((account) => (
-  <MenuItem
-    key={account.id}
-    value={account.id}
-    disabled={account.account_type === 'savings' && account.balance === 0}
-  >
-    <Box sx={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
-      <Typography>{account.account_type}</Typography>
-      <Typography variant="body2" color="textSecondary">
-        ${account.balance && !isNaN(account.balance)
-          ? account.balance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-          : "0.00"}
-      </Typography>
-    </Box>
-  </MenuItem>
-))}
+                    {accounts.map((account) => (
+                    <MenuItem
+                      key={account.id}
+                      value={account.id}
+                      disabled={account.account_type === 'savings' && account.balance === 0}
+                    >
+                      <Box sx={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
+                        <Typography>{account.account_type}</Typography>
+                        <Typography variant="body2" color="textSecondary">
+                          ${account.balance && !isNaN(account.balance)
+                            ? account.balance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+                            : "0.00"}
+                        </Typography>
+                      </Box>
+                    </MenuItem>
+                  ))}
 
                     </TextField>
                   )}
@@ -261,28 +291,37 @@ export default function TransferPage() {
 
                 {/* TO Contact (Email input) */}
                 <Controller
-                  name="toContact"
-                  control={control}
-                  rules={{
-                    required: "Please enter a recipient email",
-                    pattern: {
-                      value: /\S+@\S+\.\S+/,
-                      message: "Please enter a valid email address",
-                    },
-                  }}
-                  render={({ field, fieldState }) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label="Recipient Email"
-                      error={!!fieldState.error}
-                      helperText={fieldState.error?.message}
-                      margin="normal"
-                      onBlur={handleRecipientBlur}
-                    />
-                  )}
-                />
+  name="toContact"
+  control={control}
+  rules={{ required: "Please select or enter a recipient" }}
+  render={({ field, fieldState }) => (
+    <Autocomplete
+      freeSolo
+      options={contacts.map((c) => c.email)}
+      onInputChange={(_, value) => field.onChange(value)}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label="Recipient"
+          margin="normal"
+          fullWidth
+          onBlur={(e) => {
+            const email = e.target.value.trim();
+            if (email) fetchRecipient(email);
+          }}
+          error={!!fieldState.error}
+          helperText={fieldState.error?.message}
+        />
+      )}
+    />
+  )}
+/>
 
+{insufficientFundsWarning && (
+  <Typography variant="body2" color="error" mt={1}>
+    {insufficientFundsWarning}
+  </Typography>
+)}
                 {/* Display recipient error if applicable */}
                 {contactError && (
                   <Typography variant="body2" color="error" mt={2}>
