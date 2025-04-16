@@ -70,72 +70,38 @@ const Footer = () => {
         spacing={{ xs: 4, md: 0 }} // Adds spacing on small screens, none on medium and above
       >
         {/* Bank primary */}
-        <Grid item xs={12} md={3}>
+        <Grid item xs={12} md={6}>
           <Typography variant="h3" color="#fff" gutterBottom >
             Bank of Nova
           </Typography>
           <Typography variant="h6" pr={4} fontWeight={300} color="rgba(255,255,255,0.7)" sx={{ maxWidth: 300 }}>
-            Pioneering the future of Canadian Banking
+            Pioneering the future of Banking
           </Typography>
         </Grid>
     
-          {/* Quick Links */}
-          <Grid item xs={12} md={3}>
-            <Typography variant="h6" color="#fff" gutterBottom>
-              Features
-            </Typography>
-            <Box display="flex" flexDirection="column" gap={1}>
-              {["Expense Tracker", "About"].map((link) => (
-
-                <Quicklinks key={link} variant="subtitle1">{link}</Quicklinks>
-              ))}
-            </Box>
-          </Grid>
   
-          {/* Contact primary */}
-          <Grid item xs={12} md={3}>
-            <Typography variant="h6" color="#fff" gutterBottom>
-              Contact
-            </Typography>
-            <Typography variant="body2" pr={4} color="rgba(255,255,255,0.7)">
-              Halifax, Nova Scotia, Canada
-              https://github.com/NSCC-ITC-Winter2025-WEBD3031-700-MCa/webd3031-project-bankofnova
-            </Typography>
-          </Grid>
+{/* Contact primary */}
+<Grid item xs={12} md={6}>
+  <Typography variant="h6" color="#fff" gutterBottom>
+    About
+  </Typography>
+  <Typography variant="body2" pr={4} color="rgba(255,255,255,0.7)">
+    Halifax, Nova Scotia, Canada
+    <br />
+    <a
+      href="https://github.com/NSCC-ITC-Winter2025-WEBD3031-700-MCa/webd3031-project-bankofnova"
+      target="_blank"
+      rel="noopener noreferrer"
+      style={{ color: 'rgba(255,255,255,0.7)',  textDecoration: 'underline' }}
+    >
+      GitHub Repository
+    </a>
+  </Typography>
+</Grid>
   
-          {/* Newsletter Subscription */}
-          <Grid item xs={7} md={3}>
-            <Typography variant="h6"  color="#fff" gutterBottom>
-              Stay Connected
-            </Typography>
-            <Box mb={2}       sx={{
-                paddingRight: {
-                  sm: '55px',
-                  md: '55px',
-                  lg: '0px'
-                },
-                }}>
-              <NewsletterInput
-                fullWidth
-                label="Subscribe to Newsletter"
-                variant="outlined"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-          
-              
-              />
-              <Button
-                onClick={handleSubscribe}
-                sx={{
-                  minWidth: "auto", p: 1, color: "#fff",
-                  "&:hover": { background: "rgba(255,255,255,0.1)" }
-                }}
-              >
-                Send
-              </Button>
-            </Box>
+ 
+     
           </Grid>
-        </Grid>
 
         </Container>
             

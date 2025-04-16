@@ -23,10 +23,12 @@ export default function Login2() {
   }, [session, status, router]);
 
   return (
-    <PageContainer title="Login" description="this is Login page">
+    <PageContainer title="Login" description="this is Login page" >
           <Card
             elevation={0}
             sx={{
+          // backgroundColor: "red",
+              boxShadow: 'none !important',
               p: 2,
               zIndex: 1,
               width: "100%",

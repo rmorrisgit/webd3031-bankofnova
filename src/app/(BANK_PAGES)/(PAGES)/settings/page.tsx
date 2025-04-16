@@ -40,7 +40,7 @@ const ContactsPage = () => {
   const [selectedContactId, setSelectedContactId] = useState<number | null>(null);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
 
-  // ✅ Edit Dialog States
+  // Edit Dialog States
   const [openEditDialog, setOpenEditDialog] = useState<boolean>(false);
   const [editNickname, setEditNickname] = useState<string>('');
 
@@ -157,68 +157,66 @@ const ContactsPage = () => {
 
   return (
     <PageContainer title="My Contacts" description="List of saved contacts">
-         <Grid item xs={12}>
-                  <Typography mt={3} mb={2} variant="h2" fontWeight={700}>
-                    Contacts
+      <Grid item xs={12}>
+        <Typography mt={3} mb={2} variant="h2" fontWeight={700}>
+          Contacts
+        </Typography>
+      </Grid>
+      <>
+        {loading ? (
+          <Box display="flex" justifyContent="center" alignItems="center" minHeight="150px">
+            <CircularProgress />
+          </Box>
+        ) : contacts.length === 0 ? (
+          <Typography>No contacts found.</Typography>
+        ) : (
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>
+                  <Typography variant="subtitle2" fontWeight="600" color="text.primary">
+                    Contact name
                   </Typography>
-                  </Grid>
-        <>
-             
-                  
-          {loading ? (
-            <Box display="flex" justifyContent="center" alignItems="center" minHeight="150px">
-              <CircularProgress />
-            </Box>
-          ) : contacts.length === 0 ? (
-            <Typography>No contacts found.</Typography>
-          ) : (
-            <Table>
-              <TableHead>
-                <TableRow>
+                </TableCell>
+                <TableCell>
+                  <Typography variant="subtitle2" fontWeight="600" color="text.primary">
+                    Email
+                  </Typography>
+                </TableCell>
+                <TableCell align="right"></TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {contacts.map((contact) => (
+                <TableRow
+                  key={contact.id}
+                  sx={{ borderBottom: (theme) => `2px solid ${theme.palette.divider}` }}
+                >
                   <TableCell>
-                    <Typography variant="subtitle2" fontWeight="600" color="text.primary">
-                      Contact name
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography variant="subtitle2" fontWeight="600" color="text.primary">
-                      Email
-                    </Typography>
-                  </TableCell>
-                  <TableCell align="right"></TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {contacts.map((contact) => (
-                  <TableRow
-                    key={contact.id}
-                    sx={{ borderBottom: (theme) => `2px solid ${theme.palette.divider}` }}
-                  >
-                    <TableCell>
-                      <Box display="flex" alignItems="center">
-                        <Avatar sx={{ width: 32, height: 32, fontSize: 14, mr: 2 }}>
-                          {(contact.nickname?.charAt(0).toUpperCase() || contact.email.charAt(0).toUpperCase())}
-                        </Avatar>
-                        <Typography variant="body1" fontWeight="500">
-                          {contact.nickname}
-                        </Typography>
-                      </Box>
-                    </TableCell>
-                    <TableCell>
-                      <Typography variant="body2" color="textSecondary">
-                        {contact.email}
+                    <Box display="flex" alignItems="center">
+                      <Avatar sx={{ width: 32, height: 32, fontSize: 14, mr: 2 }}>
+                        {(contact.nickname?.charAt(0).toUpperCase() || contact.email.charAt(0).toUpperCase())}
+                      </Avatar>
+                      <Typography variant="body1" fontWeight="500">
+                        {contact.nickname}
                       </Typography>
-                    </TableCell>
-                    <TableCell align="right">
-                      <IconButton onClick={(event) => handleMenuOpen(event, contact.id)}>
-                        <MoreVertIcon fontSize="small" />
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          )}
+                    </Box>
+                  </TableCell>
+                  <TableCell>
+                    <Typography variant="body2" color="textSecondary">
+                      {contact.email}
+                    </Typography>
+                  </TableCell>
+                  <TableCell align="right">
+                    <IconButton onClick={(event) => handleMenuOpen(event, contact.id)}>
+                      <MoreVertIcon fontSize="small" />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        )}
 
           <Box display="flex" gap={2} mt={5}>
             <Button
@@ -234,7 +232,7 @@ const ContactsPage = () => {
               variant="contained"
               color="primary"
               disableElevation
-              sx={{  px: 4, fontWeight: 'bold', ml:3 }}
+              sx={{  px: 4, fontWeight: 'bold', ml:2 }}
               onClick={() => window.location.href = '/transactions/transfer/contact?redirect=/settings'}
             >
               Add Contact

@@ -4,7 +4,7 @@ import { Container, Box, Grid, Typography, Stack, Button } from '@mui/material';
 import Link from 'next/link';
 import { useMediaQuery, useTheme } from "@mui/material";
 
-const BankCardTest2 = () => {
+const NEWCTA = () => {
     const theme = useTheme();
     const lgUp = useMediaQuery(theme.breakpoints.up("lg"));
     const xlUp = useMediaQuery(theme.breakpoints.up("xl"));
@@ -74,20 +74,38 @@ const BankCardTest2 = () => {
 
                 sx={{
                   height: '56px',
+                  marginTop: '20px',
+
                   textTransform: 'none',
+
+                  marginLeft: {
+                    xs: '0px',
+                    sm: '0px',
+                    md: '0px',
+                    lg: '0px',
+                    xl: '0px',
+                  }
+
+
+
+
                 }}
                 disableElevation
               >
               <Typography variant="h6">Get started</Typography>
             </Button>
             </Link>
+
+
           </Box>
         </Stack>
       </Grid>
+
+
 
      
     </Grid>
   );
 };
 
-export default BankCardTest2;
+export default NEWCTA;

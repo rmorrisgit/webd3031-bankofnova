@@ -130,38 +130,40 @@ const Profile = () => {
             </Box>
 
             {/* Upgrade Plan Card */}
-            <Card
-              sx={{
-                background: theme.palette.warning.light,
-                mb: 2,
-                position: "relative",
-                overflow: "hidden",
-              }}
-            >
-              <CardContent>
-                <Typography variant="h6" gutterBottom>
-                  Upgrade your plan
-                </Typography>
-                <Typography
-                  variant="body2"
-                  color="grey.900"
-                  sx={{ opacity: 0.7 }}
-                  gutterBottom
-                >
-                  70% discount for 1 years subscriptions.
-                </Typography>
-                <Button
-                  variant="contained"
-                  color="warning"
-                  size="small"
-                  sx={{ boxShadow: "none" }}
-                  fullWidth
-                  href="/payment" // 👈 Added link to payment page
-                >
-                  Go Premium
-                </Button>
-              </CardContent>
-            </Card>
+            {session?.user?.has_paid !== "yes" && (
+  <Card
+    sx={{
+      background: theme.palette.warning.light,
+      mb: 2,
+      position: "relative",
+      overflow: "hidden",
+    }}
+  >
+    <CardContent>
+      <Typography variant="h6" gutterBottom>
+        Upgrade your plan
+      </Typography>
+      <Typography
+        variant="body2"
+        color="grey.900"
+        sx={{ opacity: 0.7 }}
+        gutterBottom
+      >
+        70% discount for 1 years subscriptions.
+      </Typography>
+      <Button
+        variant="contained"
+        color="warning"
+        size="small"
+        sx={{ boxShadow: "none" }}
+        fullWidth
+        href="/payment"
+      >
+        Go Premium
+      </Button>
+    </CardContent>
+  </Card>
+)}
 
             {/* Divider */}
             <Divider sx={{ mb: 1 }} />
@@ -171,16 +173,19 @@ const Profile = () => {
               <ListItemIcon>
                 <IconSettings width={20} />
               </ListItemIcon>
-              <ListItemText>Account Settings</ListItemText>
+              <ListItemText>Profile Settings</ListItemText>
             </MenuItem>
 
-            {/* ✅ Upgrade to Premium Option */}
-            <MenuItem component={Link} href="/payment" onClick={handleClose}>
-              <ListItemIcon>
-                <IconListCheck width={20} />
-              </ListItemIcon>
-              <ListItemText>Upgrade to Premium</ListItemText>
-            </MenuItem>
+{/* ✅ Conditionally render Upgrade to Premium menu item */}
+{session?.user?.has_paid !== "yes" && (
+  <MenuItem component={Link} href="/payment" onClick={handleClose}>
+    <ListItemIcon>
+      <IconListCheck width={20} />
+    </ListItemIcon>
+    <ListItemText>Upgrade to Premium</ListItemText>
+  </MenuItem>
+)}
+
 
             <MenuItem onClick={handleLogout}>
               <ListItemIcon>

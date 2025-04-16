@@ -31,11 +31,9 @@ const AddContactPage = () => {
 
       if (!response.ok) throw new Error('Failed to add contact');
 
-      alert('Contact added successfully!');
       router.push(redirect || '/transactions/transfer');
     } catch (error) {
       console.error(error);
-      alert('Error adding contact. Please try again.');
     }
   };
 
