@@ -1,7 +1,7 @@
 'use client';
 
 import { IconListCheck, IconMail, IconUser } from "@tabler/icons-react";
-import { Container, Typography, Box, List, ListItem, ListItemIcon, ListItemText, Button, Grid } from "@mui/material";
+import { Container, Typography, Box, List, ListItem, ListItemIcon, ListItemText, Button, Grid, Alert } from "@mui/material";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 
 import { useMediaQuery, useTheme } from "@mui/material";
@@ -10,15 +10,7 @@ import { useMediaQuery, useTheme } from "@mui/material";
 
 const MyCard3 = () => {
    const theme = useTheme();
-      const lgUp = useMediaQuery(theme.breakpoints.up("lg"));
       const xlUp = useMediaQuery(theme.breakpoints.up("xl"));
-  const features = [
-    { title: "Advanced API", description: "Powerful and flexible API integration" },
-    { title: "Data Security", description: "Enterprise-grade security protocols" },
-    { title: "Cloud Storage", description: "Unlimited secure cloud storage" },
-    { title: "Performance", description: "Optimized for maximum efficiency" }
-  ];
-
 
   return (
     <>
@@ -40,12 +32,14 @@ const MyCard3 = () => {
     maxWidth: xlUp ? '94% !important' : '100% !important',
     marginLeft: 'auto',
     marginRight: 'auto', // Center the grid
-    backgroundColor: theme.palette.primary.light, // Set background color to white
+    // backgroundColor: theme.palette.primary.light, 
+        backgroundColor: theme.palette.primary.dark, 
+
     textAlign: 'center'
   }}
 >   
 <List>
-                        <Typography variant="h1" fontWeight="600" fontSize="28px" color="text.primary">
+                        {/* <Typography variant="h1" fontWeight="600" fontSize="28px" color="text.primary">
             
 
           Open a Savings Account with Bank of Nova
@@ -54,7 +48,7 @@ const MyCard3 = () => {
                       <Typography variant="h5" color="text.secondary"  fontSize="18px" paragraph>
           
           Sign up to bank with us and open a Savings Account online or in our app in a few clicks.
-                       </Typography>
+                       </Typography> */}
                        </List>
        {/*   <List>
 
@@ -73,23 +67,6 @@ const MyCard3 = () => {
           </List> */}
 
     </Grid>
-
-
-
-            {/* <Alert
-              severity="info"
-              variant="outlined"
-              sx={{ mb: 4 }}
-              action={
-                <Button color="info" size="small">
-                  Learn More
-                </Button>
-              }
-            >
-              Unlock advanced features and dedicated support with our Enterprise Plan
-            </Alert> */}
-
-
 
          </>
   );

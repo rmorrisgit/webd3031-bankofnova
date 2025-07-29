@@ -15,9 +15,12 @@ const baselightTheme = createTheme({
       main: "#5D87FF",
 
       // light: "#ECF2FF",
-      light:"#E6F4FF",
+            light: "#485243ff",
+
+      // light:"#E6F4FF",
       // light:"#E3F2FD",
-      // light:"#55F7EA",
+
+      // light:"hsla(224, 55%, 59%, 1.00)",
       // light:"#EBFFFD",
 
       dark: "#4570EA",

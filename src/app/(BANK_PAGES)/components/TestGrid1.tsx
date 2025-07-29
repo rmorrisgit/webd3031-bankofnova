@@ -5,6 +5,9 @@ import CheckBoxIcon from "@mui/icons-material/CheckBox";
 
 const TestGrid1 = () => {
   const theme = useTheme();
+  // add lg and md 
+  const lgUp = useMediaQuery(theme.breakpoints.up("lg"));
+  const mdUp = useMediaQuery(theme.breakpoints.up("md"));
   const xlUp = useMediaQuery(theme.breakpoints.up("xl"));
 
   return (
@@ -20,16 +23,17 @@ const TestGrid1 = () => {
         // backgroundColor: theme.palette.primary.light,
       }}
     >
-      <Box maxWidth="700px">
+      
+      <Box maxWidth="700px" bgcolor={theme.palette.primary.light} p={4} borderRadius="16px" boxShadow={3}>
         <Typography variant="h4" fontWeight="bold" gutterBottom>
           Welcome to Bank of Nova
         </Typography>
 
-        <Typography variant="body1" color="textSecondary" sx={{ mb: 3 }}>
-          A modern banking prototype designed for learning and exploration. Built with with current web technologies and inspired by real-world financial tools.
+        <Typography variant="body1" color={theme.palette.grey[200]} sx={{ mb: 3 }}>
+        YOOOOO
         </Typography>
 
-        <List>
+        {/* <List>
           <ListItem disableGutters>
             <ListItemIcon><CheckBoxIcon color="primary" /></ListItemIcon>
             <ListItemText primary="Open and manage accounts" />
@@ -42,7 +46,7 @@ const TestGrid1 = () => {
             <ListItemIcon><CheckBoxIcon color="primary" /></ListItemIcon>
             <ListItemText primary="View transaction history" />
           </ListItem>
-        </List>
+        </List> */}
       </Box>
     </Box>
   );

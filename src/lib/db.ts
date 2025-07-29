@@ -4,9 +4,9 @@ import { RowDataPacket } from 'mysql2';
 
 const pool = mysql.createPool({
   host: 'localhost',
-  user: 'nextjs_user',
+  user: 'rmor_user',
   password: 'strongpassword',
-  database: 'bankofnova',
+  database: 'bankofnovaV2',
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,

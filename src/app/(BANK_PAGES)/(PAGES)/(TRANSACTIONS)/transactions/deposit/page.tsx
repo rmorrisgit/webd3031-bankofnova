@@ -26,6 +26,7 @@ import {
 } from "@mui/material";
 import PageContainer from "../../../../components/container/PageContainer";
 import { Employer } from "../../../../../../lib/types";
+import theme from "@/utils/theme";
 // import { fetchUserBalance } from "../../../../api/user";
 
 const Transaction = () => {
@@ -187,7 +188,7 @@ const Transaction = () => {
             <Grid container spacing={2} sx={{ mb: 6 }}>
               <Grid item xs={12}>
                 <CardContent>
-                  <Typography variant="h2">Deposit</Typography>
+                  <Typography variant="h2" bgcolor={theme.palette.warning.main}>Deposit</Typography>
                 </CardContent>
               </Grid>
 

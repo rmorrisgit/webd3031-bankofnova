@@ -25,7 +25,7 @@ const NEWCTA = () => {
         // marginRight={"24px"}
         // marginLeft={xlUp ? '72px' : '0px'}
         xs={12}
-        md={6}
+        md={8}
         sx={{
           height: '350px',
           maxWidth: xlUp ? '624px !important' : 'auto' ,

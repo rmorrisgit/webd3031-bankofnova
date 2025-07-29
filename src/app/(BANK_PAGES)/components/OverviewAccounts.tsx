@@ -1,6 +1,6 @@
 'use client';
 
-import { Grid, Box, Typography, Tabs, Tab, CardContent } from "@mui/material";
+import { Grid, Box, Typography, Tabs, Tab, CardContent, Button } from "@mui/material";
 import PageContainer from "./container/PageContainer";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
@@ -145,12 +145,16 @@ const AccountTabs = () => {
               border="1px dashed #ccc"
               borderRadius={2}
             >
-              <button
-                style={{ padding: '0.75rem 1.5rem', fontSize: '1rem', cursor: 'pointer' }}
+              <Button
+                 variant="contained"
+                color="primary"
+                size="large"           
+                disableElevation
+     
                 onClick={() => router.push('/OpenSavings')}
               >
                 Open a Savings Account
-              </button>
+            </Button>
             </Box>
           </Grid>
         ) : (
