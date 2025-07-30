@@ -7,9 +7,11 @@ import Sidebar2 from "./layout/sidebar/NAVHOME"; // Only show Sidebar2 on specif
 import Footer from "./components/Footer";
 import { usePathname } from "next/navigation";
 import Footersmall from "./components/smallFooter";
-
+import Subheader from "./components/subheader";
 import { useMediaQuery, useTheme } from "@mui/material";
-import Subheader from "./components/subheader"; // Import your Subheader component
+// import Subheader from "./components/subheader"; 
+import Subheader2 from "./components/subheader2";
+import { ThemeRegistry } from "@/app/context/ThemeContext"; // adjust path as needed
 
 const MainWrapper = styled("div")(() => ({
   display: "flex",
@@ -44,13 +46,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const xlUp = useMediaQuery(theme.breakpoints.up("xl"));
 
   const isLargerContainer = [
-    // "/overview",
-    
-    // "/accounts/chequing",
-    // "/accounts/savings",
-    // "/transactions/transfer",
+
     "/trust/accounts",
-    // "/settings",
     "/profile"
     
   ].includes(pathname);
@@ -74,10 +71,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
   ].includes(pathname);
 
-
+  const isSubheaderPage = [
+"/accounts/savings",
+    "/accounts/chequing", 
+  ].includes(pathname);
+  const isSubheader2Page = [
+"/accounts/savings",
+    "/accounts/chequing", 
+  ].includes(pathname);
 
   
   return (
+        <ThemeRegistry>
+    
     <MainWrapper className="mainwrapper">
       {/* ------------------------------------------- */}
       {/* Sidebar */}
@@ -108,9 +114,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* ------------------------------------------- */}
         <Header toggleMobileSidebar={onMobileSidebarToggle} />
         {/* Conditionally render Subheader */}
-        {/* {isSubheaderPage && <Subheader toggleMobileSidebar={onMobileSidebarToggle} />} */}
+        {isSubheaderPage && <Subheader toggleMobileSidebar={onMobileSidebarToggle} />}
         {/* ------------------------------------------- */}
         {/* {showHomeCard && <BankCardRow />} */}
+        {isSubheader2Page && <Subheader2  toggleMobileSidebar={onMobileSidebarToggle} />}
 
 <Container
   sx={{
@@ -118,10 +125,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       ? "1700px !important"
       : isMediumContainer && lgUp
       ? "1340px !important"
-      : "1200px",
-    ...(isMediumContainer && xlUp && {
-      padding: "0 !important",
-    }),
+      : "1200px"
   }}
 >
   {/* Page Content */}
@@ -135,5 +139,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
       </PageWrapper>
     </MainWrapper>
+  </ThemeRegistry>
   );
 }

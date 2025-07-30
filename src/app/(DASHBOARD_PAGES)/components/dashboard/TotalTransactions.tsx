@@ -8,7 +8,7 @@ import { useTheme } from '@mui/material/styles';
 import { Stack, Typography } from '@mui/material';
 import DashboardCard from '../shared/DashboardCard';
 
-const MonthlyEarnings = () => {
+const TotalTransactions = () => {
   const theme = useTheme();
   const [total, setTotal] = useState<number | null>(null);
 
@@ -31,7 +31,7 @@ const MonthlyEarnings = () => {
   return (
     <DashboardCard title="Total User Transactions">
       <>
-      <Typography variant="h3" fontWeight="700" mt="-20px">
+      <Typography variant="h6" fontWeight="700" mt="-20px">
   {total !== null ? `${total.toLocaleString()} transactions` : 'Loading...'}
 </Typography>
 
@@ -46,4 +46,4 @@ const MonthlyEarnings = () => {
   );
 };
 
-export default MonthlyEarnings;
+export default TotalTransactions;

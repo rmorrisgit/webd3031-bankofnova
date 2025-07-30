@@ -42,33 +42,33 @@ const AddContactPage = () => {
       <Card
         elevation={0}
         sx={{
-          p: 2,
           zIndex: 1,
           width: "100%",
           marginTop: '15px',
           boxShadow: 'none !important',
-          border: '1px solid #cdcdcd !important',
           paddingBottom: '25px',
-          "@media (max-width:600px)": {
-            p: 4,
-            marginBottom: '25px',
-            marginLeft: "auto",
-            marginRight: "auto",
-          },
-          "@media (max-width:960px)": {
-            p: 0,
-          },
-          "@media (min-width:960px)": {
-            width: "90%",
-            marginLeft: "auto",
-            marginRight: "auto",
-          },
-          "@media (max-width:1044px)": {
-            p: 4,
-          },
+          // "@media (max-width:600px)": {
+          //   p: 4,
+          //   marginBottom: '25px',
+          //   marginLeft: "auto",
+          //   marginRight: "auto",
+          // },
+          // "@media (max-width:960px)": {
+          //   p: 0,
+          // },
+          // "@media (min-width:960px)": {
+          //   width: "90%",
+          //   marginLeft: "auto",
+          //   marginRight: "auto",
+          // },
+          // "@media (max-width:1044px)": {
+          //   p: 4,
+          // },
         }}
       >
-        <Box sx={{ flexGrow: 1, p: 2 }}>
+    <Box sx={{ flexGrow: 1,  p: 2, 
+    // backgroundColor: '#44cc7861', 
+      }}>
           <Grid container spacing={2}>
             {/* Left Column: Form */}
             <Grid item xs={12} md={6}>

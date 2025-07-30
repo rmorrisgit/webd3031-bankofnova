@@ -10,17 +10,19 @@ export const SidebarProfile = () => {
       display="flex"
       alignItems="center"
       gap={2}
+      m={3}
       sx={{
         p: 3,
         height: '120px',
-        // bgcolor: 'success.light',
+        bgcolor: 'warning.light',
+        borderRadius: '8px',
         // borderBottom: '2px solid green',
-        marginTop: '65px',
+        marginTop: '75px',
       }}
     >
       {session ? (
         <Box>
-          <Typography variant="h5" fontSize="16px" mb={1}>
+          {/* <Typography variant="h5" fontSize="16px" mb={1}>
             {userName}.
           </Typography>
           <Button
@@ -47,7 +49,7 @@ export const SidebarProfile = () => {
             Log Out
             </Typography>
 
-          </Button>
+          </Button> */}
         </Box>
       ) : (
         <Box>

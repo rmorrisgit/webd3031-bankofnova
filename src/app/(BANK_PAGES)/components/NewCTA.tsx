@@ -13,7 +13,7 @@ const NEWCTA = () => {
       container
       sx={{
         borderRadius: '16px',
-        // backgroundColor: 'lawngreen',
+        backgroundColor: theme.palette.error.light,
         marginBottom: '16px',
         marginTop: '60px',
         overflow: 'hidden', // optional: to keep border radius consistent
@@ -63,9 +63,9 @@ const NEWCTA = () => {
             <Typography variant="h1" fontWeight="600" mb="20px" fontSize="36px" color="text.primary">
               Open a Bank of Nova Chequing Account
             </Typography>
-            <Typography variant="h5" color="text.secondary"  fontSize="24px" paragraph>
+            {/* <Typography variant="h5" color="text.secondary"  fontSize="24px" paragraph>
             Choose the way you manage your money.
-            </Typography>
+            </Typography> */}
             <Link href="/register" passHref>
             <Button
                 variant="contained"

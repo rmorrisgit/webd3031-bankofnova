@@ -28,11 +28,13 @@ import {
   IconListCheck,
 } from "@tabler/icons-react";
 import ManageAccountsOutlinedIcon from "@mui/icons-material/ManageAccountsOutlined";
-
+import { useThemeMode } from '../../../context/ThemeContext'; 
+import { Brightness4, Brightness7 } from '@mui/icons-material';
 const Profile = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [dndMode, setDndMode] = useState(true);
   const [notifications, setNotifications] = useState(false);
+const { toggleTheme, mode } = useThemeMode();
 
   const { data: session } = useSession();
   const pathname = usePathname();
@@ -185,7 +187,14 @@ const Profile = () => {
     <ListItemText>Upgrade to Premium</ListItemText>
   </MenuItem>
 )}
-
+<MenuItem onClick={toggleTheme}>
+  <ListItemIcon>
+    {mode === 'dark' ? <Brightness7 /> : <Brightness4 />}
+  </ListItemIcon>
+  <ListItemText>
+    {mode === 'dark' ? 'Light Mode' : 'Dark Mode'}
+  </ListItemText>
+</MenuItem>
 
             <MenuItem onClick={handleLogout}>
               <ListItemIcon>

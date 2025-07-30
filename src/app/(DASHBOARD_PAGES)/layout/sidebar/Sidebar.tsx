@@ -1,116 +1,169 @@
-import Link from 'next/link';
-import { useMediaQuery, Box, Drawer } from "@mui/material";
-import SidebarItems from "./SidebarItems";
-import { SidebarProfile } from "./admin_SidebarProfile";
+import { Box, Drawer, IconButton, AppBar, Toolbar, Backdrop } from "@mui/material";
+import SidebarItems from './SidebarItems';
+import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined"; // Closed menu icon
+import MenuOpenOutlinedIcon from "@mui/icons-material/MenuOpenOutlined"; // Open menu icon
+
 import { Sidebar, Logo } from 'react-mui-sidebar';
+// import Profile from "../header/Profile";
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { useSession } from 'next-auth/react';
+import { useEffect, useState } from 'react';
+import { useMediaQuery, useTheme } from "@mui/material";
+// import { SidebarProfile } from "./SidebarProfile";
+import { SidebarProfile } from "./admin_SidebarProfile";
+
+// const HEADER_HEIGHT = 64; 
+const SIDEBAR_WIDTH = 270; // Sidebar width when open
+const SIDEBAR_COLLAPSED_WIDTH = 65; // Sidebar width when collapsed (skinny)
+const SIDEBAR_HEIGHT = 200;
+const SIDEBAR_WIDTH_XS = 270; // New width for isXs
 
 interface ItemType {
   isMobileSidebarOpen: boolean;
   onSidebarClose: (event: React.MouseEvent<HTMLElement>) => void;
   isSidebarOpen: boolean;
+  onMobileSidebarToggle: () => void;
 }
 
-const MSidebar = ({
-  isMobileSidebarOpen,
-  onSidebarClose,
-  isSidebarOpen,
-}: ItemType) => {
-  const lgUp = useMediaQuery((theme: any) => theme.breakpoints.up("lg"));
+const LogoWithHover = () => (
+  <Link href="/" passHref>
+    <Box
+      sx={{
+        position: 'fixed',
+        top: 0,
+        left: 55,
+        zIndex: 9999,
+        backgroundColor: '#ff1d0dff !important',
 
-  const sidebarWidth = "270px";
+      }}
+    >
+      <Logo img="/images/logos/dark-logo3.svg" />
+    </Box>
+  </Link>
+);
 
-  const scrollbarStyles = {
-    '&::-webkit-scrollbar': {
-      width: '7px',
-    },
-    '&::-webkit-scrollbar-thumb': {
-      backgroundColor: '#eff2f7',
-      borderRadius: '15px',
-    },
+const MSidebar = ({ isSidebarOpen }: ItemType) => {
+  const { data: session, status } = useSession();
+  const pathname = usePathname();
+  const theme = useTheme();
+
+  // Media queries for breakpoints
+  const isSmUp = useMediaQuery(theme.breakpoints.up('sm'));
+  const isMdUp = useMediaQuery(theme.breakpoints.up('md'));
+  const isXlUp = useMediaQuery(theme.breakpoints.up('xl'));
+  const isXs = useMediaQuery('(max-width: 900px)'); // Custom xs breakpoint
+
+  const [isSidebarToggled, setIsSidebarToggled] = useState(false);
+
+  // Calculate sidebar width dynamically
+  const sidebarWidth = isXs
+    ? (isSidebarToggled ? SIDEBAR_WIDTH_XS : 0)
+    : (isSidebarToggled ? SIDEBAR_WIDTH : SIDEBAR_COLLAPSED_WIDTH);
+
+  const toggleSidebar = () => {
+    setIsSidebarToggled((prev) => !prev);
+    console.log(isSidebarToggled ? "Sidebar Open" : "Sidebar Collapsed");
   };
 
-  if (lgUp) {
-    return (
+  useEffect(() => {
+    if (isXlUp) {
+      setIsSidebarToggled(true);
+    } else if (isMdUp) {
+      setIsSidebarToggled(false);
+    } else if (isSmUp) {
+      setIsSidebarToggled(false);
+    }
+  }, [isXlUp, isMdUp, isSmUp]);
+
+  const isSpecialPage = ['/', '/login'].includes(pathname || '');
+
+  if (isSpecialPage || status !== 'authenticated') {
+    return null;
+  }
+
+  const handleBackdropClick = () => {
+    setIsSidebarToggled(false);
+  };
+
+  return (
+    <Box sx={{ display: 'flex' }}>
+      {/* Header */}
+
+
+
+      {/* Main Content */}
       <Box
         sx={{
-          width: sidebarWidth,
-          flexShrink: 0,
+          display: 'flex',
+          flex: 1,
+          transition: 'margin-left 0.3s ease',
+          marginLeft: isMdUp || isXlUp ? `${sidebarWidth}px` : 0,
         }}
       >
+        
+        <IconButton
+      onClick={toggleSidebar}
+      sx={{
+        position: 'fixed',
+        top: 10,
+        left: 10, // Move it to the right of the logo
+        zIndex: 9999,
+      }}
+>
+  {isSidebarToggled ? <MenuOpenOutlinedIcon /> : <MenuOutlinedIcon />}
+</IconButton>
+
+<Box sx={{ display: { xs: 'block', sm: 'block', md: 'none' } }}>
+  <LogoWithHover />
+</Box>  
         <Drawer
           anchor="left"
-          open={isSidebarOpen}
-          variant="permanent"
+          open={isSidebarToggled}
+          variant={isMdUp || isXlUp ? 'permanent' : 'persistent'}
+          onClose={isMdUp ? () => {} : undefined}
           PaperProps={{
             sx: {
-              boxSizing: "border-box",
-              ...scrollbarStyles,
+              width: `${sidebarWidth}px`,
+              height: `${SIDEBAR_HEIGHT}`,
+              boxShadow: 'none',
+              // borderRight: 'none',
+               borderRight: 'none',
+          background:  theme.palette.info.light,
+              display: 'flex',
+              overflowX: "hidden",
+              flexDirection: 'column',
             },
           }}
         >
-          <Box
-            sx={{
-              height: "100%",
-            }}
-          >
+          <Box sx={{ height: '100%' }}>
             <Sidebar
-              width={'270px'}
-              collapsewidth="80px"
-              open={isSidebarOpen}
-              themeColor="#5d87ff"
-              themeSecondaryColor="#49beff"
+              width={`${sidebarWidth}px`}
+              collapsewidth={`${SIDEBAR_COLLAPSED_WIDTH}px`}
               showProfile={false}
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
             >
-              {/* Logo with Link */}
-              <Link href="/" passHref>
-                <Logo img="/images/logos/dark-logo3.svg" />
-              </Link>
-
-              <Box>
-                <SidebarProfile />
-                <SidebarItems />
-              </Box>
+              {isSidebarToggled && <SidebarProfile />}
+              <SidebarItems isSidebarToggled={isSidebarToggled} />
             </Sidebar>
           </Box>
         </Drawer>
-      </Box>
-    );
-  }
 
-  return (
-    <Drawer
-      anchor="left"
-      open={isMobileSidebarOpen}
-      onClose={onSidebarClose}
-      variant="temporary"
-      PaperProps={{
-        sx: {
-          boxShadow: (theme) => theme.shadows[8],
-          ...scrollbarStyles,
-        },
-      }}
-    >
-      <Box px={2}>
-        <Sidebar
-          width={'270px'}
-          collapsewidth="80px"
-          isCollapse={false}
-          mode="light"
-          direction="ltr"
-          themeColor="#5d87ff"
-          themeSecondaryColor="#49beff"
-          showProfile={false}
-        >
-          {/* Logo with Link */}
-          <Link href="/" passHref>
-            <Logo img="/images/logos/dark-logo3.svg" />
-          </Link>
-
-          <SidebarProfile />
-          <SidebarItems />
-        </Sidebar>
+        {/* Backdrop for xs screens */}
+        {isXs && isSidebarToggled && (
+          <Backdrop
+            open={isSidebarToggled}
+            onClick={handleBackdropClick}
+            sx={{ zIndex: (theme) => theme.zIndex.drawer - 1 }}
+          />
+        )}
       </Box>
-    </Drawer>
+    </Box>
   );
 };
 

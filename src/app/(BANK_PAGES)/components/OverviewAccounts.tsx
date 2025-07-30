@@ -87,7 +87,6 @@ const AccountTabs = () => {
     <PageContainer title="Accounts" description="This is your accounts overview">
 
 
-    <Grid item xs={12} lg={12}>
 
 
     <Grid container direction="column" spacing={2}>
@@ -95,12 +94,11 @@ const AccountTabs = () => {
 <Grid item xs={12}>
 
       <Typography variant="h2"
-       fontWeight={700} 
+       fontWeight={700}
       mt={3} mb={2}>
         Accounts
       </Typography>
 
-    </Grid>
 
     </Grid>
 

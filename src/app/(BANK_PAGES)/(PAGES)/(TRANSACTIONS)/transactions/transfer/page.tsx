@@ -198,36 +198,17 @@ export default function TransferPage() {
               <Card
                 elevation={0}
                 sx={{
-                  p: 2,
                   zIndex: 1,
                   width: "100%",
                   marginTop: '15px',
                   boxShadow: 'none !important',
-                  border: '1px solid #cdcdcd !important',
                   paddingBottom: '25px',
-                  // Adding responsive styles for different breakpoints
-                  "@media (max-width:600px)": {
-                    p: 4, // Less padding for small screens (phones)
-                    marginBottom: '25px',
-                    marginLeft: "auto",
-                    marginRight: "auto",                  
-                  },
-                  "@media (max-width:960px)": {
-                    p: 0, // Adjust padding for medium-sized screens (tablets)
-                  },
-                  "@media (min-width:960px)": {
-                    width: "90%", // Keep the card width at 80% for medium to larger screens
-                    marginLeft: "auto",
-                    marginRight: "auto",
-                  },
-                  "@media (max-width:1044px)": {
-                    p: 4, // Adjust padding for medium-sized screens (tablets)
-                  },
+        
                   
                 }}
               >
 
-    <Box sx={{ flexGrow: 1,  p: 2}}>
+    <Box sx={{ flexGrow: 1,  p: 2, borderRadius: 2 }}>
       <Grid container spacing={2}>
         {/* Left Column: Form */}
         <Grid item xs={12} md={6}>

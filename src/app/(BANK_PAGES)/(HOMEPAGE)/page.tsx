@@ -7,7 +7,6 @@ import React from "react";
 import TestGrid1 from "../components/TestGrid1";
 import InfoPage from "../components/MyCard2";
 // Dynamically load the Footer component as a Client Component
-// import BankCardRow from "../components/blocks/BankCardRow";
 import NEWCTA from "../components/NewCTA";
 
 import MyCard3 from "../components/MyCard3";
@@ -19,14 +18,12 @@ const HomePage = () => {
   return (
   <>
   <NEWCTA />
-  {/* <BankCardTest5 />
-  <MuiQuickstart /> */}
-  <TestGrid1 />
 
-  <MyCard3 />
+   {/* <TestGrid1 />  */}
 
-  {/* <CardComparison /> */}
-  {/* <BankCard /> */}
+   {/* <MyCard3 />  */}
+
+   {/* <CardComparison />  */}
 
 
     </>

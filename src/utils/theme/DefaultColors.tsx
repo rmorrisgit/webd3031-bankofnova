@@ -13,16 +13,7 @@ const baselightTheme = createTheme({
   palette: {
     primary: {
       main: "#5D87FF",
-
-      // light: "#ECF2FF",
-            light: "#485243ff",
-
-      // light:"#E6F4FF",
-      // light:"#E3F2FD",
-
-      // light:"hsla(224, 55%, 59%, 1.00)",
-      // light:"#EBFFFD",
-
+      light: "#ECF2FF",
       dark: "#4570EA",
     },
     secondary: {
@@ -139,6 +130,7 @@ const baselightTheme = createTheme({
           boxShadow:
             "rgb(145 158 171 / 30%) 0px 0px 2px 0px, rgb(145 158 171 / 12%) 0px 12px 24px -4px !important",
         },
+
       },
     },
     MuiCard: {
@@ -148,7 +140,64 @@ const baselightTheme = createTheme({
         },
       },
     },
+
+
   },
 });
 
 export { baselightTheme };
+
+const basedarkTheme = createTheme({
+  direction: 'ltr',
+  palette: {
+    mode: 'dark',
+    primary: {
+      main: '#5D87FF',
+      light: '#607edc',
+      dark: '#4570EA',
+    },
+    secondary: {
+      main: '#49BEFF',
+      light: '#1e2b3f',
+      dark: '#23afdb',
+    },
+    background: {
+      default: '#121212',
+      paper: '#1e1e1e',
+    },
+    text: {
+      primary: '#ffffff',
+      secondary: '#c7c7c7',
+    },
+    divider: '#444',
+    grey: {
+      100: '#1d1d1d',
+      200: '#2c2c2c',
+      300: '#3a3a3a',
+      400: '#555',
+      500: '#777',
+      600: '#999',
+    },
+  },
+  typography: {
+    ...baselightTheme.typography, // ✅ use identical typography for consistency
+  },
+  components: {
+    MuiCssBaseline: {
+      styleOverrides: {
+        body: {
+          backgroundColor: '#121212',
+        },
+      },
+    },
+    MuiCard: {
+      styleOverrides: {
+        root: {
+          borderRadius: '7px',
+        },
+      },
+    },
+  },
+});
+
+export { basedarkTheme };

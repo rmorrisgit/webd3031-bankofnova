@@ -5,8 +5,10 @@ import { useSession } from 'next-auth/react';
 import {
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
   Paper, Button, Typography, CircularProgress, TablePagination, Dialog,
-  DialogActions, DialogContent, DialogTitle, TableSortLabel
+  DialogActions, DialogContent, DialogTitle, TableSortLabel, Checkbox, Stack,
+  Grid
 } from '@mui/material';
+import DashboardCard from '../components/shared/DashboardCard';
 
 interface User {
   id: string;
@@ -33,8 +35,10 @@ const UsersPage = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
 
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+
   useEffect(() => {
-    fetch('/api/user/AllUsers')
+    fetch('/api/user/TotalUsers')
       .then(res => res.json())
       .then(data => {
         if (data.success) {
@@ -53,14 +57,12 @@ const UsersPage = () => {
 
   const handleDelete = async () => {
     if (!selectedUserId) return;
-
     try {
       const res = await fetch('/api/user/delete', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id: selectedUserId }),
       });
-
       const result = await res.json();
       if (res.ok && result.success) {
         setUsers(users.filter(user => user.id !== selectedUserId));
@@ -71,28 +73,47 @@ const UsersPage = () => {
       console.error('Error deleting user:', error);
       setError('Failed to delete user');
     }
-
     setOpenDialog(false);
   };
 
-  const handleDeleteClick = (id: string) => {
-    setSelectedUserId(id);
-    setOpenDialog(true);
+  const handleBulkDelete = async () => {
+    const ids = Array.from(selectedIds);
+    if (ids.length === 0) return;
+
+    try {
+      await Promise.all(
+        ids.map(id =>
+          fetch('/api/user/delete', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id }),
+          })
+        )
+      );
+      setUsers(users.filter(user => !selectedIds.has(user.id)));
+      setSelectedIds(new Set());
+    } catch (error) {
+      console.error('Error deleting selected users:', error);
+      setError('Failed to delete selected users');
+    }
   };
 
-  const handleCancel = () => {
-    setOpenDialog(false);
+  const toggleSelect = (id: string) => {
+    setSelectedIds(prev => {
+      const newSet = new Set(prev);
+      newSet.has(id) ? newSet.delete(id) : newSet.add(id);
+      return newSet;
+    });
   };
 
-  const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage);
-  };
-
+  const handleChangePage = (event: unknown, newPage: number) => setPage(newPage);
   const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
-
+ const handleCancel = () => {
+    setOpenDialog(false);
+  };
   const handleRequestSort = (property: keyof User) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
@@ -108,79 +129,102 @@ const UsersPage = () => {
     return stabilized.map(el => el[0]);
   };
 
-  const getComparator = <Key extends keyof User>(
-    order: Order,
-    orderBy: Key
-  ): ((a: User, b: User) => number) => {
-    return order === 'desc'
-      ? (a, b) => (b[orderBy] < a[orderBy] ? -1 : b[orderBy] > a[orderBy] ? 1 : 0)
-      : (a, b) => (a[orderBy] < b[orderBy] ? -1 : a[orderBy] > b[orderBy] ? 1 : 0);
-  };
+  const getComparator = <Key extends keyof User>(order: Order, orderBy: Key) =>
+    order === 'desc'
+      ? (a: User, b: User) => (b[orderBy] < a[orderBy] ? -1 : 1)
+      : (a: User, b: User) => (a[orderBy] < b[orderBy] ? -1 : 1);
 
   const sortedUsers = stableSort(users, getComparator(order, orderBy));
   const paginatedUsers = sortedUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
   return (
     <PageContainer title="Users" description="Manage user accounts">
-      <Typography variant="h5" gutterBottom sx={{ color: '#333' }}>
-        Manage Users
+      
+      <Grid item xs={12}>
+      <Typography variant="h4" 
+        mt={3} mb={2}>
+        User Management
       </Typography>
-
+      </Grid>
+  <DashboardCard>
+          <>
       {loading ? (
         <CircularProgress />
       ) : error ? (
         <Typography color="error">{error}</Typography>
       ) : (
         <>
-          <TableContainer component={Paper} sx={{
-            maxWidth: '100%', margin: 'auto', boxShadow: 3, overflowX: 'auto', backgroundColor: '#fafafa'
-          }}>
+          <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
+            <Button
+              variant="contained"
+              color="error"
+              onClick={handleBulkDelete}
+              disabled={selectedIds.size === 0}
+            >
+              Delete Selected
+            </Button>
+          </Stack>
+
+          <TableContainer component={Paper}>
             <Table sx={{ minWidth: 800 }}>
-              <TableHead sx={{ backgroundColor: '#2C3E50' }}>
+              <TableHead>
                 <TableRow>
-                  {['id', 'name', 'email', 'created_at', 'role'].map((column) => (
-                    <TableCell key={column} sx={{ color: '#ECF0F1' }}>
-                      {(column === 'id' || column === 'created_at' || column === 'role') ? (
-                        <TableSortLabel
-                          active={orderBy === column}
-                          direction={orderBy === column ? order : 'asc'}
-                          onClick={() => handleRequestSort(column as keyof User)}
-                          sx={{ color: '#ECF0F1', '&.Mui-active': { color: '#F1C40F' } }}
-                        >
-                          <b>{column.replace('_', ' ').toUpperCase()}</b>
-                        </TableSortLabel>
-                      ) : (
-                        <b>{column.replace('_', ' ').toUpperCase()}</b>
-                      )}
-                    </TableCell>
-                  ))}
-                  <TableCell sx={{ color: '#ECF0F1' }}><b>Actions</b></TableCell>
-                </TableRow>
-              </TableHead>
+                  <TableCell>
+                    <TableSortLabel
+                      active={orderBy === 'id'}
+                      direction={orderBy === 'id' ? order : 'asc'}
+        onClick={() => handleRequestSort('id')}
+      >
+        <b>ID</b>
+      </TableSortLabel>
+    </TableCell>
+    <TableCell padding="checkbox">
+      <b>Select</b>
+    </TableCell>
+{['name', 'role', 'email', 'created_at'].map((column) => (
+      <TableCell key={column}>
+        {['created_at', 'role'].includes(column) ? (
+          <TableSortLabel
+            active={orderBy === column}
+            direction={orderBy === column ? order : 'asc'}
+            onClick={() => handleRequestSort(column as keyof User)}
+          >
+            <b>{column.replace('_', ' ').toUpperCase()}</b>
+          </TableSortLabel>
+        ) : (
+          <b>{column.replace('_', ' ').toUpperCase()}</b>
+        )}
+      </TableCell>
+    ))}
+  </TableRow>
+</TableHead>
               <TableBody>
                 {paginatedUsers.map(user => (
-                  <TableRow key={user.id} sx={{ '&:hover': { backgroundColor: '#BDC3C7' } }}>
-                    <TableCell>{user.id}</TableCell>
-                    <TableCell>{user.name}</TableCell>
-                    <TableCell>{user.email}</TableCell>
-                    <TableCell>{new Date(user.created_at).toLocaleString()}</TableCell>
-                    <TableCell sx={{
-                      color: user.role === 'admin' ? '#E74C3C' : '#3498DB',
-                      fontWeight: 'bold'
-                    }}>
-                      {user.role}
-                    </TableCell>
-                    <TableCell>
-                      <Button
-                        variant="contained"
-                        color="error"
-                        onClick={() => handleDeleteClick(user.id)}
-                        sx={{ backgroundColor: '#E74C3C', '&:hover': { backgroundColor: '#C0392B' } }}
-                      >
-                        Delete
-                      </Button>
-                    </TableCell>
-                  </TableRow>
+<TableRow
+  key={user.id}
+  sx={{ '&:hover': { backgroundColor: '#BDC3C7' } }}
+  selected={selectedIds.has(user.id)}
+>
+  <TableCell>{user.id}</TableCell>
+  <TableCell padding="checkbox">
+    <Checkbox
+      checked={selectedIds.has(user.id)}
+      onChange={() => toggleSelect(user.id)}
+    />
+  </TableCell>
+  <TableCell>{user.name}</TableCell>
+  <TableCell
+    sx={{
+      color: user.role === 'admin' ? '#E74C3C' : '#3498DB',
+      fontWeight: 'bold',
+    }}
+  >
+    {user.role}
+  </TableCell>
+  <TableCell>{user.email}</TableCell>
+  <TableCell>{new Date(user.created_at).toLocaleString()}</TableCell>
+</TableRow>
+
                 ))}
               </TableBody>
             </Table>
@@ -195,14 +239,17 @@ const UsersPage = () => {
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
             sx={{
-              '.MuiTablePagination-select': { backgroundColor: '#ECF0F1', color: '#2C3E50' },
+              '.MuiTablePagination-select': {
+                backgroundColor: '#ECF0F1',
+                color: '#2C3E50'
+              },
               '.MuiTablePagination-actions': { color: '#2C3E50' }
             }}
           />
         </>
       )}
 
-      <Dialog open={openDialog} onClose={handleCancel}>
+      <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
         <DialogTitle>Confirm Deletion</DialogTitle>
         <DialogContent>
           <Typography>Are you sure you want to delete this user?</Typography>
@@ -212,6 +259,8 @@ const UsersPage = () => {
           <Button onClick={handleDelete} color="error">Confirm</Button>
         </DialogActions>
       </Dialog>
+      </>
+      </DashboardCard>
     </PageContainer>
   );
 };

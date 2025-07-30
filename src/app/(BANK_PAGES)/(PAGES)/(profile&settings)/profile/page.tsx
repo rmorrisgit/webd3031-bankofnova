@@ -16,6 +16,8 @@ import {
   CircularProgress,
   Stack,
   Chip,
+  Grid,
+  Card,
 } from "@mui/material";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import { useState, useEffect } from "react";
@@ -23,6 +25,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { editProfileSchema, EditProfileFormData } from "@/lib/schemas/editProfileSchema";
 import BankCard from "../../../components/BankCard"; // adjust path as needed
+import PageContainer from '../../../components/container/PageContainer';
 
 export default function ProfilePage() {
   const [tab, setTab] = useState(0);
@@ -109,11 +112,30 @@ export default function ProfilePage() {
   };
 
   return (
-    <Box sx={{ maxWidth: 800, mx: "auto", mt: 5 }}>
-      <Typography variant="h4" gutterBottom>
+<PageContainer title="Profile" description="This is your Profile page">
+
+
+           <Card
+                elevation={0}
+                sx={{
+                  zIndex: 1,
+                  width: "100%",
+                  marginTop: '15px',
+                  boxShadow: 'none !important',
+                  paddingBottom: '25px',
+        
+                  
+                }}
+              >
+    <Box sx={{ flexGrow: 1,  p: 2, backgroundColor: 'lightpink', borderRadius: 2 }}>
+
+
+    <Grid item xs={12}>      <Typography variant="h2" 
+        fontWeight={700}
+        mt={3} mb={2}>
         Profile
       </Typography>
-
+ </Grid>
       {loading ? (
         <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: 200 }}>
           <CircularProgress />
@@ -311,6 +333,8 @@ export default function ProfilePage() {
           },
         }}
       />
-    </Box>
+          </Box>
+    </Card>
+  </PageContainer>
   );
 }

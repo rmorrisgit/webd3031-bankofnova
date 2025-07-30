@@ -14,7 +14,10 @@ import { SidebarProfile } from "./SidebarProfile";
 
 const HEADER_HEIGHT = 64; // Adjust based on your design
 const SIDEBAR_WIDTH = 220; // Sidebar width when open
-const SIDEBAR_COLLAPSED_WIDTH = 65; // Sidebar width when collapsed (skinny)
+// const SIDEBAR_COLLAPSED_WIDTH = 65; 
+const SIDEBAR_COLLAPSED_WIDTH = 60 
+const SIDEBAR_COLLAPSED_HEIGHT = 64;
+
 const SIDEBAR_HEIGHT = 200;
 const SIDEBAR_WIDTH_XS = 270; // New width for isXs
 
@@ -41,6 +44,7 @@ const LogoWithHover = () => (
   </Link>
 );
 
+
 const MSidebar = ({ isSidebarOpen }: ItemType) => {
   const { data: session, status } = useSession();
   const pathname = usePathname();
@@ -61,7 +65,7 @@ const MSidebar = ({ isSidebarOpen }: ItemType) => {
 
   const toggleSidebar = () => {
     setIsSidebarToggled((prev) => !prev);
-    console.log(isSidebarToggled ? "Sidebar Open" : "Sidebar Collapsed");
+    // console.log(isSidebarToggled ? "Sidebar Open" : "Sidebar Collapsed");
   };
 
   useEffect(() => {
@@ -87,17 +91,18 @@ const MSidebar = ({ isSidebarOpen }: ItemType) => {
   return (
     <Box sx={{ display: 'flex' }}>
       {/* Header */}
-      <AppBar
-        position="fixed"
-        sx={{
-          zIndex: (theme) => theme.zIndex.drawer + 1,
-          backgroundColor: theme.palette.background.paper,
-          // backgroundColor: "silver",
 
-          boxShadow: "none",
+
+      {/* Main Content */}
+      <Box
+        sx={{
+          display: 'flex',
+          flex: 1,
+          transition: 'margin-left 0.3s ease',
+          marginLeft: isMdUp || isXlUp ? `${sidebarWidth}px` : 0,
         }}
       >
-        <Toolbar sx={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
+
         <IconButton
       onClick={toggleSidebar}
       sx={{
@@ -110,23 +115,12 @@ const MSidebar = ({ isSidebarOpen }: ItemType) => {
   {isSidebarToggled ? <MenuOpenOutlinedIcon /> : <MenuOutlinedIcon />}
 </IconButton>
 
-          <LogoWithHover />
+<Box sx={{ display: { xs: 'block', sm: 'block', md: 'none' } }}>
+  <LogoWithHover />
+</Box> 
 
-          <Box sx={{ display: "flex", alignItems: "center", justifyContent: "flex-end", width: "100%", marginRight: '50px' }}>
-            <Profile />
-          </Box>
-        </Toolbar>
-      </AppBar>
 
-      {/* Main Content */}
-      <Box
-        sx={{
-          display: 'flex',
-          flex: 1,
-          transition: 'margin-left 0.3s ease',
-          marginLeft: isMdUp || isXlUp ? `${sidebarWidth}px` : 0,
-        }}
-      >
+
         <Drawer
           anchor="left"
           open={isSidebarToggled}
@@ -135,15 +129,29 @@ const MSidebar = ({ isSidebarOpen }: ItemType) => {
           PaperProps={{
             sx: {
               width: `${sidebarWidth}px`,
-              height: `${SIDEBAR_HEIGHT}`,
+height: isSidebarToggled ? '100vh' : `${SIDEBAR_COLLAPSED_HEIGHT}px`,
               boxShadow: 'none',
+              backgroundColor: isSidebarToggled ? theme.palette.primary.dark : theme.palette.primary.dark,
+              
+              // borderRight: '2px solid lawngreen',
+
+              // backgroundColor: theme.palette.success.main,
               borderRight: 'none',
+              color: theme.palette.success.main,
               display: 'flex',
               overflowX: "hidden",
               flexDirection: 'column',
+              overflowY: 'hidden',
             },
           }}
         >
+
+
+
+
+
+
+
           <Box sx={{ height: '100%' }}>
             <Sidebar
               width={`${sidebarWidth}px`}

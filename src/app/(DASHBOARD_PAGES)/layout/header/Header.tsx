@@ -7,19 +7,35 @@ import Link from 'next/link';
 import { useSession, signOut } from "next-auth/react"; // Import auth functions
 import Profile from './admin_Profile';
 import { IconBellRinging, IconMenu } from '@tabler/icons-react';
+import { Logo } from 'react-mui-sidebar';
 
 interface ItemType {
   toggleMobileSidebar: (event: React.MouseEvent<HTMLElement>) => void;
 }
-
+const LogoWithHover = () => (
+  <Link href="/" passHref>
+    <Box
+      sx={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        backgroundColor: 'lawngreen',
+      }}
+    >
+      <Logo img="/images/logos/dark-logo3.svg" />
+    </Box>
+  </Link>
+);
 const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
   const { data: session } = useSession(); // Now safe to use
 
   const AppBarStyled = styled(AppBar)(({ theme }) => ({
     boxShadow: 'none',
-    background: theme.palette.background.paper,
+    // background: theme.palette.background.paper,
+        background: theme.palette.background.paper,
     justifyContent: 'center',
-    // border: '2px solid lawngreen',
+    // borderBottom: '1px solid #e0e0e0',
+    color: 'lawngreen',
     backdropFilter: 'blur(4px)',
     [theme.breakpoints.up('lg')]: {
       minHeight: '70px',
@@ -29,26 +45,16 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
   const ToolbarStyled = styled(Toolbar)(({ theme }) => ({
     width: '100%',
     color: theme.palette.text.secondary,
+
   }));
 
   return (
-    <AppBarStyled position="sticky" color="default">
+    <AppBarStyled position="sticky" color="default" >
       <ToolbarStyled>
-        <IconButton
-          color="inherit"
-          aria-label="menu"
-          onClick={toggleMobileSidebar}
-          sx={{
-            display: {
-              lg: "none",
-              xs: "inline",
-            },
-          }}
-        >
-          <IconMenu width="20" height="20" />
-        </IconButton>
 
-        
+<Box sx={{ display: { xs: 'none', md: 'block' } }}>
+  <LogoWithHover />
+</Box>
         
         <Box flexGrow={1} />
         
@@ -58,9 +64,11 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
               Login
             </Button>
           ) : (
-            <Button variant="contained" onClick={() => signOut({ callbackUrl: "/" })} color="secondary">
-              Logout
-            </Button>
+            <>
+            </>
+            // <Button variant="contained" onClick={() => signOut({ callbackUrl: "/" })} color="secondary">
+            //   Logout
+            // </Button>
           )}
           <Profile />
         </Stack> 

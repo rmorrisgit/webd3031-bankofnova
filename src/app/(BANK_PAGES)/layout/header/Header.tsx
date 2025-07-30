@@ -20,6 +20,7 @@ interface ItemType {
 
 const Header = ({ toggleMobileSidebar }: ItemType) => {
   return <HeaderContent toggleMobileSidebar={toggleMobileSidebar} />;
+  console.log("Header rendered");
 };
 
 const LogoWithHover = () => {
@@ -35,9 +36,9 @@ const LogoWithHover = () => {
   if (pathname === "/register" && isXL) {
     leftPosition = 53;
   } else if (isXL) {
-    leftPosition = 72;
+    leftPosition = 0;
   } else if (isLG) {
-    leftPosition = 10;
+    leftPosition = 0;
   } else if (isMD) {
     leftPosition = 0;
   } else {
@@ -53,10 +54,13 @@ const LogoWithHover = () => {
       <Box
         sx={{
           position: "fixed",
-          top: 10,
+          top: 0,
           left: leftPosition,
           zIndex: 9999,
           width: "auto",
+
+          backgroundColor: '#310dff46 !important',
+          
         }}
       >
         <Image
@@ -69,8 +73,29 @@ const LogoWithHover = () => {
     </Link>
   );
 };
-
-
+const logoSrc2 = "/images/logos/dark-logo3.svg"; // Default logo source
+const LogoWithHover2 = () => (
+  <Link href="/" passHref>
+    <Box
+      sx={{
+  position: "fixed",
+          top: 10,
+          left: 30,
+          zIndex: 9999,
+          width: "auto",
+        backgroundColor: '#27c7325a',
+      }}
+    >
+      {/* <Logo img="/images/logos/dark-logo3.svg" /> */}
+              <Image
+          src={logoSrc2}
+          alt="Logo"
+          width={200} // Adjust width and height as per your design
+          height={50}
+        />
+    </Box>
+  </Link>
+);
 
 const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
   const { data: session, status } = useSession();
@@ -79,7 +104,7 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
   const mdUp = useMediaQuery((theme: any) => theme.breakpoints.up("md"));
   const smUp = useMediaQuery((theme: any) => theme.breakpoints.up("sm"));
   const xlUp = useMediaQuery((theme: any) => theme.breakpoints.up("xl"));
-
+//test
   // Define pages where subheader should appear
   const isLargerContainer = [
     "/overview",
@@ -89,6 +114,9 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
     "/transactions/transfer",
     "/transactions/deposit",
     "/transactions/movemoney",
+    "/profile",
+    "/settings",
+    "/transactions/transfer/contact"
   ].includes(pathname);
   const isMediumContainer = [
     "/",
@@ -98,20 +126,20 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
   const isOnHomePage = pathname === "/";
   const isOnRegister = pathname === "/register";
 
-  
+ const shouldApplyZeroSpacing = isLargerContainer && (!isOnAuthPages || !isOnHomePage || !isOnRegister);
+
 
   const blueBackground = ["/register"].includes(pathname);
 
   const AppBarStyled = styled(AppBar)(({ theme }) => ({
     boxShadow: "none",
-    background: blueBackground ? theme.palette.primary.main : "white", // Use blueBackground state
-    
-    opacity: blueBackground ? .9 : "none",
+    background: blueBackground ? theme.palette.primary.main : "transparent", // Use blueBackground state
+    opacity: blueBackground ? .9 : .6,
     justifyContent: "center",
     backdropFilter: "blur(4px)",
     borderRadius: "none !important",
     position: "sticky", // This will make the header behave as a normal element
-
+    borderBottom: blueBackground ? "none" : "2px solid lawngreen",
     [theme.breakpoints.up("lg")]: {
       minHeight: "70px",
     },
@@ -135,44 +163,51 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
     window.location.href = "/overview"; // Navigate to "My Accounts" page
   };
 
-  // if (status === "loading") {
-  //   return (
-  //     <AppBarStyled position="sticky" color="default">
-  //       <ToolbarStyled>
-  //         <Box>Loading...</Box>
-  //       </ToolbarStyled>
-  //     </AppBarStyled>
-  //   );
-  // }
 
 
 
     return isOnRegister ? (
       <>
     <LogoWithHover /> {/* Add this here for logo on register */}
-      <AppBarStyled position="sticky" color="default">
+
+      <AppBarStyled position="sticky" >
         <ToolbarStyled>
+          
           {/* ...everything inside your ToolbarStyled */}
         </ToolbarStyled>
       </AppBarStyled>
       </>
     ) : (
-      <Container
+          <AppBarStyled position="sticky" color="default">
+                  <Container
         sx={{
-          maxWidth: isLargerContainer
+          // backgroundColor: blueBackground ? "primary.main" : "primary.main",
+          //dont make these ifs. 
+       
+  marginLeft: shouldApplyZeroSpacing ? "0 !important" : "0 !important",
+  marginRight: shouldApplyZeroSpacing ? "0 !important" : "0 !important",
+  paddingLeft: shouldApplyZeroSpacing ? "0px !important" : "0 !important",
+  paddingRight: shouldApplyZeroSpacing ? "0 !important" : "0 !important",
+  // backgroundColor: blueBackground ? "primary.main" : "primary.main",
+          maxWidth: isLargerContainer && !shouldApplyZeroSpacing
             ? "1600px !important"
-            : isMediumContainer && lgUp
-            ? "1400px !important"
-            : "1200px",
-          ...(isMediumContainer && xlUp && {
+            : isMediumContainer && lgUp && !shouldApplyZeroSpacing
+            ? "100% !important"
+            : "none !important",
+          ...(isMediumContainer && xlUp && !shouldApplyZeroSpacing && {
             padding: "0 !important",
           }),
         }}
       >
-      
-    <AppBarStyled position="sticky" color="default">
       <ToolbarStyled>
 
+
+      
+
+        {shouldApplyZeroSpacing &&
+    <Box sx={{ display: {  xs: 'none', md: 'block' } }}>
+    <LogoWithHover2 />
+  </Box> }
       {(isOnHomePage || isOnAuthPages) && <LogoWithHover />}
 
         {/* LEFT SIDE */}
@@ -181,11 +216,13 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
           <Link href="/" passHref>
             <Box
               sx={{
+
                 "&:hover": {
                   opacity: 0.8, 
                 },
                 alignItems: "center",  // Vertically center logo
                 // marginTop: '16px',
+
               }}
             >
                 <Image
@@ -193,6 +230,7 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
                 alt="Logo"
                 width={200} // Adjust width and height as per your design
                 height={50}
+                
               />
             </Box>
           </Link>
@@ -217,21 +255,22 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
         <Stack spacing={1} direction="row" alignItems="center" 
 sx={(theme) => ({
   position: "absolute",
-  right: session && !isOnHomePage ? 160 : 72,
+  right: session && !isOnHomePage ? 20 : 20,
   [theme.breakpoints.down('xl')]: {
-    right: session && !isOnHomePage ? 160 : 0,
+    right: session && !isOnHomePage ? 0 : "5%"
   },
   [theme.breakpoints.down('lg')]: {
-    right: session && !isOnHomePage ? 160 : 0,
+    right: session && !isOnHomePage ? 0 : "5%",
   },
   [theme.breakpoints.down('md')]: {
-    right: session && !isOnHomePage ? 100 : 40, // adjust these values to taste
+    right: session && !isOnHomePage ? 0 : "10%", // adjust these values to taste
   },
   [theme.breakpoints.down('sm')]: {
-    right: session && !isOnHomePage ? 50 : 35,
+    right: session && !isOnHomePage ? 0 : 35,
   },
 })}
           >
+
 {status === "unauthenticated" && !isOnRegister && (
   <>
     {smUp ? (
@@ -267,6 +306,7 @@ sx={(theme) => ({
             sx={{
               padding: "10px 20px",
               border: "1px solid white",
+
               borderColor: blueBackground ? "white" : "white",
               color: blueBackground ? "white" : "white",
               backgroundColor: blueBackground ? "primary.main" : "theme.primary",
@@ -285,6 +325,8 @@ sx={(theme) => ({
   
   {status === "authenticated" && (isOnAuthPages || isOnHomePage) && (
     <>
+
+
       <Button
         variant="outlined"
         onClick={handleLogout}
@@ -292,6 +334,7 @@ sx={(theme) => ({
         disableElevation
         sx={{
           height: "44px",
+          
           backgroundColor: blueBackground ? "white" : "theme.primary",
           color: blueBackground ? "theme.primary" : "theme.primary",
           "&:hover": {
@@ -300,21 +343,22 @@ sx={(theme) => ({
           },
         }}
       >
+      <Typography variant="h6" fontWeight={700}>
         Logout
+      </Typography>
       </Button>
       <Button
         variant="contained"
         onClick={handleMyAccountsClick}
-        color="primary"
+        color="warning"
         disableElevation
         sx={{
           height: "44px",
-          border: "1px solid white",
-          backgroundColor: "theme.primary",
-          color: "theme.primary !important",
         }}
       >
-        My Accounts
+        <Typography variant="h6" fontWeight={700}>
+          My Accounts
+        </Typography>
       </Button>
 
 
@@ -340,10 +384,15 @@ sx={(theme) => ({
 
     </>
   )}
+  {status === "authenticated" && !isOnAuthPages && !isOnHomePage && (
+        <Profile />
+      )}
         </Stack>
+
       </ToolbarStyled>
-    </AppBarStyled>
     </Container>
+
+    </AppBarStyled>
   );
 };
 
