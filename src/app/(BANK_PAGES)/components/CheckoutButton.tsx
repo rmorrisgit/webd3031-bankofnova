@@ -1,6 +1,9 @@
 'use client';
+import { useTheme } from "@mui/material";
 
 export default function CheckoutButton() {
+    const theme = useTheme();
+  
   const handleClick = async () => {
     const res = await fetch('/api/stripe/checkout-session', {
       method: 'POST',
@@ -19,7 +22,7 @@ export default function CheckoutButton() {
     <button
       onClick={handleClick}
       style={{
-        backgroundColor: '#0d47a1',
+        backgroundColor: theme.palette.primary.dark,
         color: 'white',
         border: 'none',
         padding: '12px 24px',

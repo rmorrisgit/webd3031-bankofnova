@@ -27,18 +27,6 @@ const UnauthMenuItems: MenuItem[] = [
     icon: IconUserPlus,
     href: "/register",
   },
-  {
-    id: uniqueId(),
-    title: "Save",
-    icon: IconWallet,
-    href: "/utilities/save",
-  },
-  {
-    id: uniqueId(),
-    title: "Spend",
-    icon: IconCurrencyDollar,
-    href: "/utilities/spend",
-  },
 ];
 
 export default UnauthMenuItems;

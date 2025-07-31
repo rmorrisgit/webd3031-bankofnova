@@ -60,9 +60,9 @@ const Menuitems = [
   },
   {
     id: uniqueId(),
-    title: "Settings",
+    title: "Contacts",
     icon: IconSettings,
-    href: "/settings",
+    href: "/contacts",
   },
   // {
   //   id: uniqueId(),

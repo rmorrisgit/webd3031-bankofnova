@@ -8,6 +8,7 @@ import {
   ListItemText,
   useTheme,
   ListItemButton,
+  Box
 } from "@mui/material";
 import Link from "next/link";
 
@@ -28,41 +29,94 @@ interface ItemType {
   hideMenu?: any;
   level?: number | any;
   pathDirect: string;
+  children?: React.ReactNode;  // Allow children to be passed to the component
+
 }
 
-const NavItem = ({ item, level, pathDirect, onClick }: ItemType) => {
+
+
+const NavItem = ({ item, level, pathDirect, onClick, children}: ItemType) => {
   const Icon = item.icon;
   const theme = useTheme();
-  const itemIcon = <Icon stroke={1.5} size="1.3rem" />;
+
+  // Conditionally set itemIcon only if Icon exists
+  const itemIcon = Icon ? <Icon stroke={1.5} size="1.3rem" /> : null;
 
   const ListItemStyled = styled(ListItem)(() => ({
     padding: 0,
-    ".MuiButtonBase-root": {
-      whiteSpace: "nowrap",
-      marginBottom: "2px",
-      padding: "8px 10px",
-      borderRadius: "8px",
-      backgroundColor: level > 1 ? "transparent !important" : "inherit",
-      color: theme.palette.text.secondary,
-      paddingLeft: "10px",
-      "&:hover": {
+".MuiButtonBase-root": {
+  whiteSpace: "nowrap",
+  padding: "12px 0px",
+
+  borderLeft: '4px solid transparent',
+
+  // ❌ Do not set 'color' globally here (optional, unless you want it by default)
+
+  //  Text color explicitly
+  "& .MuiTab-wrapper": {
+    color: theme.palette.primary.main,
+  },
+
+  //  Ripple color explicitly
+  "& .MuiTouchRipple-root .MuiTouchRipple-rippleVisible": {
+    color: theme.palette.primary.main,
+  },
+
+  "&:hover": {
+    // backgroundColor: 'transparent',
+    backgroundColor: theme.palette.success.light, // Use theme color for hover
+    // 
+    // borderLeft: '4px solid grey',
+
+    //  Hover text color
+    "& .MuiTab-wrapper": {
+      color: theme.palette.primary.main,
+    },
+
+    //  Hover ripple color
+    "& .MuiTouchRipple-root .MuiTouchRipple-rippleVisible": {
+      color: theme.palette.primary.main,
+    },
+  },
+
+  "&.Mui-selected": {
+    // borderLeft: '4px solid #5D87FF',
+    // backgroundColor: 'transparent',
         backgroundColor: theme.palette.primary.light,
+
+
+    "& .MuiTab-wrapper": {
+      color: theme.palette.primary.main,
+    },
+
+    "& .MuiTouchRipple-root .MuiTouchRipple-rippleVisible": {
+      color: theme.palette.primary.main,
+    },
+
+    "&:hover": {
+      backgroundColor: 'transparent',
+
+      "& .MuiTab-wrapper": {
         color: theme.palette.primary.main,
       },
-      "&.Mui-selected": {
-        color: "white",
-        backgroundColor: theme.palette.primary.main,
-        "&:hover": {
-          backgroundColor: theme.palette.primary.main,
-          color: "white",
-        },
+
+      "& .MuiTouchRipple-root .MuiTouchRipple-rippleVisible": {
+        color: theme.palette.primary.main,
       },
     },
-  }));
+  },
+},
+
+  }
+)
+);
+
+
 
   return (
-    <List component="div" disablePadding key={item.id}>
-      <ListItemStyled>
+    <List component="div" disablePadding key={item.id} >
+      <ListItemStyled
+      >
         <ListItemButton
           component={Link}
           href={item.href}
@@ -70,19 +124,31 @@ const NavItem = ({ item, level, pathDirect, onClick }: ItemType) => {
           selected={pathDirect === item.href}
           target={item.external ? "_blank" : ""}
           onClick={onClick}
+
         >
-          <ListItemIcon
-            sx={{
-              minWidth: "36px",
-              p: "3px 0",
-              color: "inherit",
-            }}
-          >
-            {itemIcon}
-          </ListItemIcon>
-          <ListItemText>
-            <>{item.title}</>
-          </ListItemText>
+          {/* Render ListItemIcon only if itemIcon is not null */}
+          {itemIcon && (
+     <ListItemIcon
+     sx={{
+      color: "inherit",
+      //move icon here
+       marginLeft: "17px", 
+       
+       
+     }}
+   >
+     <Box sx={{ display: "flex",
+       }}>
+       {itemIcon}
+     </Box>
+   </ListItemIcon>
+          )}
+          {/* Render children (like title) */}
+          {children || (
+            <ListItemText>
+              <>{item.title}</>
+            </ListItemText>
+          )}
         </ListItemButton>
       </ListItemStyled>
     </List>

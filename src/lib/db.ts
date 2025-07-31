@@ -4,9 +4,9 @@ import { RowDataPacket } from 'mysql2';
 
 const pool = mysql.createPool({
   host: 'localhost',
-  user: 'nextjs_user',
+  user: 'rmor_user',
   password: 'strongpassword',
-  database: 'bankofnova',
+  database: 'bankofnovaV2',
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
@@ -19,6 +19,9 @@ export interface User {
   name: string;
   role: string;
   password: string; // Add the password field here for authentication
+  google_id?: string | null;
+  github_id?: string | null;
+  has_paid?: string;
 }
 
 // GET user accounts by userId
@@ -42,22 +45,25 @@ export async function getUserAccountsByUserId(userId: string): Promise<Array<{ i
 export const getUserByEmail = async (email: string): Promise<User | null> => {
   try {
     const [rows] = await pool.execute<mysql.RowDataPacket[]>(`
-      SELECT id, email, name, role, password, github_id, google_id
+      SELECT id, email, name, role, password, github_id, google_id, has_paid
       FROM users
       WHERE email = ?`, [email]);
 
-    if (rows.length > 0) {
-      const user = {
-        id: rows[0].id,
-        email: rows[0].email,
-        name: rows[0].name,
-        role: rows[0].role,
-        password: rows[0].password, // Include password for authentication
-        github_id: rows[0].github_id,
-        google_id: rows[0].google_id,
-      };
-      return user;
-    }
+      if (rows.length > 0) {
+        const user = {
+          id: rows[0].id,
+          email: rows[0].email,
+          name: rows[0].name,
+          role: rows[0].role,
+          password: rows[0].password,
+          github_id: rows[0].github_id,
+          google_id: rows[0].google_id,
+          has_paid: rows[0].has_paid as "yes" | "no", 
+        };
+        return user;
+      }
+  
+  
 
     return null;
   } catch (error) {
@@ -65,6 +71,7 @@ export const getUserByEmail = async (email: string): Promise<User | null> => {
     throw new Error('Error fetching user by email');
   }
 };
+
 
 // GET ALL employer details from the database
 export const getEmployerDetails = async (userId: number) => {
@@ -118,10 +125,15 @@ export const getEmpWithLimit = async (userId: number) => {
 export const getUserByAccountNumber = async (account_number: string): Promise<User | null> => {
   try {
     const [rows] = await pool.execute<mysql.RowDataPacket[]>(`
-      SELECT users.*, bank_accounts.account_number, bank_accounts.id AS bank_accounts_id
+      SELECT 
+        users.*, 
+        users.has_paid, 
+        bank_accounts.account_number, 
+        bank_accounts.id AS bank_accounts_id
       FROM users
       LEFT JOIN bank_accounts ON users.id = bank_accounts.user_id
-      WHERE bank_accounts.account_number = ?`, [account_number]);
+      WHERE bank_accounts.account_number = ?
+    `, [account_number]);
 
     if (rows.length > 0) {
       return rows[0] as User;
@@ -133,7 +145,6 @@ export const getUserByAccountNumber = async (account_number: string): Promise<Us
     throw new Error('Error fetching user by account number');
   }
 };
-
 //
 //for Oauth
 // Function to create a new user

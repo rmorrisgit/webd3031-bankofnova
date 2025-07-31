@@ -21,7 +21,7 @@ const SuccessPage = () => {
           <Box>
             {/* Title */}
             <Typography variant="h6" gutterBottom>
-              ✅ Transfer Successful!
+              Transfer Successful!
             </Typography>
 
             {/* Transaction Summary */}
@@ -46,7 +46,7 @@ const SuccessPage = () => {
             </Box>
 
             {/* Sender Details */}
-            <Box mb={2}>
+            {/* <Box mb={2}>
               <Typography variant="subtitle1" gutterBottom>
                 <strong>Sender Account</strong>
               </Typography>
@@ -56,7 +56,7 @@ const SuccessPage = () => {
               <Typography variant="body2">
                 Account Type: {transferData.senderAccountType || 'N/A'}
               </Typography>
-            </Box>
+            </Box> */}
 
             {/* Recipient Details */}
             <Box mb={2}>

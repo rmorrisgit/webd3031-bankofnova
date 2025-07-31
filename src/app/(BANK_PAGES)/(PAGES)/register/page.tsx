@@ -1,5 +1,5 @@
 "use client";
-import { Card } from "@mui/material";
+import { Box, Card } from "@mui/material";
 import PageContainer from "../../components/container/PageContainer";
 import AuthRegister from "../../../authentication/auth/AuthRegister";
 import { useRouter } from "next/navigation";
@@ -22,8 +22,7 @@ export default function Register2() {
 
   return (
   <PageContainer title="Register" description="this is Register page">
-    <Card
-      elevation={0}
+    <Box
       sx={{
         p: 2,
         zIndex: 1,
@@ -49,7 +48,7 @@ export default function Register2() {
       }}
     >
       <AuthRegister />
-    </Card>
+    </Box>
   </PageContainer>
 );
 };

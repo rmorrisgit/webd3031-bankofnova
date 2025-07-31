@@ -6,12 +6,12 @@ import { useEffect, useState } from 'react';
 
 import DashboardCard from '../shared/DashboardCard';
 
-const AllUsers = () => {
+const TotalUsers = () => {
   const [userCount, setUserCount] = useState(0);
   const [adminCount, setAdminCount] = useState(0);
 
   useEffect(() => {
-    fetch('/api/user/AllUsers')
+    fetch('/api/user/TotalUsers')
       .then((res) => res.json())
       .then((data) => {
         if (data.success && data.userCount !== undefined && data.adminCount !== undefined) {
@@ -24,7 +24,7 @@ const AllUsers = () => {
 
   const theme = useTheme();
   const primary = theme.palette.primary.main;  // Blue color for regular users
-  const adminColor = "#FF4560"; // Red color for admins
+  const adminColor = "#44cc77"; // Green color for admins
 
   const optionscolumnchart: any = {
     chart: {
@@ -73,7 +73,7 @@ const AllUsers = () => {
       <Grid container spacing={3} justifyContent="center" alignItems="center" direction="column">
         {/* Added margin top to create space between User Breakdown and Users count */}
         <Box textAlign="center" mb={2}>
-          <Typography variant="h3" fontWeight="700" color={theme.palette.text.primary}>
+          <Typography variant="h6" fontWeight="700" color={theme.palette.text.primary}>
             {userCount} Users
           </Typography>
         </Box>
@@ -107,4 +107,4 @@ const AllUsers = () => {
   );
 };
 
-export default AllUsers;
+export default TotalUsers;

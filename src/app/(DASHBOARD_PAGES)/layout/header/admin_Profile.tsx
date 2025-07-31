@@ -15,23 +15,27 @@ import {
   useTheme,
   useMediaQuery,
   ClickAwayListener,
-  Stack,
   Typography,
   Divider,
-  Switch,
-  Chip,
   Card,
   CardContent,
-  Grid,
 } from "@mui/material";
 import { signOut, useSession } from "next-auth/react";
-import { IconUser, IconSettings, IconLogout } from "@tabler/icons-react";
+import {
+  IconUser,
+  IconSettings,
+  IconLogout,
+  IconListCheck,
+} from "@tabler/icons-react";
 import ManageAccountsOutlinedIcon from "@mui/icons-material/ManageAccountsOutlined";
+import { useThemeMode } from '../../../context/ThemeContext'; 
+import { Brightness4, Brightness7 } from '@mui/icons-material';
 
 const Profile = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [dndMode, setDndMode] = useState(true);
   const [notifications, setNotifications] = useState(false);
+const { toggleTheme, mode } = useThemeMode();
 
   const { data: session } = useSession();
   const pathname = usePathname();
@@ -64,31 +68,27 @@ const Profile = () => {
           aria-label="profile menu"
           color="inherit"
           onClick={handleClick}
-          disableRipple={!!session}
           sx={{
-            ...(anchorEl && {
-              color: "primary.main",
-              padding: "0px",
-            }),
+            color: "primary.main",
           }}
         >
           {session?.user?.name ? (
             <Avatar
-              variant="square"
               {...stringAvatar(session.user.name)}
               sx={{
-                borderRadius: "4px",
-                backgroundColor: "primary.main",
-                color: "white",
-                marginRight: "15px",
+                // bgcolor: theme.palette.grey[100],
+                color: theme.palette.primary.main,
+                backgroundColor: theme.palette.success.light,
+
               }}
             />
           ) : (
             <Avatar
-              variant="rounded"
               sx={{
-                backgroundColor: "white",
-                color: "#000000",
+                width: 35,
+                height: 35,
+                backgroundColor: theme.palette.primary.main,
+                color: theme.palette.primary.main,
                 borderRadius: "50%",
               }}
             >
@@ -118,77 +118,44 @@ const Profile = () => {
           <Box>
             {/* Welcome Text */}
             <Box mb={2}>
+              <Typography component="span" variant="h6" sx={{ fontWeight: 400 }}>
+                {session?.user?.name || "Guest"}
+              </Typography>
+              <Typography
+                variant="subtitle2"
+                color="text.secondary"
+                sx={{ opacity: 0.7 }}
+              >
+                {session
+                  ? session.user.role === "admin"
+                    ? "Administrator"
+                    : ""
+                  : "Please login"}
+              </Typography>
+            </Box>
 
-  <Typography component="span" variant="h6" sx={{ fontWeight: 400 }}>
-    {session?.user?.name || "Guest"}
-  </Typography>
-  <Typography
-    variant="subtitle2"
-    color="text.secondary"
-    sx={{ opacity: 0.7 }}
-  >
-    {session
-      ? session.user.role === "admin"
-        ? "Administrator"
-        : ""
-      : "Please login"}
-  </Typography>
-</Box>
 
-
-            {/*  */}
-            {/* <Card
-              sx={{
-                bgcolor: theme.palette.primary.light,
-                mb: 2,
-              }}
-            >
-              <CardContent>
-                <Grid container spacing={2} direction="column">
-                  <Grid
-                    item
-                    container
-                    justifyContent="space-between"
-                    alignItems="center"
-                  >
-                    <Typography variant="subtitle1">Start</Typography>
-                    <Switch
-                      color="primary"
-                      checked={dndMode}
-                      onChange={(e) => setDndMode(e.target.checked)}
-                      size="small"
-                    />
-                  </Grid>
-                  <Grid
-                    item
-                    container
-                    justifyContent="space-between"
-                    alignItems="center"
-                  >
-                    <Typography variant="subtitle1">
-                      Allow Notifications
-                    </Typography>
-                    <Switch
-                      color="primary"
-                      checked={notifications}
-                      onChange={(e) => setNotifications(e.target.checked)}
-                      size="small"
-                    />
-                  </Grid>
-                </Grid>
-              </CardContent>
-            </Card> */}
 
             {/* Divider */}
             <Divider sx={{ mb: 1 }} />
 
             {/* Menu Items */}
-            <MenuItem component={Link} href="/profile" onClick={handleClose}>
+            {/* <MenuItem component={Link} href="/profile" onClick={handleClose}>
               <ListItemIcon>
                 <IconSettings width={20} />
               </ListItemIcon>
-              <ListItemText>Account Settings</ListItemText>
-            </MenuItem>
+              <ListItemText>Profile Settings</ListItemText>
+            </MenuItem> */}
+
+<MenuItem onClick={toggleTheme}>
+  <ListItemIcon>
+    {mode === 'dark' ? <Brightness7 /> : <Brightness4 />}
+  </ListItemIcon>
+  <ListItemText>
+    {mode === 'dark' ? 'Light Mode' : 'Dark Mode'}
+  </ListItemText>
+</MenuItem>
+
 
             <MenuItem onClick={handleLogout}>
               <ListItemIcon>

@@ -8,7 +8,8 @@ import {
   ListItemText,
   useTheme,
   ListItemButton,
-  Box
+  Box,
+  Typography
 } from "@mui/material";
 import Link from "next/link";
 
@@ -52,53 +53,47 @@ const NavItem = ({ item, level, pathDirect, onClick, children}: ItemType) => {
 
   // ❌ Do not set 'color' globally here (optional, unless you want it by default)
 
-  // ✅ Text color explicitly
-  "& .MuiTab-wrapper": {
-    color: theme.palette.primary.main,
-  },
+
+
 
   // ✅ Ripple color explicitly
-  "& .MuiTouchRipple-root .MuiTouchRipple-rippleVisible": {
-    color: theme.palette.primary.main,
-  },
+  // "& .MuiTouchRipple-root .MuiTouchRipple-rippleVisible": {
+  //   color: theme.palette.primary.main,
+  // },
+
 
   "&:hover": {
-    backgroundColor: 'transparent',
+    backgroundColor: 'green',
     borderLeft: '4px solid grey',
-
-    // ✅ Hover text color
-    "& .MuiTab-wrapper": {
-      color: theme.palette.primary.main,
-    },
-
-    // ✅ Hover ripple color
-    "& .MuiTouchRipple-root .MuiTouchRipple-rippleVisible": {
-      color: theme.palette.primary.main,
-    },
   },
 
   "&.Mui-selected": {
     borderLeft: '4px solid #5D87FF',
-    backgroundColor: 'transparent',
+    // backgroundColor: 'red',
 
-    "& .MuiTab-wrapper": {
-      color: theme.palette.primary.main,
-    },
 
-    "& .MuiTouchRipple-root .MuiTouchRipple-rippleVisible": {
-      color: theme.palette.primary.main,
-    },
+    // "& .MuiTouchRipple-root .MuiTouchRipple-rippleVisible": {
+    //   color: theme.palette.primary.main,
+    // },
+
+
 
     "&:hover": {
       backgroundColor: 'transparent',
 
-      "& .MuiTab-wrapper": {
-        color: theme.palette.primary.main,
-      },
+      // "& .MuiTab-wrapper": {
+      //   color: theme.palette.primary.main,
+      // },
+      // "& .MuiTab-wrapper": {
+      //   color: theme.palette.primary.main,
+      // },
 
-      "& .MuiTouchRipple-root .MuiTouchRipple-rippleVisible": {
-        color: theme.palette.primary.main,
-      },
+      // "& .MuiTouchRipple-root .MuiTouchRipple-rippleVisible": {
+      //   color: theme.palette.primary.main,
+      // },
+      // "& .MuiTouchRipple-root .MuiTouchRipple-rippleVisible": {
+      //   color: theme.palette.primary.main,
+      // },
     },
   },
 },
@@ -108,47 +103,8 @@ const NavItem = ({ item, level, pathDirect, onClick, children}: ItemType) => {
 );
 
 
-  //   ".MuiButtonBase-root": {
-  //     whiteSpace: "nowrap",
-  //     // marginBottom: "2px",
-  //     padding: "12px 0px",
-  //     // marginTop: "5px",
-  //     borderLeft: '4px solid transparent',
 
-  //     // borderRadius: "8px",
-  //     // borderRadius: "4px",
-  //     // backgroundColor: level > 1 ? "transparent !important" : "inherit",
-  //     color: theme.palette.text.primary,
-  //     "&:hover": {
-  //       // backgroundColor: theme.palette.primary.light,
-  //       color: theme.palette.primary.main,
-  //       // color: 'default',
-  //       borderLeft: '4px solid grey',
-  //       // backgroundColor: theme.palette.primary.light,
-  //       backgroundColor: theme.palette.success.light,
-        
 
-  //     },
-  //     "&.Mui-selected": {
-  // // backgroundColor: theme.palette.primary.main,
-  // borderLeft: '4px solid 13DEB9',
-  // // backgroundColor: theme.palette.primary.main,
-  // backgroundColor: 'transparent',
-
-  // // borderLeft:  theme.palette.primary.main,
-  //         // backgroundColor: theme.palette.primary.light,
-  //       "&:hover": {        
-  //           // backgroundColor: theme.palette.primary.light,
-  //           // backgroundColor: theme.palette.success.light,
-  //           backgroundColor: theme.palette.success.light,
-          
-  //       color: theme.palette.primary.main,
-  //         // borderLeft: '2px solid grey',
-  //         // color: "white",
-  //       },
-  //     },
-  //   },
-  // }
 
 
   return (
@@ -162,7 +118,6 @@ const NavItem = ({ item, level, pathDirect, onClick, children}: ItemType) => {
           selected={pathDirect === item.href}
           target={item.external ? "_blank" : ""}
           onClick={onClick}
-
         >
           {/* Render ListItemIcon only if itemIcon is not null */}
           {itemIcon && (
@@ -183,7 +138,14 @@ const NavItem = ({ item, level, pathDirect, onClick, children}: ItemType) => {
           )}
           {/* Render children (like title) */}
           {children || (
-            <ListItemText>
+            <ListItemText
+                 sx={{
+      // color: "green",
+      //move icon here
+       marginLeft: "17px", 
+       
+       
+     }}>
               <>{item.title}</>
             </ListItemText>
           )}

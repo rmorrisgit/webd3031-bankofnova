@@ -1,6 +1,6 @@
 'use client';
 
-import { Grid, Box, Typography, Tabs, Tab, CardContent } from "@mui/material";
+import { Grid, Box, Typography, Tabs, Tab, Button } from "@mui/material";
 import PageContainer from "./container/PageContainer";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
@@ -13,10 +13,6 @@ import {
   IconCurrencyDollar,
   IconWallet,
 } from "@tabler/icons-react";
-
-/* ----------------------------------- */
-/* 🔧 Helpers + Components */
-/* ----------------------------------- */
 
 // Helper: Mask account number
 const maskAccountNumber = (accountNumber: string | null) => {
@@ -69,7 +65,6 @@ const AccountTabs = () => {
 
           if (chequingAccount) setChequingAccountNumber(chequingAccount.account_number);
           if (savingsAccount) setSavingsAccountNumber(savingsAccount.account_number);
-
         } catch (error) {
           console.error('Failed to load account data:', error);
         }
@@ -83,136 +78,140 @@ const AccountTabs = () => {
   };
 
   return (
-
     <PageContainer title="Accounts" description="This is your accounts overview">
-
-
-    <Grid item xs={12} lg={12}>
-
-
-    <Grid container direction="column" spacing={2}>
-
-<Grid item xs={12}>
-
-      <Typography variant="h2"
-       fontWeight={700} 
-      mt={3} mb={2}>
-        Accounts
-      </Typography>
-
-    </Grid>
-
-    </Grid>
-
-
-
-      <Tabs
-        value={selectedTab}
-        onChange={handleTabChange}
-        aria-label="account-tabs"
-        textColor="primary"
-        indicatorColor="primary"
-      >
-        <Tab icon={<IconHome />} label="All" />
-        <Tab icon={<IconCurrencyDollar />} label="Spending" />
-        {savings !== null && <Tab icon={<IconWallet />} label="Saving" />}
-      </Tabs>
-
-      {/* All Accounts */}
-      <TabPanel value={selectedTab} index={0}>
-        <Grid item xs={12} lg={12} sx={{ marginBottom: 2 }}>
-          <MonthlyEarnings
-            title={
-              <>
-                Chequing{' '}
-                <Typography component="span" variant="subtitle2" color="textSecondary" fontFamily="monospace">
-                  {chequingAccountNumber ? maskAccountNumber(chequingAccountNumber) : ''}
-                </Typography>
-              </>
-            }
-            balance={chequing ?? 0}
-            link="/accounts/chequing"
-          />
+      <Grid container direction="column" spacing={2}>
+        <Grid item xs={12}>
+          <Typography variant="h2" fontWeight={700} mt={3} mb={2}>
+            Accounts
+          </Typography>
         </Grid>
 
-        {savings === null ? (
-          <Grid item xs={12} lg={12}>
-            <Box
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-              height={120}
-              border="1px dashed #ccc"
-              borderRadius={2}
-            >
-              <button
-                style={{ padding: '0.75rem 1.5rem', fontSize: '1rem', cursor: 'pointer' }}
-                onClick={() => router.push('/OpenSavings')}
-              >
-                Open a Savings Account
-              </button>
+        <Box sx={{ maxWidth: 1000, mx: "auto", px: 2, mt: 2 }}>
+          <Tabs
+            value={selectedTab}
+            onChange={handleTabChange}
+            aria-label="account-tabs"
+            textColor="primary"
+            indicatorColor="primary"
+            variant="scrollable"
+            scrollButtons="auto"
+          >
+            <Tab icon={<IconHome />} label="All" />
+            <Tab icon={<IconCurrencyDollar />} label="Spending" />
+            {savings !== null && <Tab icon={<IconWallet />} label="Saving" />}
+          </Tabs>
+        </Box>
+
+        {/* All Accounts */}
+        <TabPanel value={selectedTab} index={0}>
+          <Grid item xs={12} lg={12} sx={{ marginBottom: 2 }}>
+            <Box sx={{ maxWidth: 1000, mx: "auto", px: 2 }}>
+              <MonthlyEarnings
+                title={
+                  <>
+                    Chequing{' '}
+                    <Typography component="span" variant="subtitle2" color="textSecondary" fontFamily="monospace">
+                      {chequingAccountNumber ? maskAccountNumber(chequingAccountNumber) : ''}
+                    </Typography>
+                  </>
+                }
+                balance={chequing ?? 0}
+                link="/accounts/chequing"
+              />
             </Box>
           </Grid>
-        ) : (
-          <Grid item xs={12} lg={12}>
-            <MonthlyEarnings
-              title={
-                <>
-                  Savings{' '}
-                  <Typography component="span" variant="subtitle2" color="textSecondary" fontFamily="monospace">
-                    {savingsAccountNumber ? maskAccountNumber(savingsAccountNumber) : ''}
-                  </Typography>
-                </>
-              }
-              balance={savings}
-              link="/accounts/savings"
-              color="#ff5733"
-            />
-          </Grid>
-        )}
-      </TabPanel>
 
-      {/* Spending Tab */}
-      <TabPanel value={selectedTab} index={1}>
-        <Grid item xs={12} lg={12} sx={{ marginBottom: 2 }}>
-          <MonthlyEarnings
-            title={
-              <>
-                Chequing{' '}
-                <Typography component="span" variant="subtitle2" color="textSecondary" fontFamily="monospace">
-                  {chequingAccountNumber ? maskAccountNumber(chequingAccountNumber) : ''}
-                </Typography>
-              </>
-            }
-            balance={chequing ?? 0}
-            link="/accounts/chequing"
-          />
-        </Grid>
-      </TabPanel>
+          {savings === null ? (
+            <Grid item xs={12} lg={12}>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  height: 120,
+                  border: "1px dashed #ccc",
+                  borderRadius: 2,
+                  maxWidth: 1000,
+                  mx: "auto",
+                  px: 2,
+                }}
+              >
+                <Button
+                  variant="contained"
+                  color="primary"
+                  size="large"
+                  disableElevation
+                  onClick={() => router.push('/OpenSavings')}
+                >
+                  Open a Savings Account
+                </Button>
+              </Box>
+            </Grid>
+          ) : (
+            <Grid item xs={12} lg={12}>
+              <Box sx={{ maxWidth: 1000, mx: "auto", px: 2 }}>
+                <MonthlyEarnings
+                  title={
+                    <>
+                      Savings{' '}
+                      <Typography component="span" variant="subtitle2" color="textSecondary" fontFamily="monospace">
+                        {savingsAccountNumber ? maskAccountNumber(savingsAccountNumber) : ''}
+                      </Typography>
+                    </>
+                  }
+                  balance={savings}
+                  link="/accounts/savings"
+                  color="#ff5733"
+                />
+              </Box>
+            </Grid>
+          )}
+        </TabPanel>
 
-      {/* Savings Tab */}
-      {savings !== null && (
-        <TabPanel value={selectedTab} index={2}>
-          <Grid item xs={12} lg={12}>
-            <MonthlyEarnings
-              title={
-                <>
-                  Savings{' '}
-                  <Typography component="span" variant="subtitle2" color="textSecondary" fontFamily="monospace">
-                    {savingsAccountNumber ? maskAccountNumber(savingsAccountNumber) : ''}
-                  </Typography>
-                </>
-              }
-              balance={savings}
-              link="/accounts/savings"
-              color="#ff5733"
-            />
+        {/* Spending Tab */}
+        <TabPanel value={selectedTab} index={1}>
+          <Grid item xs={12} lg={12} sx={{ marginBottom: 2 }}>
+            <Box sx={{ maxWidth: 1000, mx: "auto", px: 2 }}>
+              <MonthlyEarnings
+                title={
+                  <>
+                    Chequing{' '}
+                    <Typography component="span" variant="subtitle2" color="textSecondary" fontFamily="monospace">
+                      {chequingAccountNumber ? maskAccountNumber(chequingAccountNumber) : ''}
+                    </Typography>
+                  </>
+                }
+                balance={chequing ?? 0}
+                link="/accounts/chequing"
+              />
+            </Box>
           </Grid>
         </TabPanel>
-      )}
-    </Grid>
-      </PageContainer>
-    
+
+        {/* Savings Tab */}
+        {savings !== null && (
+          <TabPanel value={selectedTab} index={2}>
+            <Grid item xs={12} lg={12}>
+              <Box sx={{ maxWidth: 1000, mx: "auto", px: 2 }}>
+                <MonthlyEarnings
+                  title={
+                    <>
+                      Savings{' '}
+                      <Typography component="span" variant="subtitle2" color="textSecondary" fontFamily="monospace">
+                        {savingsAccountNumber ? maskAccountNumber(savingsAccountNumber) : ''}
+                      </Typography>
+                    </>
+                  }
+                  balance={savings}
+                  link="/accounts/savings"
+                  color="#ff5733"
+                />
+              </Box>
+            </Grid>
+          </TabPanel>
+        )}
+      </Grid>
+    </PageContainer>
   );
 };
 

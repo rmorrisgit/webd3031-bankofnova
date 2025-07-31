@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import { Box, List, Divider, Typography } from "@mui/material";
 import NavItem from "./NavItem";
 import NavGroup from "./NavGroup/NavGroup";
+import theme from "@/utils/theme";
 
 const SidebarItems = ({ toggleMobileSidebar, isSidebarToggled }: any) => {
   const pathname = usePathname();
@@ -39,7 +40,7 @@ const SidebarItems = ({ toggleMobileSidebar, isSidebarToggled }: any) => {
           // }
 
           // Divider before "Settings"
-          if ((item.title === "Transfer" || item.title === "Settings") && index > 0) {
+          if ((item.title === "Transfer" || item.title === "Contacts") && index > 0) {
             return (
               <React.Fragment key={item.id || `divider-${index}`}>
                 <Divider sx={{ my: 1 }} />
@@ -54,9 +55,10 @@ const SidebarItems = ({ toggleMobileSidebar, isSidebarToggled }: any) => {
                          <Typography
               variant="body2"
               fontSize={14}
-              fontWeight="400"
+              fontWeight="900"
                 sx={{
-                  
+                  color: theme.palette.success.main,
+
                   marginLeft: isSidebarToggled ? '-10px' : "10px",
                   // marginLeft: "10px",
                   display: isSidebarToggled ? "block" : "none",
@@ -83,9 +85,9 @@ const SidebarItems = ({ toggleMobileSidebar, isSidebarToggled }: any) => {
               <Typography
               variant="body2"
               fontSize={14}
-              fontWeight="400"
+              fontWeight="900"
                 sx={{
-                  
+                  color: theme.palette.success.main,
                   marginLeft: isSidebarToggled ? '-10px' : "10px",
                   // marginLeft: "10px",
                   display: isSidebarToggled ? "block" : "none",

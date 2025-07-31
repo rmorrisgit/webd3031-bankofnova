@@ -32,12 +32,12 @@ const MonthlyEarnings = ({ title, balance, link, color }: MonthlyEarningsProps) 
       width: "100%",
       marginTop: '15px',
       boxShadow: 'none !important',
-      borderBottom: '1px solid #cdcdcd !important',
+      borderBottom: '1px solid #ff0000ff !important',
       paddingBottom: '25px',
       borderRadius: 0,
       transition: 'background-color 0.3s ease',
       '&:hover': {
-        backgroundColor: theme.palette.grey[100],
+        backgroundColor: theme.palette.background.paper,
         cursor: 'pointer',
       },
     }}
@@ -49,9 +49,9 @@ const MonthlyEarnings = ({ title, balance, link, color }: MonthlyEarningsProps) 
           
     <Link href={link} passHref>
 
-          <Fab color="secondary" size="medium" sx={{ color: '#ffffff' }}>
+          {/* <Fab color="secondary" size="medium" sx={{ color: '#ffffff' }}>
             <IconCurrencyDollar width={24} />
-          </Fab>
+          </Fab> */}
     </Link>
 
         }

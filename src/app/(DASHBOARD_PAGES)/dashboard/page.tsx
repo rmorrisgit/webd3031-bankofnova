@@ -1,19 +1,25 @@
 'use client'
-import { Grid, Box } from '@mui/material';
+import { Grid, Box, Typography } from '@mui/material';
 import PageContainer from '../components/container/PageContainer';
 import dynamic from 'next/dynamic';
 import RecentTransactions from '../components/dashboard/RecentTransactions';
 import ProductPerformance from '../components/dashboard/ProductPerformance';
-import MonthlyEarnings from '../components/dashboard/MonthlyEarnings';
-
+import TotalTransactions from '../components/dashboard/TotalTransactions';
+// import Blog from '../components/dashboard/Blog';
 // Dynamically import components with SSR disabled
 const SalesOverview = dynamic(() => import('../components/dashboard/UserRegistration'), { ssr: false });
-const YearlyBreakup = dynamic(() => import('../components/dashboard/AllUsers'), { ssr: false });
+const TotalUsers = dynamic(() => import('../components/dashboard/TotalUsers'), { ssr: false });
 
 const Dashboard = () => {
   return (
     <PageContainer title="Dashboard" description="this is Dashboard">
-      <Box>
+      <Grid item xs={12}>
+      {/* <Typography variant="h4" 
+        mt={3} mb={2}
+      >Dashboard
+      </Typography> */}
+      </Grid> 
+      <Box mt={3}>
         <Grid container spacing={3}>
           <Grid item xs={12} lg={8}>
             <SalesOverview />
@@ -21,10 +27,10 @@ const Dashboard = () => {
           <Grid item xs={12} lg={4}>
             <Grid container spacing={3}>
               <Grid item xs={12}>
-                <YearlyBreakup />
+                <TotalUsers />
               </Grid>
               <Grid item xs={12}>
-                <MonthlyEarnings />
+                <TotalTransactions />
               </Grid>
             </Grid>
           </Grid>
@@ -35,8 +41,8 @@ const Dashboard = () => {
              <ProductPerformance />
            </Grid>
            <Grid item xs={12}>
-             {/* <Blog /> */}
-           </Grid>
+              {/* <Blog />  */}
+           </Grid> 
         </Grid>
       </Box>
     </PageContainer>

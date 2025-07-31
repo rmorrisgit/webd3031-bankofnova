@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { Button, FormControl, InputLabel, Select, MenuItem, RadioGroup, FormControlLabel, Radio, Typography, Box, Card } from "@mui/material";
 import { SelectChangeEvent } from "@mui/material";
+import { useRouter } from "next/navigation";
 
 interface Employer {
   id: number;
@@ -15,6 +16,7 @@ const EmployerSettings = () => {
   const [withdrawalLimit, setWithdrawalLimit] = useState<number>(0);
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
+  const router = useRouter(); // Add this inside the component
 
   useEffect(() => {
     const fetchEmployers = async () => {
@@ -57,7 +59,7 @@ const EmployerSettings = () => {
 
   const handleSaveLimit = async () => {
     if (!selectedEmployer) {
-      setError("Please select an employer.");
+      setError("Please select an account.");
       return;
     }
   
@@ -89,17 +91,17 @@ const EmployerSettings = () => {
 
   return (
     <Card elevation={ 0 } sx={{ padding: 2, maxWidth: 400, mx: "auto" }}>
-      <Typography variant="h5" sx={{ mb: 2 }}>Employer Settings</Typography>
+      <Typography variant="h5" sx={{ mb: 2 }}>Trust Account Settings</Typography>
       
       {error && <Typography color="error">{error}</Typography>}
       {message && <Typography color="success.main">{message}</Typography>}
 
       <FormControl fullWidth sx={{ mb: 3 }}>
-        <InputLabel>Select Employer</InputLabel>
+        <InputLabel>Select Account</InputLabel>
         <Select
           value={selectedEmployer || ""}
           onChange={handleEmployerChange}
-          label="Select Employer"
+          label="Select Account"
         >
           {employers.map((employer) => (
             <MenuItem key={employer.id} value={employer.id}>
@@ -121,16 +123,17 @@ const EmployerSettings = () => {
             <FormControlLabel value="50000" control={<Radio />} label="25,000 - 50,000" />
           </RadioGroup>
         </Box>
- 
+     {/* Back Button */}
+     <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 3 }}>
+  <Button variant="outlined" onClick={() => router.back()}>
+    ← Back
+  </Button>
 
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={handleSaveLimit}
-        sx={{ mt: 3 }}
-      >
-        Save Limit
-      </Button>
+  <Button variant="contained" color="primary" onClick={handleSaveLimit}>
+    Save Limit
+  </Button>
+</Box>
+
     </Card>
   );
 };

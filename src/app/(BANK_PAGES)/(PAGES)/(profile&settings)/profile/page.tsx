@@ -15,19 +15,30 @@ import {
   Alert,
   CircularProgress,
   Stack,
+  Chip,
+  Grid,
+  Card,
 } from "@mui/material";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { editProfileSchema, EditProfileFormData } from "@/lib/schemas/editProfileSchema";
+import BankCard from "../../../components/BankCard"; // adjust path as needed
+import PageContainer from '../../../components/container/PageContainer';
 
 export default function ProfilePage() {
   const [tab, setTab] = useState(0);
-  const [user, setUser] = useState({ name: "", email: "" });
-  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<{ name: string; email: string; has_paid?: string }>({
+    name: "",
+    email: "",
+    has_paid: "no", // optional default
+  });  const [loading, setLoading] = useState(true);
   const [openDialog, setOpenDialog] = useState(false);
   const [snackbar, setSnackbar] = useState({ open: false, message: "" });
   const [showAlert, setShowAlert] = useState(false);
+  const [integrations, setIntegrations] = useState<null | { googleLinked: boolean; githubLinked: boolean }>(null);
+  const [loadingIntegrations, setLoadingIntegrations] = useState(true);
 
   const {
     register,
@@ -52,18 +63,29 @@ export default function ProfilePage() {
         }
       })
       .finally(() => setLoading(false));
+
+    fetch("/api/user/account-integration")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          setIntegrations(data.data);
+        }
+      })
+      .catch((err) => {
+        console.error("Failed to fetch integrations:", err);
+      })
+      .finally(() => setLoadingIntegrations(false));
   }, [reset]);
 
   const handleEdit = () => {
     reset({
       name: user.name,
       email: user.email,
-      password: "", // always blank on open
+      password: "",
     });
     setOpenDialog(true);
     setShowAlert(true);
   };
-  
 
   const handleClose = () => {
     setOpenDialog(false);
@@ -90,11 +112,30 @@ export default function ProfilePage() {
   };
 
   return (
-    <Box sx={{ maxWidth: 800, mx: "auto", mt: 5 }}>
-      <Typography variant="h4" gutterBottom>
+<PageContainer title="Profile" description="This is your Profile page">
+
+
+           <Card
+                elevation={0}
+                sx={{
+                  zIndex: 1,
+                  width: "100%",
+                  marginTop: '15px',
+                  boxShadow: 'none !important',
+                  paddingBottom: '25px',
+        
+                  
+                }}
+              >
+    <Box sx={{ flexGrow: 1,  p: 2, backgroundColor: 'lightpink', borderRadius: 2 }}>
+
+
+    <Grid item xs={12}>      <Typography variant="h2" 
+        fontWeight={700}
+        mt={3} mb={2}>
         Profile
       </Typography>
-
+ </Grid>
       {loading ? (
         <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: 200 }}>
           <CircularProgress />
@@ -104,6 +145,8 @@ export default function ProfilePage() {
           <Tabs value={tab} onChange={(e, newValue) => setTab(newValue)} sx={{ mb: 2 }}>
             <Tab label="Details" />
             <Tab label="Edit Profile" />
+            <Tab label="Linked Accounts" />
+            <Tab label="Bonuses" /> {/* ✅ New Tab */}
           </Tabs>
 
           {tab === 0 && (
@@ -122,22 +165,14 @@ export default function ProfilePage() {
               </Button>
 
               <Dialog
-  open={openDialog}
-  onClose={(event, reason) => {
-    if (reason === "backdropClick" || reason === "escapeKeyDown") return;
-    handleClose();
-  }}
-  maxWidth="sm" // sets consistent width
-  fullWidth // enables it to use full width of sm (not 100% screen)
-  PaperProps={{
-    sx: {
-      transition: 'none', // optional: remove the scale transition entirely
-      // minWidth: '400px', // optional: can help prevent flickering
-    },
-  }}
->
-
-
+                open={openDialog}
+                onClose={(event, reason) => {
+                  if (reason === "backdropClick" || reason === "escapeKeyDown") return;
+                  handleClose();
+                }}
+                maxWidth="sm"
+                fullWidth
+              >
                 <DialogTitle>Edit Profile</DialogTitle>
                 <Box component="form" onSubmit={handleSubmit(onSubmit)}>
                   <DialogContent>
@@ -161,8 +196,7 @@ export default function ProfilePage() {
                         margin="dense"
                         label="Email"
                         fullWidth
-                        disabled // 🔒 This disables the field
-
+                        disabled
                         {...register("email")}
                         error={!!errors.email}
                         helperText={errors.email?.message}
@@ -190,23 +224,117 @@ export default function ProfilePage() {
               </Dialog>
             </Box>
           )}
+
+          {tab === 2 && (
+            <Box>
+              <Typography variant="h6" gutterBottom>
+                Linked Accounts
+              </Typography>
+
+              {loadingIntegrations ? (
+                <Box sx={{ display: "flex", justifyContent: "center", my: 3 }}>
+                  <CircularProgress />
+                </Box>
+              ) : (
+                <Stack spacing={3} mt={2}>
+                  <Box>
+                    <Typography>Google</Typography>
+                    <Stack direction="row" spacing={2} alignItems="center" mt={1}>
+                      <Chip
+                        label={integrations?.googleLinked ? "Google Linked" : "Google Not Linked"}
+                        icon={integrations?.googleLinked ? <CheckCircleOutlineIcon color="success" /> : undefined}
+                        style={{
+                          backgroundColor: integrations?.googleLinked ? "#388E3C" : "#D32F2F",
+                          color: "white",
+                        }}
+                      />
+                    </Stack>
+                  </Box>
+
+                  <Box>
+                    <Typography>GitHub</Typography>
+                    <Stack direction="row" spacing={2} alignItems="center" mt={1}>
+                      <Chip
+                        label={integrations?.githubLinked ? "GitHub Linked" : "GitHub Not Linked"}
+                        icon={integrations?.githubLinked ? <CheckCircleOutlineIcon color="success" /> : undefined}
+                        style={{
+                          backgroundColor: integrations?.githubLinked ? "#388E3C" : "#D32F2F",
+                          color: "white",
+                        }}
+                      />
+                    </Stack>
+                  </Box>
+                </Stack>
+              )}
+            </Box>
+          )}
+
+{tab === 3 && (
+  <Box>
+    <Typography variant="h6" gutterBottom>
+      Bonuses & Achievements
+    </Typography>
+
+    <Stack spacing={2} mt={2}>
+      <Alert
+        icon={<CheckCircleOutlineIcon fontSize="inherit" />}
+        severity="success"
+        variant="outlined"
+        sx={{ pl: 2 }}
+      >
+        <Typography variant="subtitle1" fontWeight="bold">
+          Early Supporter Badge
+        </Typography>
+        <Typography variant="body2" color="textSecondary">
+          You&#39;ve been recognized as a Day 1 tester. Thanks for helping shape the future of Bank of Nova.
+        </Typography>
+      </Alert>
+
+      {user.has_paid === "yes" && (
+        <>
+          <Alert
+            icon={<CheckCircleOutlineIcon fontSize="inherit" />}
+            severity="info"
+            variant="outlined"
+            sx={{ pl: 2 }}
+          >
+            <Typography variant="subtitle1" fontWeight="bold">
+              Premium Customer Badge
+            </Typography>
+            <Typography variant="body2" color="textSecondary">
+              Thanks for supporting Bank of Nova with a premium upgrade. You now have exclusive access to enhanced features and early releases.
+            </Typography>
+          </Alert>
+
+          <Box display="flex" justifyContent="center" mt={2}>
+            <BankCard name={user.name || "Your Name"} />
+          </Box>
+
         </>
       )}
 
-<Snackbar
-  open={snackbar.open}
-  autoHideDuration={4000}
-  onClose={() => setSnackbar({ open: false, message: '' })}
-  message={snackbar.message}
-  anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }} // Centered on screen
-  sx={{
-    '& .MuiSnackbarContent-root': {
-      maxWidth: '90vw', // Keeps it from overflowing on small screens
-      width: 'auto',     // Shrink-to-fit behavior
-      textAlign: 'center',
-    },
-  }}
-/>
-    </Box>
+    </Stack>
+  </Box>
+)}
+        </>
+      )}
+
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={4000}
+        onClose={() => setSnackbar({ open: false, message: "" })}
+        message={snackbar.message}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        sx={{
+          "& .MuiSnackbarContent-root": {
+            maxWidth: "90vw",
+            width: "auto",
+            textAlign: "center",
+          },
+        }}
+      />
+          </Box>
+    </Card>
+  </PageContainer>
   );
 }

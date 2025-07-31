@@ -11,6 +11,7 @@ declare module "next-auth" {
       role: string;
       name?: string | null;
       image?: string | null;
+      has_paid?: "yes" | "no";
     };
     expires: string;
   }
@@ -20,5 +21,6 @@ declare module "next-auth" {
     email: string;
     role: string;
     name?: string;
+    has_paid?: "yes" | "no";
   }
 }
