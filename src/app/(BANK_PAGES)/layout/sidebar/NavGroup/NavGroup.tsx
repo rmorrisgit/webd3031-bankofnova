@@ -19,7 +19,8 @@ const ListSubheaderStyle = styled((props: Theme | any) => (
   fontWeight: "700",
   marginTop: theme.spacing(1),
   // marginBottom: theme.spacing(0),
-  color: theme.palette.text.primary,
+  // color: theme.palette.text.primary,
+  // color: theme.palette.info.main,
   lineHeight: "26px",
   padding: "3px 12px",
 }));

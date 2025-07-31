@@ -8,6 +8,7 @@ export interface CustomSession extends Omit<Session, "user"> {
     role: string;
     name?: string | null; // Name is now optional
     image?: string | null; // Optional image field
+    has_paid?: "yes" | "no"; // ✅ Add this line
   };
   expires: string;
 }
@@ -25,4 +26,5 @@ export interface Employer {
 export interface ExtendedUser extends NextAuthUser {
   google_id?: string | null;
   github_id?: string | null;
+  has_paid?: "yes" | "no"; 
 }

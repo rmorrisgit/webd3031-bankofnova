@@ -1,25 +1,32 @@
-"use client"; // Ensure this runs only on the client side
-
 import React, { useState } from "react";
-import { Box, AppBar, Toolbar, styled, Stack, Button, Typography } from "@mui/material";
-import PropTypes from "prop-types";
-import Link from "next/link";
-import { useSession } from "next-auth/react"; // Import auth functions
+import {
+  Box,
+  AppBar,
+  Toolbar,
+  styled,
+  Typography,
+  useMediaQuery,
+  Fab,
+  Backdrop,
+} from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import { useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
-import { useMediaQuery } from "@mui/material"; // Import useMediaQuery
 
 interface ItemType {
   toggleMobileSidebar: (event: React.MouseEvent<HTMLElement>) => void;
 }
 
-const Subheader = ({ toggleMobileSidebar }: ItemType) => {
-  return <SubheaderContent toggleMobileSidebar={toggleMobileSidebar} />;
-};
-
 const SubheaderContent = ({ toggleMobileSidebar }: ItemType) => {
   const { data: session, status } = useSession();
   const pathname = usePathname();
   const smUp = useMediaQuery((theme: any) => theme.breakpoints.up("sm"));
+
+  const [fabOpen, setFabOpen] = useState(false);
+
+  const handleFabClick = () => {
+    setFabOpen((prev) => !prev);
+  };
 
   const AppBarStyled = styled(AppBar)(({ theme }) => ({
     boxShadow: "none",
@@ -39,42 +46,37 @@ const SubheaderContent = ({ toggleMobileSidebar }: ItemType) => {
     position: "relative",
   }));
 
-  if (status === "loading") {
-    return (
-      <AppBarStyled position="sticky" color="default">
-        <ToolbarStyled>
-          <Box>Loading...</Box>
-        </ToolbarStyled>
-      </AppBarStyled>
-    );
-  }
-
-  const isSubheaderPage = [
-    "/overview",
-    "/transactions/transfer/confirm",
-    "/accounts/chequing",
-    "/accounts/savings",
-    "/transactions/transfer",
-    "/transactions/deposit",
-    "/transactions/movemoney",
-  ].includes(pathname);
+  const FabStyled = styled(Fab)(({ theme }) => ({
+    position: "fixed",
+    bottom: theme.spacing(4),
+    right: theme.spacing(4),
+    transition: "transform 0.3s ease",
+    "&:hover": {
+      transform: "rotate(90deg)",
+    },
+    zIndex: 1301,
+  }));
 
   return (
     <>
 
 
-      {/* Subheader component */}
-      {isSubheaderPage && (
-        <Box sx={{ backgroundColor: "lightgray", padding: "10px 0", textAlign: "center" }}>
-          <Typography variant="h6">Subheader Content</Typography>
-        </Box>
-      )}
+      <FabStyled color="primary" onClick={handleFabClick}>
+        <AddIcon
+          sx={{
+            transition: "transform 0.3s ease",
+            transform: fabOpen ? "rotate(45deg)" : "rotate(0deg)",
+          }}
+        />
+      </FabStyled>
+
+      <Backdrop
+        open={fabOpen}
+        onClick={() => setFabOpen(false)}
+        sx={{ zIndex: 1300, color: "#fff" }}
+      />
     </>
   );
 };
 
-Subheader.propTypes = {
-  sx: PropTypes.object,
-};
-
-export default Subheader;
+export default SubheaderContent;

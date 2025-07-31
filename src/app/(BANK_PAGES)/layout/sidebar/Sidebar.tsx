@@ -13,8 +13,10 @@ import { useMediaQuery, useTheme } from "@mui/material";
 import { SidebarProfile } from "./SidebarProfile";
 
 const HEADER_HEIGHT = 64; // Adjust based on your design
-const SIDEBAR_WIDTH = 200; // Sidebar width when open
-const SIDEBAR_COLLAPSED_WIDTH = 65; // Sidebar width when collapsed (skinny)
+const SIDEBAR_WIDTH = 220; // Sidebar width when open
+// const SIDEBAR_COLLAPSED_WIDTH = 65; 
+const SIDEBAR_COLLAPSED_WIDTH = 0; 
+
 const SIDEBAR_HEIGHT = 200;
 const SIDEBAR_WIDTH_XS = 270; // New width for isXs
 
@@ -40,6 +42,7 @@ const LogoWithHover = () => (
     </Box>
   </Link>
 );
+
 
 const MSidebar = ({ isSidebarOpen }: ItemType) => {
   const { data: session, status } = useSession();
@@ -87,17 +90,18 @@ const MSidebar = ({ isSidebarOpen }: ItemType) => {
   return (
     <Box sx={{ display: 'flex' }}>
       {/* Header */}
-      <AppBar
-        position="fixed"
-        sx={{
-          zIndex: (theme) => theme.zIndex.drawer + 1,
-          backgroundColor: theme.palette.background.paper,
-          // backgroundColor: "silver",
 
-          boxShadow: "none",
+
+      {/* Main Content */}
+      <Box
+        sx={{
+          display: 'flex',
+          flex: 1,
+          transition: 'margin-left 0.3s ease',
+          marginLeft: isMdUp || isXlUp ? `${sidebarWidth}px` : 0,
         }}
       >
-        <Toolbar sx={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
+
         <IconButton
       onClick={toggleSidebar}
       sx={{
@@ -110,23 +114,12 @@ const MSidebar = ({ isSidebarOpen }: ItemType) => {
   {isSidebarToggled ? <MenuOpenOutlinedIcon /> : <MenuOutlinedIcon />}
 </IconButton>
 
-          <LogoWithHover />
+<Box sx={{ display: { xs: 'block', sm: 'block', md: 'none' } }}>
+  <LogoWithHover />
+</Box> 
 
-          <Box sx={{ display: "flex", alignItems: "center", justifyContent: "flex-end", width: "100%", marginRight: '50px' }}>
-            <Profile />
-          </Box>
-        </Toolbar>
-      </AppBar>
 
-      {/* Main Content */}
-      <Box
-        sx={{
-          display: 'flex',
-          flex: 1,
-          transition: 'margin-left 0.3s ease',
-          marginLeft: isMdUp || isXlUp ? `${sidebarWidth}px` : 0,
-        }}
-      >
+
         <Drawer
           anchor="left"
           open={isSidebarToggled}
@@ -137,13 +130,25 @@ const MSidebar = ({ isSidebarOpen }: ItemType) => {
               width: `${sidebarWidth}px`,
               height: `${SIDEBAR_HEIGHT}`,
               boxShadow: 'none',
+              // borderRight: '2px solid lawngreen',
+                            // backgroundColor: theme.palette.background.default,
+
+              backgroundColor: theme.palette.background.default,
               borderRight: 'none',
+              color: theme.palette.success.main,
               display: 'flex',
               overflowX: "hidden",
               flexDirection: 'column',
             },
           }}
         >
+
+
+
+
+
+
+
           <Box sx={{ height: '100%' }}>
             <Sidebar
               width={`${sidebarWidth}px`}

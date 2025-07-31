@@ -1,5 +1,5 @@
 "use client";
-import { Card } from "@mui/material";
+import { Box, Card } from "@mui/material";
 // components
 import PageContainer from "../../components/container/PageContainer";
 // import Logo from "../layout/shared/logo/Logo";
@@ -23,10 +23,11 @@ export default function Login2() {
   }, [session, status, router]);
 
   return (
-    <PageContainer title="Login" description="this is Login page">
-          <Card
-            elevation={0}
+    <PageContainer title="Login" description="this is Login page" >
+          <Box
             sx={{
+          // backgroundColor: "red",
+              boxShadow: 'none !important',
               p: 2,
               zIndex: 1,
               width: "100%",
@@ -51,7 +52,7 @@ export default function Login2() {
             }}
           >
           <AuthLogin />
-        </Card>
+        </Box>
     </PageContainer>
   );
 };

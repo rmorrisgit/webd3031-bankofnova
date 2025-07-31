@@ -7,6 +7,7 @@ const LinkStyled = styled(Link)(() => ({
   width: "180px",
   overflow: "hidden",
   display: "block",
+  
 }));
 
 const Logo = () => {

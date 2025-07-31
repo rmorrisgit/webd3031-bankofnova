@@ -1,64 +1,61 @@
 'use client';
 import CheckoutButton from '../../components/CheckoutButton';
 import { CheckCircle } from '@mui/icons-material';
+import { Box, Typography, List, ListItem, ListItemIcon, ListItemText, Paper } from '@mui/material';
 
 export default function PricingPage() {
   return (
-    <div style={{
-      minHeight: '100vh',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: '#f9f9f9',
-    }}>
-      <div style={{
-        backgroundColor: 'white',
-        borderRadius: '16px',
-        padding: '40px',
-        maxWidth: '420px',
-        width: '100%',
-        boxShadow: '0 8px 24px rgba(0, 0, 0, 0.1)',
-        textAlign: 'center',
-      }}>
-        <h1 style={{ fontSize: '1.75rem', marginBottom: '0.5rem', color: '#0d47a1' }}>
+    <Box
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      // bgcolor="#f9f9f9"
+      minHeight="100vh"
+    >
+      <Paper
+        elevation={3}
+        sx={{
+          borderRadius: '16px',
+          p: 6,
+          maxWidth: '500px',
+          width: '100%',
+          textAlign: 'center',
+          boxShadow: '0 8px 24px rgba(0, 0, 0, 0.1)',
+        }}
+      >
+        <Typography variant="h1" sx={{ color: '#000000', mb: 1 }}>
           Bank of Nova Premium
-        </h1>
-        <p style={{ fontSize: '1rem', color: '#444', marginBottom: '1.5rem' }}>
-          Unlock unlimited transactions and more features.
-        </p>
+        </Typography>
 
-        <div style={{
-          fontSize: '2rem',
-          fontWeight: 700,
-          color: '#0d47a1',
-          marginBottom: '0.5rem',
-        }}>
-          $16.99/mo <span style={{ fontSize: '1rem', fontWeight: 400 }}>*</span>
-        </div>
-        <p style={{ fontSize: '0.85rem', color: '#888', marginBottom: '1.5rem' }}>
+        <Typography variant="body1" sx={{ color: '#444', mb: 3 , mt: 3}}>
+          Unlock credit card and more features.
+        </Typography>
+
+        <Typography variant="h3" component="div" sx={{ color: '#000000', fontWeight: 700, mb: 1 }}>
+          $16.99/mo <Typography component="span" variant="body2" fontWeight={400}>*</Typography>
+        </Typography>
+
+        <Typography variant="caption" sx={{ color: '#888', display: 'block', mb: 3 }}>
           *with the Value Program
-        </p>
+        </Typography>
 
-        <ul style={{ textAlign: 'left', marginBottom: '2rem' }}>
+        <List sx={{ textAlign: 'left', mb: 4 }}>
           {[
-            'Unlimited debit transactions in Canada',
-            'Up to $48 rebate on credit card fees',
-            'FREE Interac e-Transfers',
+            'Low interest credit card',
+            'Borrow money up to a set credit limit',
+            'Premium expense tracking',
           ].map((feature, index) => (
-            <li key={index} style={{
-              display: 'flex',
-              alignItems: 'center',
-              marginBottom: '0.75rem',
-              color: '#333',
-            }}>
-              <CheckCircle style={{ color: '#4caf50', marginRight: '8px' }} />
-              {feature}
-            </li>
+            <ListItem key={index} disableGutters sx={{ alignItems: 'center' }}>
+              <ListItemIcon sx={{ minWidth: '32px' }}>
+                <CheckCircle sx={{ color: '#4caf50' }} />
+              </ListItemIcon>
+              <ListItemText primary={feature} primaryTypographyProps={{ sx: { color: '#333' } }} />
+            </ListItem>
           ))}
-        </ul>
+        </List>
 
         <CheckoutButton />
-      </div>
-    </div>
+      </Paper>
+    </Box>
   );
 }

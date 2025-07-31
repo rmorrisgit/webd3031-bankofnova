@@ -22,10 +22,10 @@ const UserRegistrationsChart = () => {
 
   const theme = useTheme();
   const userColor = theme.palette.primary.main;
-  const adminColor = "#FF4560";
+  const adminColor = "#44cc77"; // Green color for admins
 
   useEffect(() => {
-    setLoading(true); // ✅ Start loading
+    setLoading(true); 
     fetch(`/api/user/registration-stats?filter=${filter}`)
       .then((res) => res.json())
       .then((data: RegistrationData[]) => {
@@ -48,7 +48,7 @@ const UserRegistrationsChart = () => {
         }
       })
       .catch((err) => console.error("Error fetching chart data:", err))
-      .finally(() => setTimeout(() => setLoading(false), 150)); // ✅ Slight delay for smoothness
+      .finally(() => setTimeout(() => setLoading(false), 150)); 
   }, [filter, roleFilter]);
 
   const formatPeriod = (period: string, filter: "day" | "month" | "year"): string => {

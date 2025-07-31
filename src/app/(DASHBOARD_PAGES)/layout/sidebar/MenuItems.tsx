@@ -11,10 +11,7 @@ import {
 import { uniqueId } from "lodash";
 
 const Menuitems = [
-  {
-    navlabel: true,
-    subheader: "Home",
-  },
+
 
   {
     id: uniqueId(),
@@ -22,10 +19,7 @@ const Menuitems = [
     icon: IconLayoutDashboard,
     href: "/dashboard",
   },
-  {
-    navlabel: true,
-    subheader: "User Management",
-  },
+
   // {
   //   id: uniqueId(),
   //   title: "premium-tracking",
@@ -34,7 +28,7 @@ const Menuitems = [
   // },
   {
     id: uniqueId(),
-    title: "user-management",
+    title: "User Management",
     icon: IconAperture,
     href: "/user-management",
   },

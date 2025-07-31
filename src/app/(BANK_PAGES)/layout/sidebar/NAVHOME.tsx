@@ -51,30 +51,7 @@ const Sidebar2 = ({
     </IconButton>
   );
 
-  const logoSrc = pathname === "/register" ? "/images/logos/dark-logo4.svg" : "/images/logos/dark-logo3.svg";
-
-  // Logo component to ensure it stays on top permanently
-  const LogoWithHover = () => (
-    <Link href="/" passHref>
-       <Box
-         sx={{
-           position: "fixed",
-           top: 10,
-           right: 77,
-           zIndex: 9999,
-           width: "auto",
-         }}
-       >
-         <Image
-           src={logoSrc}
-           alt="Logo"
-           width={200} // Adjust width and height as per your design
-           height={50}
-         />
-       </Box>
-    </Link>
-  );
-
+ 
   if (!isSpecialPage || isMD) return null;
 
   return (
