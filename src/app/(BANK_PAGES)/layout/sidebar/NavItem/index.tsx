@@ -56,6 +56,8 @@ const NavItem = ({ item, level, pathDirect, onClick, children}: ItemType) => {
 
 
 
+
+
   // ✅ Ripple color explicitly
   // "& .MuiTouchRipple-root .MuiTouchRipple-rippleVisible": {
   //   color: theme.palette.primary.main,
@@ -94,6 +96,19 @@ const NavItem = ({ item, level, pathDirect, onClick, children}: ItemType) => {
       // "& .MuiTouchRipple-root .MuiTouchRipple-rippleVisible": {
       //   color: theme.palette.primary.main,
       // },
+      // "& .MuiTab-wrapper": {
+      //   color: theme.palette.primary.main,
+      // },
+      // "& .MuiTab-wrapper": {
+      //   color: theme.palette.primary.main,
+      // },
+
+      // "& .MuiTouchRipple-root .MuiTouchRipple-rippleVisible": {
+      //   color: theme.palette.primary.main,
+      // },
+      // "& .MuiTouchRipple-root .MuiTouchRipple-rippleVisible": {
+      //   color: theme.palette.primary.main,
+      // },
     },
   },
 },
@@ -101,6 +116,8 @@ const NavItem = ({ item, level, pathDirect, onClick, children}: ItemType) => {
   }
 )
 );
+
+
 
 
 
@@ -138,6 +155,14 @@ const NavItem = ({ item, level, pathDirect, onClick, children}: ItemType) => {
           )}
           {/* Render children (like title) */}
           {children || (
+            <ListItemText
+                 sx={{
+      // color: "green",
+      //move icon here
+       marginLeft: "17px", 
+       
+       
+     }}>
             <ListItemText
                  sx={{
       // color: "green",

@@ -17,6 +17,10 @@ const SIDEBAR_WIDTH = 220; // Sidebar width when open
 // const SIDEBAR_COLLAPSED_WIDTH = 65; 
 const SIDEBAR_COLLAPSED_WIDTH = 0; 
 
+const SIDEBAR_WIDTH = 220; // Sidebar width when open
+// const SIDEBAR_COLLAPSED_WIDTH = 65; 
+const SIDEBAR_COLLAPSED_WIDTH = 0; 
+
 const SIDEBAR_HEIGHT = 200;
 const SIDEBAR_WIDTH_XS = 270; // New width for isXs
 
@@ -45,6 +49,8 @@ const LogoWithHover = () => (
 
 
 
+
+
 const MSidebar = ({ isSidebarOpen }: ItemType) => {
   const { data: session, status } = useSession();
   const pathname = usePathname();
@@ -65,6 +71,7 @@ const MSidebar = ({ isSidebarOpen }: ItemType) => {
 
   const toggleSidebar = () => {
     setIsSidebarToggled((prev) => !prev);
+    // console.log(isSidebarToggled ? "Sidebar Open" : "Sidebar Collapsed");
     // console.log(isSidebarToggled ? "Sidebar Open" : "Sidebar Collapsed");
   };
 
@@ -147,9 +154,24 @@ const MSidebar = ({ isSidebarOpen }: ItemType) => {
               display: 'flex',
               overflowX: "hidden",
               flexDirection: 'column',
+              overflowY: 'hidden',
             },
           }}
         >
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
