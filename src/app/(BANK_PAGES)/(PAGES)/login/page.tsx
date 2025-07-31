@@ -28,6 +28,8 @@ export default function Login2() {
             sx={{
           // backgroundColor: "red",
               boxShadow: 'none !important',
+          // backgroundColor: "red",
+              boxShadow: 'none !important',
               p: 2,
               zIndex: 1,
               width: "100%",

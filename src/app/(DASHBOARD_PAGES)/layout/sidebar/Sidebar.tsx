@@ -3,6 +3,7 @@ import SidebarItems from './SidebarItems';
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined"; // Closed menu icon
 import MenuOpenOutlinedIcon from "@mui/icons-material/MenuOpenOutlined"; // Open menu icon
 
+
 import { Sidebar, Logo } from 'react-mui-sidebar';
 // import Profile from "../header/Profile";
 import Link from 'next/link';

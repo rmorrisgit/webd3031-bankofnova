@@ -10,6 +10,8 @@ import {
   ListItemButton,
   Box,
   Typography
+  Box,
+  Typography
 } from "@mui/material";
 import Link from "next/link";
 
@@ -55,12 +57,17 @@ const NavItem = ({ item, level, pathDirect, onClick, children}: ItemType) => {
 
 
 
+
   // ✅ Ripple color explicitly
+  // "& .MuiTouchRipple-root .MuiTouchRipple-rippleVisible": {
+  //   color: theme.palette.primary.main,
+  // },
   // "& .MuiTouchRipple-root .MuiTouchRipple-rippleVisible": {
   //   color: theme.palette.primary.main,
   // },
 
   "&:hover": {
+    backgroundColor: 'green',
     backgroundColor: 'green',
     borderLeft: '4px solid grey',
   },
@@ -74,13 +81,23 @@ const NavItem = ({ item, level, pathDirect, onClick, children}: ItemType) => {
     //   color: theme.palette.primary.main,
     // },
 
+    // "& .MuiTouchRipple-root .MuiTouchRipple-rippleVisible": {
+    //   color: theme.palette.primary.main,
+    // },
+
     "&:hover": {
       backgroundColor: 'transparent',
 
       // "& .MuiTab-wrapper": {
       //   color: theme.palette.primary.main,
       // },
+      // "& .MuiTab-wrapper": {
+      //   color: theme.palette.primary.main,
+      // },
 
+      // "& .MuiTouchRipple-root .MuiTouchRipple-rippleVisible": {
+      //   color: theme.palette.primary.main,
+      // },
       // "& .MuiTouchRipple-root .MuiTouchRipple-rippleVisible": {
       //   color: theme.palette.primary.main,
       // },
@@ -91,6 +108,7 @@ const NavItem = ({ item, level, pathDirect, onClick, children}: ItemType) => {
   }
 )
 );
+
 
 
 

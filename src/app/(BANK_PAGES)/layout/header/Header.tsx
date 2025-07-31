@@ -21,6 +21,7 @@ interface ItemType {
 const Header = ({ toggleMobileSidebar }: ItemType) => {
   return <HeaderContent toggleMobileSidebar={toggleMobileSidebar} />;
   console.log("Header rendered");
+  console.log("Header rendered");
 };
 
 const LogoWithHover = () => {

@@ -44,6 +44,7 @@ const LogoWithHover = () => (
 );
 
 
+
 const MSidebar = ({ isSidebarOpen }: ItemType) => {
   const { data: session, status } = useSession();
   const pathname = usePathname();
@@ -64,7 +65,7 @@ const MSidebar = ({ isSidebarOpen }: ItemType) => {
 
   const toggleSidebar = () => {
     setIsSidebarToggled((prev) => !prev);
-    console.log(isSidebarToggled ? "Sidebar Open" : "Sidebar Collapsed");
+    // console.log(isSidebarToggled ? "Sidebar Open" : "Sidebar Collapsed");
   };
 
   useEffect(() => {
@@ -94,13 +95,22 @@ const MSidebar = ({ isSidebarOpen }: ItemType) => {
 
       {/* Main Content */}
       <Box
+
+
+      {/* Main Content */}
+      <Box
         sx={{
+          display: 'flex',
+          flex: 1,
+          transition: 'margin-left 0.3s ease',
+          marginLeft: isMdUp || isXlUp ? `${sidebarWidth}px` : 0,
           display: 'flex',
           flex: 1,
           transition: 'margin-left 0.3s ease',
           marginLeft: isMdUp || isXlUp ? `${sidebarWidth}px` : 0,
         }}
       >
+
 
         <IconButton
       onClick={toggleSidebar}
@@ -120,6 +130,12 @@ const MSidebar = ({ isSidebarOpen }: ItemType) => {
 
 
 
+<Box sx={{ display: { xs: 'block', sm: 'block', md: 'none' } }}>
+  <LogoWithHover />
+</Box> 
+
+
+
         <Drawer
           anchor="left"
           open={isSidebarToggled}
@@ -128,7 +144,7 @@ const MSidebar = ({ isSidebarOpen }: ItemType) => {
           PaperProps={{
             sx: {
               width: `${sidebarWidth}px`,
-              height: `${SIDEBAR_HEIGHT}`,
+height: isSidebarToggled ? '100vh' : `${SIDEBAR_COLLAPSED_HEIGHT}px`,
               boxShadow: 'none',
               // borderRight: '2px solid lawngreen',
                             // backgroundColor: theme.palette.background.default,
@@ -136,12 +152,21 @@ const MSidebar = ({ isSidebarOpen }: ItemType) => {
               backgroundColor: theme.palette.background.default,
               borderRight: 'none',
               color: theme.palette.success.main,
+              color: theme.palette.success.main,
               display: 'flex',
               overflowX: "hidden",
               flexDirection: 'column',
+              overflowY: 'hidden',
             },
           }}
         >
+
+
+
+
+
+
+
 
 
 
