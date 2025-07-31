@@ -17,9 +17,7 @@ const SIDEBAR_WIDTH = 220; // Sidebar width when open
 // const SIDEBAR_COLLAPSED_WIDTH = 65; 
 const SIDEBAR_COLLAPSED_WIDTH = 0; 
 
-const SIDEBAR_WIDTH = 220; // Sidebar width when open
-// const SIDEBAR_COLLAPSED_WIDTH = 65; 
-const SIDEBAR_COLLAPSED_WIDTH = 0; 
+
 
 const SIDEBAR_HEIGHT = 200;
 const SIDEBAR_WIDTH_XS = 270; // New width for isXs

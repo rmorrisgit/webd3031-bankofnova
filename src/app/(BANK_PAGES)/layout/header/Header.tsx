@@ -56,7 +56,6 @@ const LogoWithHover = () => {
         sx={{
           position: "fixed",
           top: 0,
-          top: 0,
           left: leftPosition,
           zIndex: 9999,
           width: "auto",
@@ -64,7 +63,6 @@ const LogoWithHover = () => {
           backgroundColor: '#310dff46 !important',
           
 
-          backgroundColor: '#310dff46 !important',
           
         }}
       >
@@ -101,29 +99,7 @@ const LogoWithHover2 = () => (
     </Box>
   </Link>
 );
-const logoSrc2 = "/images/logos/dark-logo3.svg"; // Default logo source
-const LogoWithHover2 = () => (
-  <Link href="/" passHref>
-    <Box
-      sx={{
-  position: "fixed",
-          top: 10,
-          left:30,
-          zIndex: 9999,
-          width: "auto",
-        backgroundColor: '#27c7325a',
-      }}
-    >
-      {/* <Logo img="/images/logos/dark-logo3.svg" /> */}
-              <Image
-          src={logoSrc2}
-          alt="Logo"
-          width={200} // Adjust width and height as per your design
-          height={50}
-        />
-    </Box>
-  </Link>
-);
+
 
 const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
   const { data: session, status } = useSession();
@@ -132,7 +108,6 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
   const mdUp = useMediaQuery((theme: any) => theme.breakpoints.up("md"));
   const smUp = useMediaQuery((theme: any) => theme.breakpoints.up("sm"));
   const xlUp = useMediaQuery((theme: any) => theme.breakpoints.up("xl"));
-//test
 //test
   // Define pages where subheader should appear
   const isLargerContainer = [
@@ -143,9 +118,6 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
     "/transactions/transfer",
     "/transactions/deposit",
     "/transactions/movemoney",
-    "/profile",
-    "/settings",
-    "/transactions/transfer/contact"
     "/profile",
     "/settings",
     "/transactions/transfer/contact"
@@ -160,8 +132,6 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
 
  const shouldApplyZeroSpacing = isLargerContainer && (!isOnAuthPages || !isOnHomePage || !isOnRegister);
 
- const shouldApplyZeroSpacing = isLargerContainer && (!isOnAuthPages || !isOnHomePage || !isOnRegister);
-
 
   const blueBackground = ["/register"].includes(pathname);
 
@@ -169,13 +139,10 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
     boxShadow: "none",
     background: blueBackground ? theme.palette.primary.main : "transparent", // Use blueBackground state
     opacity: blueBackground ? .9 : .6,
-    background: blueBackground ? theme.palette.primary.main : "transparent", // Use blueBackground state
-    opacity: blueBackground ? .9 : .6,
     justifyContent: "center",
     backdropFilter: "blur(4px)",
     borderRadius: "none !important",
     position: "sticky", // This will make the header behave as a normal element
-    borderBottom: blueBackground ? "none" : "2px solid lawngreen",
     borderBottom: blueBackground ? "none" : "2px solid lawngreen",
     [theme.breakpoints.up("lg")]: {
       minHeight: "70px",
@@ -208,18 +175,13 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
     <LogoWithHover /> {/* Add this here for logo on register */}
 
       <AppBarStyled position="sticky" >
-
-      <AppBarStyled position="sticky" >
         <ToolbarStyled>
-          
           
           {/* ...everything inside your ToolbarStyled */}
         </ToolbarStyled>
       </AppBarStyled>
       </>
     ) : (
-          <AppBarStyled position="sticky" color="default">
-                  <Container
           <AppBarStyled position="sticky" color="default">
                   <Container
         sx={{
@@ -232,20 +194,7 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
   paddingRight: shouldApplyZeroSpacing ? "0 !important" : "0 !important",
   // backgroundColor: blueBackground ? "primary.main" : "primary.main",
           maxWidth: isLargerContainer && !shouldApplyZeroSpacing
-          // backgroundColor: blueBackground ? "primary.main" : "primary.main",
-          //dont make these ifs. 
-       
-  marginLeft: shouldApplyZeroSpacing ? "0 !important" : "0 !important",
-  marginRight: shouldApplyZeroSpacing ? "0 !important" : "0 !important",
-  paddingLeft: shouldApplyZeroSpacing ? "0px !important" : "0 !important",
-  paddingRight: shouldApplyZeroSpacing ? "0 !important" : "0 !important",
-  // backgroundColor: blueBackground ? "primary.main" : "primary.main",
-          maxWidth: isLargerContainer && !shouldApplyZeroSpacing
             ? "1600px !important"
-            : isMediumContainer && lgUp && !shouldApplyZeroSpacing
-            ? "100% !important"
-            : "none !important",
-          ...(isMediumContainer && xlUp && !shouldApplyZeroSpacing && {
             : isMediumContainer && lgUp && !shouldApplyZeroSpacing
             ? "100% !important"
             : "none !important",
@@ -263,13 +212,6 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
     <Box sx={{ display: {  xs: 'none', md: 'block' } }}>
     <LogoWithHover2 />
   </Box> }
-
-      
-
-        {shouldApplyZeroSpacing &&
-    <Box sx={{ display: {  xs: 'none', md: 'block' } }}>
-    <LogoWithHover2 />
-  </Box> }
       {(isOnHomePage || isOnAuthPages) && <LogoWithHover />}
 
         {/* LEFT SIDE */}
@@ -279,13 +221,11 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
             <Box
               sx={{
 
-
                 "&:hover": {
                   opacity: 0.8, 
                 },
                 alignItems: "center",  // Vertically center logo
                 // marginTop: '16px',
-
 
               }}
             >
@@ -294,7 +234,6 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
                 alt="Logo"
                 width={200} // Adjust width and height as per your design
                 height={50}
-                
                 
               />
             </Box>
@@ -321,26 +260,20 @@ const HeaderContent = ({ toggleMobileSidebar }: ItemType) => {
 sx={(theme) => ({
   position: "absolute",
   right: session && !isOnHomePage ? 20 : 20,
-  right: session && !isOnHomePage ? 20 : 20,
   [theme.breakpoints.down('xl')]: {
-    right: session && !isOnHomePage ? 0 : "5%"
     right: session && !isOnHomePage ? 0 : "5%"
   },
   [theme.breakpoints.down('lg')]: {
     right: session && !isOnHomePage ? 0 : "5%",
-    right: session && !isOnHomePage ? 0 : "5%",
   },
   [theme.breakpoints.down('md')]: {
-    right: session && !isOnHomePage ? 0 : "10%", // adjust these values to taste
     right: session && !isOnHomePage ? 0 : "10%", // adjust these values to taste
   },
   [theme.breakpoints.down('sm')]: {
     right: session && !isOnHomePage ? 0 : 35,
-    right: session && !isOnHomePage ? 0 : 35,
   },
 })}
           >
-
 
 {status === "unauthenticated" && !isOnRegister && (
   <>
@@ -378,7 +311,6 @@ sx={(theme) => ({
               padding: "10px 20px",
               border: "1px solid white",
 
-
               borderColor: blueBackground ? "white" : "white",
               color: blueBackground ? "white" : "white",
               backgroundColor: blueBackground ? "primary.main" : "theme.primary",
@@ -399,8 +331,6 @@ sx={(theme) => ({
     <>
 
 
-
-
       <Button
         variant="outlined"
         onClick={handleLogout}
@@ -408,7 +338,6 @@ sx={(theme) => ({
         disableElevation
         sx={{
           height: "44px",
-          
           
           backgroundColor: blueBackground ? "white" : "theme.primary",
           color: blueBackground ? "theme.primary" : "theme.primary",
@@ -419,24 +348,18 @@ sx={(theme) => ({
         }}
       >
       <Typography variant="h6" fontWeight={700}>
-      <Typography variant="h6" fontWeight={700}>
         Logout
-      </Typography>
       </Typography>
       </Button>
       <Button
         variant="contained"
         onClick={handleMyAccountsClick}
         color="warning"
-        color="warning"
         disableElevation
         sx={{
           height: "44px",
         }}
       >
-        <Typography variant="h6" fontWeight={700}>
-          My Accounts
-        </Typography>
         <Typography variant="h6" fontWeight={700}>
           My Accounts
         </Typography>
@@ -468,16 +391,9 @@ sx={(theme) => ({
   {status === "authenticated" && !isOnAuthPages && !isOnHomePage && (
         <Profile />
       )}
-  )}
-  {status === "authenticated" && !isOnAuthPages && !isOnHomePage && (
-        <Profile />
-      )}
         </Stack>
 
-
       </ToolbarStyled>
-    </Container>
-
     </Container>
 
     </AppBarStyled>

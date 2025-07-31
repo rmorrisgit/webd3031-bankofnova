@@ -163,14 +163,6 @@ const NavItem = ({ item, level, pathDirect, onClick, children}: ItemType) => {
        
        
      }}>
-            <ListItemText
-                 sx={{
-      // color: "green",
-      //move icon here
-       marginLeft: "17px", 
-       
-       
-     }}>
               <>{item.title}</>
             </ListItemText>
           )}
