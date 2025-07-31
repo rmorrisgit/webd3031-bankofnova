@@ -71,7 +71,7 @@ const NavItem = ({ item, level, pathDirect, onClick, children}: ItemType) => {
 
   "&.Mui-selected": {
     borderLeft: '4px solid #5D87FF',
-    // backgroundColor: 'red',
+    backgroundColor: theme.palette.success.light,
 
 
     // "& .MuiTouchRipple-root .MuiTouchRipple-rippleVisible": {
@@ -157,7 +157,7 @@ const NavItem = ({ item, level, pathDirect, onClick, children}: ItemType) => {
           {children || (
             <ListItemText
                  sx={{
-      // color: "green",
+      // color: "yellow",
       //move icon here
        marginLeft: "17px", 
        

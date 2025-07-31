@@ -14,7 +14,7 @@ export const SidebarProfile = () => {
       sx={{
         p: 3,
         height: '120px',
-        bgcolor: 'warning.light',
+        bgcolor: 'info.dark',
         borderRadius: '8px',
         // borderBottom: '2px solid green',
         marginTop: '75px',

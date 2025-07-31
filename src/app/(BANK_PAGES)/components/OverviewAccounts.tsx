@@ -86,7 +86,7 @@ const AccountTabs = () => {
           </Typography>
         </Grid>
 
-        <Box sx={{ maxWidth: 1000, mx: "auto", px: 2, mt: 2 }}>
+        <Box sx={{ maxWidth: 1000, mx: "0", px: 2, mt: 2 }}>
           <Tabs
             value={selectedTab}
             onChange={handleTabChange}
@@ -105,7 +105,7 @@ const AccountTabs = () => {
         {/* All Accounts */}
         <TabPanel value={selectedTab} index={0}>
           <Grid item xs={12} lg={12} sx={{ marginBottom: 2 }}>
-            <Box sx={{ maxWidth: 1000, mx: "auto", px: 2 }}>
+            <Box sx={{ maxWidth: 1000, mx: "0", px: 2 }}>
               <MonthlyEarnings
                 title={
                   <>
@@ -132,7 +132,7 @@ const AccountTabs = () => {
                   border: "1px dashed #ccc",
                   borderRadius: 2,
                   maxWidth: 1000,
-                  mx: "auto",
+                  mx: "0",
                   px: 2,
                 }}
               >
@@ -149,7 +149,7 @@ const AccountTabs = () => {
             </Grid>
           ) : (
             <Grid item xs={12} lg={12}>
-              <Box sx={{ maxWidth: 1000, mx: "auto", px: 2 }}>
+              <Box sx={{ maxWidth: 1000, mx: "0", px: 2 }}>
                 <MonthlyEarnings
                   title={
                     <>

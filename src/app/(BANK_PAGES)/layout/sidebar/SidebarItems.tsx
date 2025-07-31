@@ -57,7 +57,7 @@ const SidebarItems = ({ toggleMobileSidebar, isSidebarToggled }: any) => {
               fontSize={14}
               fontWeight="900"
                 sx={{
-                  color: theme.palette.success.main,
+                  // color: theme.palette.text.primary,
 
                   marginLeft: isSidebarToggled ? '-10px' : "10px",
                   // marginLeft: "10px",
@@ -87,7 +87,7 @@ const SidebarItems = ({ toggleMobileSidebar, isSidebarToggled }: any) => {
               fontSize={14}
               fontWeight="900"
                 sx={{
-                  color: theme.palette.success.main,
+                  // color: theme.palette.success.main,
                   marginLeft: isSidebarToggled ? '-10px' : "10px",
                   // marginLeft: "10px",
                   display: isSidebarToggled ? "block" : "none",
